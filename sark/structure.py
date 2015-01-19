@@ -1,6 +1,6 @@
 from . import exceptions
 import idaapi
-from . import sark
+from . import code
 import idautils
 import idc
 from collections import namedtuple, defaultdict
@@ -101,19 +101,19 @@ def dtyp_to_size(dtyp):
 def infer_struct_offsets(start, end, reg_name):
     offsets = set()
     operands = []
-    for line in sark.iter_lines(start, end):
+    for line in code.iter_lines(start, end):
         inst = line.inst
-        if not sark.is_reg_in_inst(inst, reg_name):
+        if not code.is_reg_in_inst(inst, reg_name):
             continue
 
         for operand in inst.Operands:
-            if not sark.is_reg_in_operand(operand, reg_name):
+            if not code.is_reg_in_operand(operand, reg_name):
                 continue
 
-            if not sark.operand_has_displacement(operand):
+            if not code.operand_has_displacement(operand):
                 continue
 
-            offset = sark.operand_get_displacement(operand)
+            offset = code.operand_get_displacement(operand)
             size = dtyp_to_size(operand.dtyp)
             offsets.add(StructOffset(offset, size))
             operands.append(OperandRef(line.ea, operand.n))
@@ -123,16 +123,16 @@ def infer_struct_offsets(start, end, reg_name):
 
 def get_common_register(start, end):
     registers = defaultdict(int)
-    for line in sark.iter_lines(start, end):
+    for line in code.iter_lines(start, end):
         inst = line.inst
 
         for operand in inst.Operands:
 
-            if not sark.operand_has_displacement(operand):
+            if not code.operand_has_displacement(operand):
                 continue
 
             # TODO: use the operand dtyp size here to get the proper register name.
-            register_name = sark.get_register_name(operand.reg)
+            register_name = code.get_register_name(operand.reg)
             registers[register_name] += 1
 
     return max(registers.iteritems(), key=operator.itemgetter(1))[0]

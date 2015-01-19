@@ -1,14 +1,14 @@
-import struct
-import itertools
 import collections
 import string
 
 import idaapi
+
 import idc
+
 import idautils
 from .core import get_func, get_ea
 from . import exceptions
-from .core import fix_addresses, iter_find_query, iter_find_string
+from .core import fix_addresses
 
 
 NAME_VALID_CHARS = string.ascii_letters + string.digits + "?_:"
@@ -229,98 +229,6 @@ def get_selection(always=True):
         end = idaapi.get_item_end(ea)
 
     return Selection(start, end)
-
-
-def undefine(start, end):
-    idc.MakeUnknown(start, end - start, idc.DOUNK_SIMPLE)
-
-
-def range(start, end=None, step=1):
-    if end is None:
-        end = start
-        start = 0
-
-    if cmp(start, end) * step >= 0:
-        return
-
-    value = start
-    while cmp(start, end) * cmp(value, end) > 0:
-        yield value
-        value += step
-
-
-def Bytes(start=None, end=None):
-    start, end = fix_addresses(start, end)
-
-    return itertools.imap(idc.Byte, range(start, end))
-
-
-def Words(start=None, end=None):
-    start, end = fix_addresses(start, end)
-
-    return itertools.imap(idc.Word, range(start, end, 2))
-
-
-def Dwords(start=None, end=None):
-    start, end = fix_addresses(start, end)
-
-    return itertools.imap(idc.Dword, range(start, end, 4))
-
-
-def Qwords(start=None, end=None):
-    start, end = fix_addresses(start, end)
-
-    return itertools.imap(idc.Qword, range(start, end, 4))
-
-
-def bytes_until(byte=0, start=None, end=None):
-    return iter(Bytes(start, end).next, byte)
-
-
-def words_until(word=0, start=None, end=None):
-    return iter(Words(start, end).next, word)
-
-
-def dwords_until(dword=0, start=None, end=None):
-    return iter(Dwords(start, end).next, dword)
-
-
-def Chars(start=None, end=None):
-    return itertools.imap(chr, Bytes(start, end))
-
-
-def chars_until(char='\0', start=None, end=None):
-    return iter(Chars(start, end).next, char)
-
-
-def read_ascii_string(ea, max_length=None):
-    if max_length is None:
-        end = None
-    else:
-        end = ea + max_length
-    return "".join(chars_until(start=ea, end=end))
-
-
-def dword_to_bytes(dword):
-    return struct.pack(">L", dword)
-
-
-def read_memory(start, end):
-    size = end - start
-
-    dword_count = size // 4
-    byte_count = size % 4
-
-    dwords_data = itertools.imap(dword_to_bytes, Dwords(start, start + (dword_count * 4)))
-    bytes_data = Chars(end - byte_count, end)
-
-    data = "".join(itertools.chain(dwords_data, bytes_data))
-
-    return data
-
-
-def ilen(iterator):
-    return sum(1 for item in iterator)
 
 
 def format_name(name):

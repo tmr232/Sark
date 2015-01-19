@@ -36,6 +36,7 @@ def iter_find_string(query, start=None, end=None, down=True):
     query = string_to_query(query)
     return iter_find_query(query, start, end, down)
 
+
 def iter_find_query(query, start=None, end=None, down=True):
     start, end = fix_addresses(start, end)
 
@@ -57,3 +58,21 @@ def fix_addresses(start=None, end=None):
         end = idaapi.cvar.inf.maxEA
 
     return start, end
+
+
+def range(start, end=None, step=1):
+    if end is None:
+        end = start
+        start = 0
+
+    if cmp(start, end) * step >= 0:
+        return
+
+    value = start
+    while cmp(start, end) * cmp(value, end) > 0:
+        yield value
+        value += step
+
+
+def ilen(iterator):
+    return sum(1 for item in iterator)
