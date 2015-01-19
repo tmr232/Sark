@@ -12,6 +12,20 @@ FF_SIZES = [1, 2, 4, 8, 16, ]
 
 SIZE_TO_TYPE = dict(zip(FF_SIZES, FF_TYPES))
 
+DTYP_TO_SIZE = {
+    idaapi.dt_byte: 1,
+    idaapi.dt_word: 2,
+    idaapi.dt_dword: 4,
+    idaapi.dt_float: 4,
+    idaapi.dt_double: 8,
+    idaapi.dt_qword: 8,
+    idaapi.dt_byte16: 16,
+    idaapi.dt_fword: 6,
+    idaapi.dt_3byte: 3,
+    idaapi.dt_byte32: 32,
+    idaapi.dt_byte64: 64,
+}
+
 STRUCT_ERROR_MAP = {
     idc.STRUC_ERROR_MEMBER_NAME:
         (exceptions.SarkErrorStructMemberName, "already has member with this name (bad name)"),
@@ -79,23 +93,9 @@ def add_struct_member(sid, name, offset, size):
 StructOffset = namedtuple("StructOffset", "offset size")
 OperandRef = namedtuple("OperandRef", "ea n")
 
-DTYP_TO_SIZE = {
-        idaapi.dt_byte : 1,
-        idaapi.dt_word : 2,
-        idaapi.dt_dword: 4,
-        idaapi.dt_float: 4,
-        idaapi.dt_double: 8,
-        idaapi.dt_qword: 8,
-        idaapi.dt_byte16: 16,
-        idaapi.dt_fword: 6,
-        idaapi.dt_3byte: 3,
-        idaapi.dt_byte32: 32,
-        idaapi.dt_byte64: 64,
-    }
 
 def dtyp_to_size(dtyp):
     return DTYP_TO_SIZE[dtyp]
-
 
 
 def infer_struct_offsets(start, end, reg_name):
@@ -136,7 +136,6 @@ def get_common_register(start, end):
             registers[register_name] += 1
 
     return max(registers.iteritems(), key=operator.itemgetter(1))[0]
-
 
 
 def offset_name(offset):

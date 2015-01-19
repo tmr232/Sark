@@ -152,6 +152,17 @@ class Line(object):
     def inst(self):
         return idautils.DecodeInstruction(self.ea)
 
+    @property
+    def color(self):
+        return idc.GetColor(self.ea, idc.CIC_ITEM)
+
+    @color.setter
+    def color(self, color):
+        if color is None:
+            color = 0xFFFFFFFF
+
+        idc.SetColor(self.ea, idc.CIC_ITEM, color)
+
 
 def iter_lines(start=None, end=None):
     start, end = fix_addresses(start, end)
@@ -236,9 +247,6 @@ def range(start, end=None, step=1):
     while cmp(start, end) * cmp(value, end) > 0:
         yield value
         value += step
-
-
-
 
 
 def Bytes(start=None, end=None):
