@@ -131,6 +131,7 @@ def get_common_register(start, end):
             if not sark.operand_has_displacement(operand):
                 continue
 
+            # TODO: use the operand dtyp size here to get the proper register name.
             register_name = sark.get_register_name(operand.reg)
             registers[register_name] += 1
 
