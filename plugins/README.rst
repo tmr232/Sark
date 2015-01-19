@@ -86,7 +86,7 @@ Usage
 	mov     esi, [ebx+my_struct.offset_8]
 
 	# Structure-view
-			 my_struct       struc ; (sizeof=0xC)
+	         my_struct       struc ; (sizeof=0xC)
 	00000000 offset_0        dd ?                    ; XREF: .text:_createnum(ulong)/r
 	00000004 offset_4        dw ?                    ; XREF: .text:004044E5/r
 	00000006 offset_6        db ?                    ; XREF: .text:004044E9/r
