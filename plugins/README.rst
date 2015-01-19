@@ -5,7 +5,7 @@ Plugins
 Plugin Proxy
 ============
 
-Filename: `proxy.py`
+Filename: :code:`proxy.py`
 
 A plugin used to speed up development and deployment of plugins.
 
@@ -16,8 +16,8 @@ from any directory you choose.
 Usage
 -----
 
-1. Set the `sarkPlugins` environment variable to point to your Sark plugins directory;
-2. Place a copy of `proxy.py` in the IDA plugins directory;
+1. Set the :code:`sarkPlugins` environment variable to point to your Sark plugins directory;
+2. Place a copy of :code:`proxy.py` in the IDA plugins directory;
 3. Rename the copy to the name of the plugin you want;
 4. Repeat steps 2 and 3 as needed.
 
@@ -25,8 +25,9 @@ Usage
 Function Strings
 ================
 
-Filename: `function_strings.py`
-Hotkey: `Alt + 9`
+Filename: :code:`function_strings.py`
+
+Hotkey: :code:`Alt + 9`
 
 Quickly see all strings referenced by the current function.
 
@@ -34,7 +35,7 @@ Usage
 -----
 
 1. Position the cursor inside the desired function;
-2. Press `Alt+9`;
+2. Press :code:`Alt+9`;
 3. Check the output window::
 
 	String References in ??0CDateTime@@QAE@XZ:0x0044C057
@@ -52,8 +53,9 @@ Usage
 Autostruct
 ==========
 
-Filename: `autostruct.py`
-Hotkey: `Shift + T`
+Filename: :code:`autostruct.py`
+
+Hotkey: :code:`Shift + T`
 
 Automatically generate structs from the IDA view.
 
@@ -72,11 +74,13 @@ Usage
 	mov     dh, [ebx+7]
 	mov     esi, [ebx+8]
     
-2. Press `Shift + T`
-	1. Set the struct name (can be existing struct);
-	2. Choose the register (the most likely register will be suggested to you);
+2. Press :code:`Shift + T`;
 
-3. Enjoy your new struct::
+3. Set the struct name (can be existing struct);
+
+4. Choose the register (the most likely register will be suggested to you);
+
+5. Enjoy your new struct::
 
 	# IDA-view
 	mov     eax, [ebx+my_struct.offset_0]
