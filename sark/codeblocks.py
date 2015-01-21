@@ -1,8 +1,6 @@
 import networkx
 
 import idaapi
-import idc
-
 import code
 
 
@@ -48,7 +46,6 @@ def codeblock(ea):
     for code_block in flowchart_:
         if code_block.startEA <= ea < code_block.endEA:
             return code_block
-
 
 
 def get_block_start(ea):

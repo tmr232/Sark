@@ -1,7 +1,9 @@
 import idaapi
 import idc
-import sark
 import networkx as nx
+import sark
+from sark.ui import ActionHandler
+
 
 MARKBLOCK_REACHABLE = "markblock:reachable"
 MARKBLOCK_UNREACHABLE = "markblock:unreachable"
@@ -11,65 +13,6 @@ COLOR_REACHABLE = 0x66EE11
 COLOR_UNREACHABLE = 0x6611EE
 COLOR_SOURCE = 0xEE6611
 COLOR_NONE = 0xFFFFFFFF
-
-
-def mark_reachable_nodes(ea):
-    graph = sark.get_nx_graph(ea)
-    block_ea = sark.get_block_start(ea)
-    for descendant in nx.descendants(graph, block_ea):
-        sark.codeblock(descendant).color = COLOR_REACHABLE
-
-    sark.codeblock(ea).color = COLOR_SOURCE
-
-
-def mark_unreachable_nodes(ea):
-    graph = sark.get_nx_graph(ea)
-    block_ea = sark.get_block_start(ea)
-    descendants = nx.descendants(graph, block_ea)
-    for block in sark.flowchart(ea):
-        if block.startEA not in descendants:
-            block.color = COLOR_UNREACHABLE
-
-    sark.codeblock(ea).color = COLOR_SOURCE
-
-
-def clear_func(ea):
-    for block in sark.flowchart(ea):
-        block.color = COLOR_NONE
-
-
-
-
-class ActionHandler(idaapi.action_handler_t):
-    NAME = None
-    TEXT = "Default. Replace me!"
-    HOTKEY = ""
-    TOOLTIP = ""
-    ICON = 0
-
-    @classmethod
-    def register(cls):
-        name = cls.NAME
-        text = cls.TEXT
-        handler = cls()
-        hotkey = cls.HOTKEY
-        tooltip = cls.TOOLTIP
-        icon = cls.ICON
-
-        action_desc = idaapi.action_desc_t(
-            name,
-            text,
-            handler,
-            hotkey,
-            tooltip,
-            icon,
-        )
-
-        idaapi.register_action(action_desc)
-
-    @classmethod
-    def unregister(cls):
-        idaapi.unregister_action(cls.NAME)
 
 
 class MarkReachableNodesHandler(ActionHandler):
@@ -159,3 +102,28 @@ class FunctionFlow(idaapi.plugin_t):
 
 def PLUGIN_ENTRY():
     return FunctionFlow()
+
+
+def mark_reachable_nodes(ea):
+    graph = sark.get_nx_graph(ea)
+    block_ea = sark.get_block_start(ea)
+    for descendant in nx.descendants(graph, block_ea):
+        sark.codeblock(descendant).color = COLOR_REACHABLE
+
+    sark.codeblock(ea).color = COLOR_SOURCE
+
+
+def mark_unreachable_nodes(ea):
+    graph = sark.get_nx_graph(ea)
+    block_ea = sark.get_block_start(ea)
+    descendants = nx.descendants(graph, block_ea)
+    for block in sark.flowchart(ea):
+        if block.startEA not in descendants:
+            block.color = COLOR_UNREACHABLE
+
+    sark.codeblock(ea).color = COLOR_SOURCE
+
+
+def clear_func(ea):
+    for block in sark.flowchart(ea):
+        block.color = COLOR_NONE
