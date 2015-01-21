@@ -118,3 +118,21 @@ Usage
 3. Use IDLE and hope it doesn't crash.
 
 When terminating IDA, remember to first close the IDLE window or it will hand.
+
+
+Function Flow
+=============
+
+Filename: :code:`function_flow.py`
+
+IDA Version: :code:`>=6.7`
+
+Visualize code flow in functions.
+
+Usage
+-----
+
+1. Go to graph-view;
+2. Right-click the desired block (you may have to left-click it first to set the cursor to it);
+3. Click :code:`Mark->Reachable` to mark all nodes reachable by the block;
+4. Click :code:`Mark->Clear` to remove the marks.
