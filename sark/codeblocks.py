@@ -37,12 +37,18 @@ class FlowChart(idaapi.FlowChart):
         return CodeBlock(index, self._q[index], self)
 
 
-def codeblock(ea):
+def flowchart(ea):
     func = idaapi.get_func(ea)
     flowchart = FlowChart(func)
-    for code_block in flowchart:
+    return flowchart
+
+
+def codeblock(ea):
+    flowchart_ = flowchart(ea)
+    for code_block in flowchart_:
         if code_block.startEA <= ea < code_block.endEA:
             return code_block
+
 
 
 def get_block_start(ea):

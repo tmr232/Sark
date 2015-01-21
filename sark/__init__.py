@@ -8,5 +8,5 @@ reload(codeblocks)
 reload(data)
 
 from .code import *
-from .codeblocks import codeblock, get_nx_graph, get_block_start
+from .codeblocks import codeblock, get_nx_graph, get_block_start, flowchart
 from .data import read_ascii_string
