@@ -12,7 +12,7 @@ IDA Plugins & Scripting Library
 
 
 
-**IMPORTANT!**
+**WARNING!**
 
 Sark is currently in very early development. The code is expected to change a lot. Use at own risk.
 
