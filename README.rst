@@ -2,6 +2,10 @@
 Sark
 ====
 
+.. image::
+    media/sark-pacman.jpg
+
+
 **IMPORTANT!**
 
 Sark is currently in very early development. The code is expected to change a lot. Use at own risk.
