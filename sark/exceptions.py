@@ -1,6 +1,3 @@
-import idc
-
-
 class SarkException(Exception):
     pass
 

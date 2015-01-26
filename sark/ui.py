@@ -1,5 +1,6 @@
 import idaapi
 
+
 class ActionHandler(idaapi.action_handler_t):
     NAME = None
     TEXT = "Default. Replace me!"

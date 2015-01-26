@@ -1,7 +1,7 @@
 import networkx
 
 import idaapi
-import code
+from . import code
 
 
 class CodeBlock(idaapi.BasicBlock):

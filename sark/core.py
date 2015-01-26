@@ -2,7 +2,7 @@ import idaapi
 import idc
 import string
 
-import exceptions
+from . import exceptions
 
 
 def get_func(func_ea):

@@ -1,7 +1,6 @@
 import idaapi
-import code
 import idc
-from code.data import read_ascii_string
+import sark
 
 
 class FunctionStrings(idaapi.plugin_t):
@@ -18,7 +17,7 @@ class FunctionStrings(idaapi.plugin_t):
         pass
 
     def run(self, arg):
-        function = code.Function(idc.here())
+        function = sark.Function(idc.here())
 
         print "String References in {}:0x{:08X}".format(function.name, function.startEA)
         print "From          To            String"
@@ -27,8 +26,8 @@ class FunctionStrings(idaapi.plugin_t):
             for ea in line.drefs_from:
                 if idaapi.isCode(idaapi.getFlags(ea)):
                     continue
-                string = read_ascii_string(ea, max_length=100)
-                if not code.core.is_string_printable(string):
+                string = sark.read_ascii_string(ea, max_length=100)
+                if not sark.core.is_string_printable(string):
                     continue
 
                 print "0x{:08X}    0x{:08X}    {}".format(line.ea, ea, repr(string))
