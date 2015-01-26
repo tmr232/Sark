@@ -21,7 +21,7 @@ class ActionHandler(idaapi.action_handler_t):
     TEXT = "Default. Replace me!"
     HOTKEY = ""
     TOOLTIP = ""
-    ICON = 0
+    ICON = -1
 
     @classmethod
     def get_name(cls):
