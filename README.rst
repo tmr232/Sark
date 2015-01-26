@@ -5,7 +5,8 @@ Sark
 .. image::
     media/sark-pacman.jpg
 
-----
+General
+-------
 
 IDA Plugins & Scripting Library
 
