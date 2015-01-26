@@ -52,9 +52,9 @@ def iter_find_query(query, start=None, end=None, down=True):
 
 
 def fix_addresses(start=None, end=None):
-    if start is None:
+    if start in (None, idaapi.BADADDR):
         start = idaapi.cvar.inf.minEA
-    if end is None:
+    if end in (None, idaapi.BADADDR):
         end = idaapi.cvar.inf.maxEA
 
     return start, end

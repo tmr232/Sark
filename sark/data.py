@@ -1,4 +1,5 @@
 import idc
+import idaapi
 
 import itertools
 import struct
@@ -63,16 +64,7 @@ def dword_to_bytes(dword):
 
 def read_memory(start, end):
     size = end - start
-
-    dword_count = size // 4
-    byte_count = size % 4
-
-    dwords_data = itertools.imap(dword_to_bytes, Dwords(start, start + (dword_count * 4)))
-    bytes_data = Chars(end - byte_count, end)
-
-    data = "".join(itertools.chain(dwords_data, bytes_data))
-
-    return data
+    return idaapi.get_many_bytes(start, size)
 
 
 def undefine(start, end):
