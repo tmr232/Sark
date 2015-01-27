@@ -18,6 +18,12 @@ Sark is currently in very early development. The code is expected to change a lo
 
 The plugins, however, are expected to remain roughly the same.
 
+Dependencies
+------------
+
+1. `NetworkX <https://networkx.github.io/>`_
+2. `clipboard <https://pypi.python.org/pypi/clipboard/0.0.4>`_
+
 
 Installation
 ------------
