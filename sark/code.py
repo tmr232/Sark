@@ -68,7 +68,6 @@ def is_reg_in_inst(inst, reg_name):
 
 
 def get_register_name(reg_id, size=4):
-    # TODO: the 4 size is great for MIPS, but there should be a way to tell the actual size from an opcode.
     return idaapi.get_reg_name(reg_id, size)
 
 
