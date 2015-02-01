@@ -60,3 +60,37 @@ class SarkErrorStructMemberUnivar(SarkErrorAddStructMemeberFailed):
 
 class SarkErrorStructMemberVarlast(SarkErrorAddStructMemeberFailed):
     pass
+
+
+class SarkErrorAddEnumMemeberFailed(SarkError):
+    pass
+
+
+class SarkErrorEnumMemberName(SarkErrorAddEnumMemeberFailed):
+    pass
+
+
+class SarkErrorEnumMemberValue(SarkErrorAddEnumMemeberFailed):
+    pass
+
+
+class SarkErrorEnumMemberEnum(SarkErrorAddEnumMemeberFailed):
+    pass
+
+
+class SarkErrorEnumMemberMask(SarkErrorAddEnumMemeberFailed):
+    pass
+
+
+class SarkErrorEnumMemberIllv(SarkErrorAddEnumMemeberFailed):
+    pass
+
+
+class EnumNotFound(SarkError):
+    pass
+
+class EnumCreationFailed(SarkError):
+    pass
+
+class EnumAlreadyExists(SarkError):
+    pass
