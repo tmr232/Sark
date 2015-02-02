@@ -8,9 +8,13 @@ A collections of useful codecs that do not exist in Python by default.
 Installation
 ============
 
-Copy the desired codecs to Python's :code:`encodings` directory,
-Usually found at :code:`C:\Python27\Lib\encodings`.
+To make installation of updates easier, a :code:`proxy.py` codec has been created.
+The proxy codec forwards the codec to a codec in the :code:`sarkCodecs` directory
+based on the filename of the proxy.
 
+To install, set the :code:`sarkCodecs` environment variable to the Sark codecs directory,
+then copy the proxy to Python's codec directory (:code:`C:\Python27\Lib\encodings`)
+and rename it to the name of the desired Sark-codec.
 
 Codecs
 ------
