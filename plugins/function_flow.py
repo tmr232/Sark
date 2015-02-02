@@ -28,6 +28,7 @@ class MarkUnReachableNodesHandler(ActionHandler):
         clear_func(ctx.cur_ea)
         mark_unreachable_nodes(ctx.cur_ea)
 
+
 class MarkReachingNodesHandler(ActionHandler):
     TEXT = "Reaching"
 

@@ -89,8 +89,10 @@ class SarkErrorEnumMemberIllv(SarkErrorAddEnumMemeberFailed):
 class EnumNotFound(SarkError):
     pass
 
+
 class EnumCreationFailed(SarkError):
     pass
+
 
 class EnumAlreadyExists(SarkError):
     pass
