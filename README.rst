@@ -23,13 +23,15 @@ Dependencies
 
 1. `NetworkX <https://networkx.github.io/>`_
 2. `clipboard <https://pypi.python.org/pypi/clipboard/0.0.4>`_
+3. `AwesomeLib <https://github.com/tmr232/awesomelib>`_
 
 
 Installation
 ------------
 
 1. Put the :code:`sark` package in your :code:`site-packages` directory.
-2. Install the plugins.
+2. Run :code:`pip install -r requirements.txt` to install the requirements.
+3. Install the plugins.
 
 Plugin Installation
 -------------------

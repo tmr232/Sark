@@ -1,0 +1,3 @@
+clipboard
+networkx
+git+https://github.com/tmr232/awesomelib#egg=awesomelib
