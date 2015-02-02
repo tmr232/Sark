@@ -1,5 +1,6 @@
 import idaapi
 import exceptions
+from awesome.context import ignored
 
 ENUM_ERROR_MAP = {
     idaapi.ENUM_MEMBER_ERROR_NAME:
@@ -36,11 +37,9 @@ def get_enum(name):
 
 def add_enum(name=None, index=idaapi.BADADDR, flags=idaapi.hexflag(), bitfield=False):
     if name is not None:
-        try:
+        with ignored(exceptions.EnumNotFound):
             get_enum(name)
             raise exceptions.EnumAlreadyExists()
-        except exceptions.EnumNotFound:
-            pass
 
     enum = idaapi.add_enum(index, name, flags)
 
