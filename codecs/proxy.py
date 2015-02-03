@@ -9,6 +9,9 @@ CODECS_DIR = path.expandvars("$sarkCodecs")
 
 # Load the codecs based on the filename of the proxy
 name = __name__.split(".")[-1]
+
+# Force the use of `.py` files as trying to load `.pyc` by filename
+# makes Python try and load it as a `.py` file.
 codec_filename = name + ".py"
 codec_path = path.join(CODECS_DIR, codec_filename)
 
