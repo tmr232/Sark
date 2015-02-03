@@ -8,7 +8,8 @@ from os import path
 CODECS_DIR = path.expandvars("$sarkCodecs")
 
 # Load the codecs based on the filename of the proxy
-codec_filename = path.basename(__file__)
+name = __name__.split(".")[-1]
+codec_filename = name + ".py"
 codec_path = path.join(CODECS_DIR, codec_filename)
 
 codec = imp.load_source(__name__, codec_path)
