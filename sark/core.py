@@ -1,7 +1,6 @@
 import idaapi
 import idc
 import string
-
 from . import exceptions
 
 
@@ -54,25 +53,8 @@ def iter_find_query(query, start=None, end=None, down=True):
 def fix_addresses(start=None, end=None):
     if start in (None, idaapi.BADADDR):
         start = idaapi.cvar.inf.minEA
+
     if end in (None, idaapi.BADADDR):
         end = idaapi.cvar.inf.maxEA
 
     return start, end
-
-
-def range(start, end=None, step=1):
-    if end is None:
-        end = start
-        start = 0
-
-    if cmp(start, end) * step >= 0:
-        return
-
-    value = start
-    while cmp(start, end) * cmp(value, end) > 0:
-        yield value
-        value += step
-
-
-def ilen(iterator):
-    return sum(1 for item in iterator)

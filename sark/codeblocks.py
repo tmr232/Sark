@@ -37,8 +37,8 @@ class FlowChart(idaapi.FlowChart):
 
 def flowchart(ea):
     func = idaapi.get_func(ea)
-    flowchart = FlowChart(func)
-    return flowchart
+    flowchart_ = FlowChart(func)
+    return flowchart_
 
 
 def codeblock(ea):

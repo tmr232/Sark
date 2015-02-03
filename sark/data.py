@@ -3,7 +3,8 @@ import idaapi
 
 import itertools
 import struct
-from .core import fix_addresses, range
+from awesome.iterator import irange as range
+from .core import fix_addresses
 
 
 def Bytes(start=None, end=None):
