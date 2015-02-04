@@ -136,3 +136,21 @@ Usage
 2. Right-click the desired block (you may have to left-click it first to set the cursor to it);
 3. Click :code:`Mark->Reachable` to mark all nodes reachable by the block;
 4. Click :code:`Mark->Clear` to remove the marks.
+
+
+Function Flow For IDA <=6.6
+===========================
+
+Filename: :code:`function_flow_66.py`
+
+Visualize code flow in functions.
+
+Modified to work with IDA 6.6. This does mean that the UI is a bit less friendly.
+
+Usage
+-----
+
+1. Go to graph-view;
+2. Left-click the desired block;
+3. Click :code:`View->Mark->Reachable` to mark all nodes reachable by the block;
+4. Click :code:`View->Mark->Clear` to remove the marks.
