@@ -1,6 +1,6 @@
 import collections
 import string
-
+import itertools
 import idaapi
 
 import idc
@@ -162,6 +162,15 @@ class Line(object):
 
         idc.SetColor(self.ea, idc.CIC_ITEM, color)
 
+    @property
+    def anterior_comment(self):
+        lines = (idc.LineA(self._ea, index) for index in itertools.count())
+        return "\n".join(iter(lines.next, None))
+
+    @anterior_comment.setter
+    def anterior_comment(self, value):
+        idaapi.add_long_cmt(self._ea, True, value)
+
 
 def iter_lines(start=None, end=None):
     start, end = fix_addresses(start, end)
@@ -210,6 +219,14 @@ class Function(object):
 
     def __repr__(self):
         return 'Function(name="{}", addr=0x{:08X})'.format(self.name, self.startEA)
+
+    @property
+    def comment(self):
+        return idaapi.get_func_cmt(self._func, False)
+
+    @comment.setter
+    def comment(self, value):
+        idaapi.set_func_cmt(self._func, value, False)
 
 
 Selection = collections.namedtuple("Selection", "start end")

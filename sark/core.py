@@ -9,7 +9,7 @@ def get_func(func_ea):
         return func_ea
     func = idaapi.get_func(func_ea)
     if func is None:
-        raise exceptions.SarkNoFunction()
+        raise exceptions.SarkNoFunction("No function at 0x{:08X}".format(func_ea))
 
     return func
 
