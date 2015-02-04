@@ -117,7 +117,7 @@ Usage
 2. Press :code:`Ctrl + Alt + 6`;
 3. Use IDLE and hope it doesn't crash.
 
-When terminating IDA, remember to first close the IDLE window or it will hand.
+When terminating IDA, remember to first close the IDLE window or it will hang.
 
 
 Function Flow
