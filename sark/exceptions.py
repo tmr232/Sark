@@ -96,3 +96,11 @@ class EnumCreationFailed(SarkError):
 
 class EnumAlreadyExists(SarkError):
     pass
+
+
+class SarkErrorNameAlreadyExists(SarkError):
+    pass
+
+
+class SarkSetNameFailed(SarkError):
+    pass

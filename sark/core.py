@@ -58,3 +58,21 @@ def fix_addresses(start=None, end=None):
         end = idaapi.cvar.inf.maxEA
 
     return start, end
+
+
+def set_name(address, name, anyway=False):
+    success = idaapi.set_name(address, name, idaapi.SN_NOWARN | idaapi.SN_NOCHECK)
+    if success:
+        return
+
+    if anyway:
+        success = idaapi.do_name_anyway(address, name)
+        if success:
+            return
+
+        raise exceptions.SarkSetNameFailed("Failed renaming 0x{:08X} to {!r}.".format(address, name))
+
+    raise exceptions.SarkErrorNameAlreadyExists(
+        "Can't rename 0x{:08X}. Name {!r} already exists.".format(address, name))
+
+
