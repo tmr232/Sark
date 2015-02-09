@@ -1,13 +1,13 @@
 import networkx
 
 import idaapi
-from . import code
+from sark import iter_lines
 
 
 class CodeBlock(idaapi.BasicBlock):
     @property
     def lines(self):
-        return code.iter_lines(self.startEA, self.endEA)
+        return iter_lines(self.startEA, self.endEA)
 
     @property
     def next(self):

@@ -5,6 +5,7 @@ import idautils
 import idc
 from collections import namedtuple, defaultdict
 import operator
+from sark import iter_lines
 
 
 FF_TYPES = [idc.FF_BYTE, idc.FF_WORD, idc.FF_DWRD, idc.FF_QWRD, idc.FF_OWRD, ]
@@ -101,7 +102,7 @@ def dtyp_to_size(dtyp):
 def infer_struct_offsets(start, end, reg_name):
     offsets = set()
     operands = []
-    for line in code.iter_lines(start, end):
+    for line in iter_lines(start, end):
         inst = line.inst
         if not code.is_reg_in_inst(inst, reg_name):
             continue
@@ -123,7 +124,7 @@ def infer_struct_offsets(start, end, reg_name):
 
 def get_common_register(start, end):
     registers = defaultdict(int)
-    for line in code.iter_lines(start, end):
+    for line in iter_lines(start, end):
         inst = line.inst
 
         for operand in inst.Operands:
