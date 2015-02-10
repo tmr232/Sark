@@ -56,6 +56,10 @@ class Function(object):
     def comment(self, value):
         idaapi.set_func_cmt(self._func, value, False)
 
+    @property
+    def frame_size(self):
+        return idaapi.get_frame_size(self._func)
+
 
 def iter_function_lines(func_ea):
     for line in idautils.FuncItems(get_ea(func_ea)):
