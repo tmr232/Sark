@@ -1,7 +1,7 @@
 import networkx
 
 import idaapi
-from sark import iter_lines
+from .code import iter_lines
 
 
 class CodeBlock(idaapi.BasicBlock):

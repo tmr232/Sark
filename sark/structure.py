@@ -5,7 +5,7 @@ import idautils
 import idc
 from collections import namedtuple, defaultdict
 import operator
-from sark import iter_lines
+from .code import iter_lines
 
 
 FF_TYPES = [idc.FF_BYTE, idc.FF_WORD, idc.FF_DWRD, idc.FF_QWRD, idc.FF_OWRD, ]
