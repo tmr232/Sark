@@ -18,6 +18,7 @@ Highlights
 ----------
 
 **Autostruct Plugin**
+
 .. image::
     media/autostruct-demo.gif
 
