@@ -8,15 +8,19 @@ Sark
 General
 -------
 
-IDA Plugins & Scripting Library
+IDA Plugins & Scripting Library.
+
+The library is in early development, so APIs are expected to change.
 
 
 
-**WARNING!**
+Highlights
+----------
 
-Sark is currently in very early development. The code is expected to change a lot. Use at own risk.
+**Autostruct Plugin**
+.. image::
+    media/autostruct-demo.gif
 
-The plugins, however, are expected to remain roughly the same.
 
 Dependencies
 ------------
