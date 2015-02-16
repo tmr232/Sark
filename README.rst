@@ -8,7 +8,7 @@ Sark
 General
 -------
 
-IDA Plugins & Scripting Library.
+IDA Plugins & IDAPython Scripting Library.
 
 The library is in early development, so APIs are expected to change.
 
