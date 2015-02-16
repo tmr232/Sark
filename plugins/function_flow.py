@@ -4,7 +4,9 @@ from sark.graph import (clear_func,
                         mark_not_reaching_nodes,
                         mark_reaching_nodes,
                         mark_unreachable_nodes,
-                        mark_reachable_nodes)
+                        mark_reachable_nodes,
+                        mark_exit_nodes,
+                        iter_exit_nodes)
 from sark.ui import ActionHandler
 
 
@@ -47,6 +49,19 @@ class MarkClearHandler(ActionHandler):
         clear_func(ctx.cur_ea)
 
 
+class MarkExits(ActionHandler):
+    TEXT = "Exits"
+
+    def _activate(self, ctx):
+        clear_func(ctx.cur_ea)
+        mark_exit_nodes(ctx.cur_ea)
+
+        idaapi.msg("\n"*2)
+
+        for block in iter_exit_nodes(ctx.cur_ea):
+            idaapi.msg("Exit at 0x{:08X}\n".format(block.startEA))
+
+
 class Hooks(idaapi.UI_Hooks):
     def populating_tform_popup(self, form, popup):
         # You can attach here.
@@ -60,6 +75,7 @@ class Hooks(idaapi.UI_Hooks):
             idaapi.attach_action_to_popup(form, popup, MarkUnReachableNodesHandler.get_name(), "Mark/")
             idaapi.attach_action_to_popup(form, popup, MarkReachingNodesHandler.get_name(), "Mark/")
             idaapi.attach_action_to_popup(form, popup, MarkNotReachingNodesHandler.get_name(), "Mark/")
+            idaapi.attach_action_to_popup(form, popup, MarkExits.get_name(), "Mark/")
             idaapi.attach_action_to_popup(form, popup, MarkClearHandler.get_name(), "Mark/")
 
 
@@ -75,6 +91,7 @@ class FunctionFlow(idaapi.plugin_t):
         MarkUnReachableNodesHandler.register()
         MarkReachingNodesHandler.register()
         MarkNotReachingNodesHandler.register()
+        MarkExits.register()
         MarkClearHandler.register()
 
         self.hooks = Hooks()

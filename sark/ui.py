@@ -48,7 +48,7 @@ class ActionHandler(idaapi.action_handler_t):
             icon,
         )
 
-        idaapi.register_action(action_desc)
+        return idaapi.register_action(action_desc)
 
     @classmethod
     def unregister(cls):

@@ -7,6 +7,7 @@ COLOR_REACHING = 0x11EE66
 COLOR_NOT_REACHING = 0x1166EE
 COLOR_SOURCE = 0xEE6611
 COLOR_NONE = 0xFFFFFFFF
+COLOR_EXIT = 0x000048
 
 
 def clear_func(ea):
@@ -54,3 +55,17 @@ def mark_reachable_nodes(ea, source_color=COLOR_SOURCE, other_color=COLOR_REACHA
         codeblock(descendant).color = other_color
 
     codeblock(ea).color = source_color
+
+
+def iter_exit_nodes(ea):
+    for block in flowchart(ea):
+        # Check if there are successors
+        for successor in block.next:
+            break
+        else:
+            yield block
+
+
+def mark_exit_nodes(ea, node_color=COLOR_EXIT):
+    for block in iter_exit_nodes(ea):
+        block.color = node_color

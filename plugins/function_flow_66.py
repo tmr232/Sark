@@ -4,7 +4,9 @@ from sark.graph import (clear_func,
                         mark_not_reaching_nodes,
                         mark_reaching_nodes,
                         mark_unreachable_nodes,
-                        mark_reachable_nodes)
+                        mark_reachable_nodes,
+                        mark_exit_nodes,
+                        iter_exit_nodes)
 
 
 def mark_reachable():
@@ -31,6 +33,17 @@ def mark_not_reaching():
     mark_not_reaching_nodes(ea)
 
 
+def mark_exists():
+    ea = idaapi.get_screen_ea()
+    clear_func(ea)
+    mark_exit_nodes(ea)
+
+    idaapi.msg("\n" * 2)
+
+    for block in iter_exit_nodes(ea):
+        idaapi.msg("Exit at 0x{:08X}\n".format(block.startEA))
+
+
 def mark_clear():
     ea = idaapi.get_screen_ea()
     clear_func(ea)
@@ -48,6 +61,7 @@ class FunctionFlow(idaapi.plugin_t):
         idaapi.add_menu_item("View/Mark/", "Un-Reachable", None, 0, mark_unreachable, tuple())
         idaapi.add_menu_item("View/Mark/", "Reaching", None, 0, mark_reaching, tuple())
         idaapi.add_menu_item("View/Mark/", "Not Reaching", None, 0, mark_not_reaching, tuple())
+        idaapi.add_menu_item("View/Mark/", "Exists", None, 0, mark_exists, tuple())
         idaapi.add_menu_item("View/Mark/", "Clear", None, 0, mark_clear, tuple())
 
         return idaapi.PLUGIN_KEEP
