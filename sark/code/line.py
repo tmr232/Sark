@@ -2,7 +2,7 @@ import itertools
 import idaapi
 import idautils
 import idc
-from .code import is_ea_call
+from .base import is_ea_call
 from ..core import fix_addresses
 from .xref import Xref
 

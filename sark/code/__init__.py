@@ -1,6 +1,6 @@
-from . import code
+from . import base
 
-reload(code)
+reload(base)
 from . import line
 
 reload(line)
@@ -8,6 +8,6 @@ from . import function
 
 reload(function)
 
-from .code import *
+from .base import *
 from .line import Line, iter_lines
-from .function import Function
+from .function import Function, iter_functions
