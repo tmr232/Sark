@@ -19,8 +19,8 @@ class FunctionStrings(idaapi.plugin_t):
     def run(self, arg):
         function = sark.Function(idc.here())
 
-        print "String References in {}:0x{:08X}".format(function.name, function.startEA)
-        print "From          To            String"
+        idaapi.msg("String References in {}:0x{:08X}\n".format(function.name, function.startEA))
+        idaapi.msg("From          To            String\n")
 
         for line in function.lines:
             for ea in line.drefs_from:
@@ -30,7 +30,7 @@ class FunctionStrings(idaapi.plugin_t):
                 if not sark.core.is_string_printable(string):
                     continue
 
-                print "0x{:08X}    0x{:08X}    {}".format(line.ea, ea, repr(string))
+                idaapi.msg("0x{:08X}    0x{:08X}    {}\n".format(line.ea, ea, repr(string)))
 
 
 def PLUGIN_ENTRY():
