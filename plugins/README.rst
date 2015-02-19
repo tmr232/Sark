@@ -154,3 +154,18 @@ Usage
 2. Left-click the desired block;
 3. Click :code:`View->Mark->Reachable` to mark all nodes reachable by the block;
 4. Click :code:`View->Mark->Clear` to remove the marks.
+
+
+Quick Copy
+==========
+
+Filename: :code:`quick_copy.py`
+
+Copy addresses and instruction bytes from IDA.
+
+Usage
+-----
+
+1. Place your cursor or mark a selection;
+2. Press :code:`Ctrl + Alt + C` to copy the marked address;
+3. Press :code:`Ctrl + Shift + C` to copy the selected bytes (instruction bytes).
