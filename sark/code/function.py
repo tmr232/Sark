@@ -4,6 +4,7 @@ import idc
 from .base import get_func
 from ..core import set_name, get_ea, fix_addresses
 from .line import Line
+from .xref import Xref
 
 
 class Function(object):
@@ -32,8 +33,26 @@ class Function(object):
         return self._func.endEA
 
     @property
+    def xrefs_from(self):
+        for line in self.lines:
+            for xref in line.xrefs_from:
+                yield xref
+
+    @property
+    def drefs_from(self):
+        for line in self.lines:
+            for ea in line.drefs_from:
+                yield ea
+
+    @property
+    def crefs_from(self):
+        for line in self.lines:
+            for ea in line.crefs_from:
+                yield ea
+
+    @property
     def xrefs_to(self):
-        return idautils.XrefsTo(self.startEA)
+        return map(Xref, idautils.XrefsTo(self.startEA))
 
     @property
     def drefs_to(self):
@@ -73,6 +92,7 @@ class Function(object):
 def iter_function_lines(func_ea):
     for line in idautils.FuncItems(get_ea(func_ea)):
         yield Line(line)
+
 
 def iter_functions(start=None, end=None):
     start, end = fix_addresses(start, end)
