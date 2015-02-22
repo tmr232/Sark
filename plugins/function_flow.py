@@ -99,7 +99,12 @@ class FunctionFlow(idaapi.plugin_t):
         return idaapi.PLUGIN_KEEP
 
     def term(self):
-        pass
+        MarkReachableNodesHandler.unregister()
+        MarkUnReachableNodesHandler.unregister()
+        MarkReachingNodesHandler.unregister()
+        MarkNotReachingNodesHandler.unregister()
+        MarkExits.unregister()
+        MarkClearHandler.unregister()
 
     def run(self, arg):
         pass
