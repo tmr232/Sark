@@ -45,3 +45,9 @@ Plugin Installation
    :code:`proxy.py` to contain the correct path.
 2. For every plugin you want to use, copy :code:`proxy.py` to the IDA plugins directory, and rename it
    to the name of the desired plugin.
+
+
+Other Useful Plugins
+--------------------
+
+1. `IDA IPython <https://github.com/james91b/ida_ipython>`_ - Run IPython inside IDA.
