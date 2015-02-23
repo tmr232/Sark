@@ -99,26 +99,6 @@ Usage
 	0000000C my_struct       ends
 
 
-IDLE Starter
-============
-
-Filename: :code:`idle_starter.py`
-
-Hotkey: :code:`Ctrl + Alt + 6`
-
-Start IDLE from within IDA.
-
-**WARNING:** This is useful, but tends to crash IDA *a lot.*
-
-Usage
------
-
-1. Backup your research;
-2. Press :code:`Ctrl + Alt + 6`;
-3. Use IDLE and hope it doesn't crash.
-
-When terminating IDA, remember to first close the IDLE window or it will hang.
-
 
 Function Flow
 =============
