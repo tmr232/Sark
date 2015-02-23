@@ -17,6 +17,22 @@ import idaapi
 
 
 class ActionHandler(idaapi.action_handler_t):
+    """A wrapper around `idaapi.action_handler_t`.
+
+    The class simplifies the creation of UI actions in IDA >= 6.7.
+
+    To create an action, simply create subclass and override the relevant fields
+    and register it::
+
+        class MyAction(ActionHandler):
+            TEXT = "My Action"
+            HOTKEY = "Alt+Z"
+
+            def _activate(self, ctx):
+                idaapi.msg("Activated!")
+
+        MyAction.register()
+    """
     NAME = None
     TEXT = "Default. Replace me!"
     HOTKEY = ""
@@ -25,6 +41,13 @@ class ActionHandler(idaapi.action_handler_t):
 
     @classmethod
     def get_name(cls):
+        """Return the name of the action.
+
+        If a name has not been set (using the `Name` class variable), the
+        function generates a name based on the class name and id.
+        :return: action name
+        :rtype: str
+        """
         if cls.NAME is not None:
             return cls.NAME
 
@@ -32,6 +55,11 @@ class ActionHandler(idaapi.action_handler_t):
 
     @classmethod
     def register(cls):
+        """Register the action.
+
+        Each action MUST be registered before it can be used. To remove the action
+        use the `unregister` method.
+        """
         name = cls.get_name()
         text = cls.TEXT
         handler = cls()
@@ -52,6 +80,10 @@ class ActionHandler(idaapi.action_handler_t):
 
     @classmethod
     def unregister(cls):
+        """Unregister the action.
+
+        After unregistering the class cannot be used.
+        """
         idaapi.unregister_action(cls.get_name())
 
     def __init__(self):
@@ -65,7 +97,20 @@ class ActionHandler(idaapi.action_handler_t):
             return 0
 
     def update(self, ctx):
+        """Update the action.
+
+        Optionally override this function.
+        See IDA-SDK for more information.
+        """
         return idaapi.AST_ENABLE_ALWAYS
 
     def _activate(self, ctx):
+        """Activate the action.
+
+        This function contains the action code itself. You MUST implement
+        it in your class for the action to work.
+
+        :param ctx: The action context passed from IDA.
+        :return: None
+        """
         raise NotImplementedError()
