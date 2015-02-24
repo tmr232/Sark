@@ -7,9 +7,63 @@ from ..core import fix_addresses
 from .xref import Xref
 
 
+class Comments(object):
+    def __init__(self, ea):
+        self._ea = ea
+
+    @property
+    def regular(self):
+        return idc.Comment(self._ea)
+
+    @regular.setter
+    def regular(self, comment):
+        idc.MakeComm(self._ea, comment)
+
+    @property
+    def repeat(self):
+        return idc.RptCmt(self._ea)
+
+    @repeat.setter
+    def repeat(self, comment):
+        idc.MakeRptCmt(self._ea, comment)
+
+    @property
+    def anterior(self):
+        lines = (idc.LineA(self._ea, index) for index in itertools.count())
+        return "\n".join(iter(lines.next, None))
+
+    @anterior.setter
+    def anterior(self, comment):
+        index = 0
+
+        for index, line in enumerate(comment.splitlines()):
+            idc.ExtLinA(self._ea, index, line)
+
+        idc.DelExtLnA(self._ea, index + 1)
+
+    @property
+    def posterior(self):
+        lines = (idc.LineB(self._ea, index) for index in itertools.count())
+        return "\n".join(iter(lines.next, None))
+
+    @posterior.setter
+    def posterior(self, comment):
+        index = 0
+
+        for index, line in enumerate(comment.splitlines()):
+            idc.ExtLinB(self._ea, index, line)
+
+        idc.DelExtLnB(self._ea, index + 1)
+
+
 class Line(object):
     def __init__(self, ea):
         self._ea = idaapi.get_item_head(ea)
+        self._comments = Comments(ea)
+
+    @property
+    def comments(self):
+        return self._comments
 
     @property
     def ea(self):
@@ -76,15 +130,6 @@ class Line(object):
             color = 0xFFFFFFFF
 
         idc.SetColor(self.ea, idc.CIC_ITEM, color)
-
-    @property
-    def anterior_comment(self):
-        lines = (idc.LineA(self._ea, index) for index in itertools.count())
-        return "\n".join(iter(lines.next, None))
-
-    @anterior_comment.setter
-    def anterior_comment(self, value):
-        idaapi.add_long_cmt(self._ea, True, value)
 
 
 def iter_lines(start=None, end=None):
