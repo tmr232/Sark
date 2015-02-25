@@ -16,101 +16,103 @@ Return values for update:
 import idaapi
 
 
-class ActionHandler(idaapi.action_handler_t):
-    """A wrapper around `idaapi.action_handler_t`.
+# Make sure API is supported to enable use of other functionality in older versions.
+if idaapi.IDA_SDK_VERSION >= 670:
+    class ActionHandler(idaapi.action_handler_t):
+        """A wrapper around `idaapi.action_handler_t`.
 
-    The class simplifies the creation of UI actions in IDA >= 6.7.
+        The class simplifies the creation of UI actions in IDA >= 6.7.
 
-    To create an action, simply create subclass and override the relevant fields
-    and register it::
+        To create an action, simply create subclass and override the relevant fields
+        and register it::
 
-        class MyAction(ActionHandler):
-            TEXT = "My Action"
-            HOTKEY = "Alt+Z"
+            class MyAction(ActionHandler):
+                TEXT = "My Action"
+                HOTKEY = "Alt+Z"
 
-            def _activate(self, ctx):
-                idaapi.msg("Activated!")
+                def _activate(self, ctx):
+                    idaapi.msg("Activated!")
 
-        MyAction.register()
-    """
-    NAME = None
-    TEXT = "Default. Replace me!"
-    HOTKEY = ""
-    TOOLTIP = ""
-    ICON = -1
-
-    @classmethod
-    def get_name(cls):
-        """Return the name of the action.
-
-        If a name has not been set (using the `Name` class variable), the
-        function generates a name based on the class name and id.
-        :return: action name
-        :rtype: str
+            MyAction.register()
         """
-        if cls.NAME is not None:
-            return cls.NAME
+        NAME = None
+        TEXT = "Default. Replace me!"
+        HOTKEY = ""
+        TOOLTIP = ""
+        ICON = -1
 
-        return "{}:{}".format(cls.__name__, id(cls))
+        @classmethod
+        def get_name(cls):
+            """Return the name of the action.
 
-    @classmethod
-    def register(cls):
-        """Register the action.
+            If a name has not been set (using the `Name` class variable), the
+            function generates a name based on the class name and id.
+            :return: action name
+            :rtype: str
+            """
+            if cls.NAME is not None:
+                return cls.NAME
 
-        Each action MUST be registered before it can be used. To remove the action
-        use the `unregister` method.
-        """
-        name = cls.get_name()
-        text = cls.TEXT
-        handler = cls()
-        hotkey = cls.HOTKEY
-        tooltip = cls.TOOLTIP
-        icon = cls.ICON
+            return "{}:{}".format(cls.__name__, id(cls))
 
-        action_desc = idaapi.action_desc_t(
-            name,
-            text,
-            handler,
-            hotkey,
-            tooltip,
-            icon,
-        )
+        @classmethod
+        def register(cls):
+            """Register the action.
 
-        return idaapi.register_action(action_desc)
+            Each action MUST be registered before it can be used. To remove the action
+            use the `unregister` method.
+            """
+            name = cls.get_name()
+            text = cls.TEXT
+            handler = cls()
+            hotkey = cls.HOTKEY
+            tooltip = cls.TOOLTIP
+            icon = cls.ICON
 
-    @classmethod
-    def unregister(cls):
-        """Unregister the action.
+            action_desc = idaapi.action_desc_t(
+                name,
+                text,
+                handler,
+                hotkey,
+                tooltip,
+                icon,
+            )
 
-        After unregistering the class cannot be used.
-        """
-        idaapi.unregister_action(cls.get_name())
+            return idaapi.register_action(action_desc)
 
-    def __init__(self):
-        idaapi.action_handler_t.__init__(self)
+        @classmethod
+        def unregister(cls):
+            """Unregister the action.
 
-    def activate(self, ctx):
-        try:
-            self._activate(ctx)
-            return 1
-        except:
-            return 0
+            After unregistering the class cannot be used.
+            """
+            idaapi.unregister_action(cls.get_name())
 
-    def update(self, ctx):
-        """Update the action.
+        def __init__(self):
+            idaapi.action_handler_t.__init__(self)
 
-        Optionally override this function.
-        See IDA-SDK for more information.
-        """
-        return idaapi.AST_ENABLE_ALWAYS
+        def activate(self, ctx):
+            try:
+                self._activate(ctx)
+                return 1
+            except:
+                return 0
 
-    def _activate(self, ctx):
-        """Activate the action.
+        def update(self, ctx):
+            """Update the action.
 
-        This function contains the action code itself. You MUST implement
-        it in your class for the action to work.
+            Optionally override this function.
+            See IDA-SDK for more information.
+            """
+            return idaapi.AST_ENABLE_ALWAYS
 
-        :param ctx: The action context passed from IDA.
-        :return: None
-        """
-        raise NotImplementedError()
+        def _activate(self, ctx):
+            """Activate the action.
+
+            This function contains the action code itself. You MUST implement
+            it in your class for the action to work.
+
+            :param ctx: The action context passed from IDA.
+            :return: None
+            """
+            raise NotImplementedError()
