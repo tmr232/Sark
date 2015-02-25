@@ -81,24 +81,23 @@ StructOffset = namedtuple("StructOffset", "offset size")
 OperandRef = namedtuple("OperandRef", "ea n")
 
 
-
 def infer_struct_offsets(start, end, reg_name):
     offsets = set()
     operands = []
     for line in iter_lines(start, end):
         inst = line.inst
-        if not code.is_reg_in_inst(inst, reg_name):
+        if not inst.has_reg(reg_name):
             continue
 
-        for operand in inst.Operands:
-            if not code.is_reg_in_operand(operand, reg_name):
+        for operand in inst.operands:
+            if not operand.has_reg(reg_name):
                 continue
 
-            if not code.operand_has_displacement(operand):
+            if not operand.has_displacement:
                 continue
 
-            offset = code.operand_get_displacement(operand)
-            size = dtyp_to_size(operand.dtyp)
+            offset = operand.displacement
+            size = operand.size
             offsets.add(StructOffset(offset, size))
             operands.append(OperandRef(line.ea, operand.n))
 
@@ -110,13 +109,12 @@ def get_common_register(start, end):
     for line in iter_lines(start, end):
         inst = line.inst
 
-        for operand in inst.Operands:
+        for operand in inst.operands:
 
-            if not code.operand_has_displacement(operand):
+            if not operand.has_displacement:
                 continue
 
-            # TODO: use the operand dtyp size here to get the proper register name.
-            register_name = code.get_register_name(operand.reg)
+            register_name = operand.reg
             registers[register_name] += 1
 
     return max(registers.iteritems(), key=operator.itemgetter(1))[0]

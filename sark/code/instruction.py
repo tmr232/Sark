@@ -29,6 +29,10 @@ class Operand(object):
         self._read = read
 
     @property
+    def n(self):
+        return self._operand.n
+
+    @property
     def has_displacement(self):
         return base.operand_has_displacement(self._operand)
 
