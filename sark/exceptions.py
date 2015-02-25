@@ -104,3 +104,9 @@ class SarkErrorNameAlreadyExists(SarkError):
 
 class SarkSetNameFailed(SarkError):
     pass
+
+class SarkSwitchError(SarkError):
+    pass
+
+class SarkNotASwitch(SarkSwitchError):
+    pass
