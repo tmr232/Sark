@@ -11,6 +11,24 @@ from .. import exceptions
 
 NAME_VALID_CHARS = string.ascii_letters + string.digits + "?_:"
 
+DTYP_TO_SIZE = {
+    idaapi.dt_byte: 1,
+    idaapi.dt_word: 2,
+    idaapi.dt_dword: 4,
+    idaapi.dt_float: 4,
+    idaapi.dt_double: 8,
+    idaapi.dt_qword: 8,
+    idaapi.dt_byte16: 16,
+    idaapi.dt_fword: 6,
+    idaapi.dt_3byte: 3,
+    idaapi.dt_byte32: 32,
+    idaapi.dt_byte64: 64,
+}
+
+
+def dtyp_to_size(dtyp):
+    return DTYP_TO_SIZE[dtyp]
+
 
 def is_ea_call(ea):
     inst = idautils.DecodeInstruction(ea)
@@ -64,15 +82,15 @@ def get_register_name(reg_id, size=4):
     return idaapi.get_reg_name(reg_id, size)
 
 
-def operand_has_displacement(opcode):
-    if opcode.type in (idaapi.o_phrase, idaapi.o_displ):
+def operand_has_displacement(operand):
+    if operand.type in (idaapi.o_phrase, idaapi.o_displ):
         return True
 
     return False
 
 
-def operand_get_displacement(opcode):
-    return opcode.addr
+def operand_get_displacement(operand):
+    return operand.addr
 
 
 def is_same_function(ea1, ea2):

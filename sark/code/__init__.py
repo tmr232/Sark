@@ -12,6 +12,10 @@ from . import switch
 
 reload(switch)
 
+from . import instruction
+
+reload(instruction)
+
 from .base import *
 from .line import Line, iter_lines
 from .function import Function, iter_functions

@@ -5,6 +5,7 @@ import idc
 from .base import is_ea_call
 from ..core import fix_addresses
 from .xref import Xref
+from .instruction import Instruction
 
 
 class Comments(object):
@@ -118,7 +119,7 @@ class Line(object):
 
     @property
     def inst(self):
-        return idautils.DecodeInstruction(self.ea)
+        return Instruction(self.ea)
 
     @property
     def color(self):

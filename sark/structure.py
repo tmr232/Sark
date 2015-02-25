@@ -5,27 +5,13 @@ import idautils
 import idc
 from collections import namedtuple, defaultdict
 import operator
-from .code import iter_lines
+from .code import iter_lines, dtyp_to_size
 
 
 FF_TYPES = [idc.FF_BYTE, idc.FF_WORD, idc.FF_DWRD, idc.FF_QWRD, idc.FF_OWRD, ]
 FF_SIZES = [1, 2, 4, 8, 16, ]
 
 SIZE_TO_TYPE = dict(zip(FF_SIZES, FF_TYPES))
-
-DTYP_TO_SIZE = {
-    idaapi.dt_byte: 1,
-    idaapi.dt_word: 2,
-    idaapi.dt_dword: 4,
-    idaapi.dt_float: 4,
-    idaapi.dt_double: 8,
-    idaapi.dt_qword: 8,
-    idaapi.dt_byte16: 16,
-    idaapi.dt_fword: 6,
-    idaapi.dt_3byte: 3,
-    idaapi.dt_byte32: 32,
-    idaapi.dt_byte64: 64,
-}
 
 STRUCT_ERROR_MAP = {
     idc.STRUC_ERROR_MEMBER_NAME:
@@ -94,9 +80,6 @@ def add_struct_member(sid, name, offset, size):
 StructOffset = namedtuple("StructOffset", "offset size")
 OperandRef = namedtuple("OperandRef", "ea n")
 
-
-def dtyp_to_size(dtyp):
-    return DTYP_TO_SIZE[dtyp]
 
 
 def infer_struct_offsets(start, end, reg_name):
