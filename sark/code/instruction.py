@@ -30,6 +30,7 @@ class Operand(object):
 
     @property
     def n(self):
+        """Index of the operand in the instruction."""
         return self._operand.n
 
     @property
@@ -45,22 +46,27 @@ class Operand(object):
 
     @property
     def size(self):
+        """Size of the operand."""
         return base.dtyp_to_size(self._operand.dtyp)
 
     @property
     def is_read(self):
+        """Is the operand value used in the instruction."""
         return self._read
 
     @property
     def is_write(self):
+        """Is the operand value changed in the instruction."""
         return self._write
 
     @property
     def reg_id(self):
+        """ID of the register used in the operand."""
         return self._operand.reg
 
     @property
     def reg(self):
+        """Name of the register used in the operand."""
         return base.get_register_name(self.reg_id, self.size)
 
 
@@ -100,4 +106,5 @@ class Instruction(object):
 
     @property
     def regs(self):
+        """Names of all registers used by the instruction."""
         return set(operand.reg for operand in self.operands)
