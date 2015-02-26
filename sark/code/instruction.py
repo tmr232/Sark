@@ -100,4 +100,4 @@ class Instruction(object):
 
     @property
     def regs(self):
-        return [operand.reg for operand in self.operands]
+        return set(operand.reg for operand in self.operands)
