@@ -95,6 +95,10 @@ class Instruction(object):
     def feature(self):
         return self._inst.get_canon_feature()
 
+    @property
+    def mnem(self):
+        return self._inst.get_canon_mnem()
+
     def has_reg(self, reg_name):
         return any(operand.has_reg(reg_name) for operand in self.operands)
 
