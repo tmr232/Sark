@@ -29,6 +29,7 @@ Dependencies
 1. `NetworkX <https://networkx.github.io/>`_
 2. `clipboard <https://pypi.python.org/pypi/clipboard/0.0.4>`_
 3. `AwesomeLib <https://github.com/tmr232/awesomelib>`_
+4. `wrapt <https://pypi.python.org/pypi/wrapt>`_
 
 
 Installation

@@ -14,6 +14,30 @@ Return values for update:
     AST_DISABLE           // analog of ::AST_ENABLE
 """
 import idaapi
+import idc
+from threading import RLock
+import wrapt
+
+
+class Update(object):
+    LOCK = RLock()
+
+    def __enter__(self):
+        self.LOCK.acquire(blocking=0)
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        can_update = self.LOCK._is_owned()
+
+        if can_update:
+            idc.Refresh()
+
+        self.LOCK.release()
+
+
+@wrapt.decorator
+def update_ui(wrapped, instance, args, kwargs):
+    with Update():
+        return wrapped(*args, **kwargs)
 
 
 # Make sure API is supported to enable use of other functionality in older versions.
@@ -116,3 +140,5 @@ if idaapi.IDA_SDK_VERSION >= 670:
             :return: None
             """
             raise NotImplementedError()
+
+
