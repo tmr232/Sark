@@ -8,7 +8,10 @@ from .xref import Xref
 
 
 class Function(object):
-    def __init__(self, ea):
+    def __init__(self, ea=None):
+        if ea is None:
+            ea = idc.here()
+
         self._func = get_func(ea)
 
     def __eq__(self, other):

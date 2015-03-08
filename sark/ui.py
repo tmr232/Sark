@@ -35,7 +35,7 @@ class Update(object):
 
 
 @wrapt.decorator
-def update_ui(wrapped, instance, args, kwargs):
+def updates_ui(wrapped, instance, args, kwargs):
     with Update():
         return wrapped(*args, **kwargs)
 

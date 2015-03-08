@@ -6,6 +6,7 @@ from .base import is_ea_call
 from ..core import fix_addresses
 from .xref import Xref
 from .instruction import Instruction
+from ..ui import updates_ui
 
 
 class Comments(object):
@@ -34,6 +35,7 @@ class Comments(object):
         return "\n".join(iter(lines.next, None))
 
     @anterior.setter
+    @updates_ui
     def anterior(self, comment):
         index = 0
 
@@ -48,6 +50,7 @@ class Comments(object):
         return "\n".join(iter(lines.next, None))
 
     @posterior.setter
+    @updates_ui
     def posterior(self, comment):
         index = 0
 
@@ -56,9 +59,25 @@ class Comments(object):
 
         idc.DelExtLnB(self._ea, index + 1)
 
+    def __repr__(self):
+        return ("Comments("
+                "ea=0x{ea:08X},"
+                " reqular={regular},"
+                " repeat={repeat},"
+                " anterior={anterior},"
+                " posterior={posterior})").format(
+            ea=self._ea,
+            regular=repr(self.regular),
+            repeat=repr(self.repeat),
+            anterior=repr(self.anterior),
+            posterior=repr(self.posterior))
+
 
 class Line(object):
-    def __init__(self, ea):
+    def __init__(self, ea=None):
+        if ea is None:
+            ea = idc.here()
+
         self._ea = idaapi.get_item_head(ea)
         self._comments = Comments(ea)
 
