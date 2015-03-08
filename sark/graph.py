@@ -1,3 +1,4 @@
+import collections
 import networkx as nx
 from .codeblocks import get_nx_graph, get_block_start, codeblock, flowchart
 
@@ -69,3 +70,34 @@ def iter_exit_nodes(ea):
 def mark_exit_nodes(ea, node_color=COLOR_EXIT):
     for block in iter_exit_nodes(ea):
         block.color = node_color
+
+
+def lowest_common_ancestors(G, targets):
+    common_ancestors = None
+    all_ancestors = set()
+    for target in targets:
+        parents = set()
+        q = collections.deque()
+        q.append(target)
+
+        while q:
+            n = q.popleft()
+            if n in parents:
+                continue
+            for p in G.predecessors_iter(n):
+                q.append(p)
+            parents.add(n)
+
+        all_ancestors.update(parents)
+
+        if common_ancestors is None:
+            common_ancestors = parents
+        else:
+            common_ancestors &= parents
+
+    lowest_common = set()
+    for p in common_ancestors:
+        if any(child not in common_ancestors and child in all_ancestors for child in G.successors_iter(p)):
+            lowest_common.add(p)
+
+    return lowest_common
