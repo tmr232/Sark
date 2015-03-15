@@ -125,3 +125,19 @@ def idb_to_graph():
             digraph.add_edge(frm, to)
 
     return digraph
+
+
+def get_lca_graph(G, targets, lca_sources=None):
+    if lca_sources is None:
+        lca_sources = lowest_common_ancestors(G, targets)
+
+    lca_graph = nx.DiGraph()
+
+    for source in lca_sources:
+        for target in targets:
+            path = nx.shortest_path(G, source, target)
+
+            for frm, to in itertools.izip(path[:-1], path[1:]):
+                lca_graph.add_edge(frm, to)
+
+    return lca_graph
