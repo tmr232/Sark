@@ -1,6 +1,10 @@
 import collections
+import itertools
 import networkx as nx
 from .codeblocks import get_nx_graph, get_block_start, codeblock, flowchart
+from .code.function import iter_functions, Function
+from awesome.context import ignored
+from .exceptions import SarkNoFunction
 
 COLOR_REACHABLE = 0x66EE11
 COLOR_UNREACHABLE = 0x6611EE
@@ -101,3 +105,23 @@ def lowest_common_ancestors(G, targets):
             lowest_common.add(p)
 
     return lowest_common
+
+
+def _try_get_function_start(ea):
+    with ignored(SarkNoFunction):
+        return Function(ea).startEA
+
+    return ea
+
+
+def idb_to_graph():
+    digraph = nx.DiGraph()
+
+    for function in iter_functions():
+        for xref in itertools.chain(function.xrefs_from, function.xrefs_to):
+            frm = _try_get_function_start(xref.frm)
+            to = _try_get_function_start(xref.to)
+
+            digraph.add_edge(frm, to)
+
+    return digraph
