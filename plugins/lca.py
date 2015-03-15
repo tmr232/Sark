@@ -79,7 +79,7 @@ class NxGraph(GraphViewer):
 def show_graph():
     idb_graph = sark.graph.idb_to_graph()
     targets = [0x004243C8, 0x004243DC, 0x004243E8, 0x004243F0]
-    targets = [0x00441580, 0x00441584]
+    targets = [0x00441580, 0x00441584, 0x0044157C]
     sources = sark.graph.lowest_common_ancestors(idb_graph, targets)
     lca_graph = sark.graph.get_lca_graph(idb_graph, targets, sources)
     ida_g = NxGraph("Test", lca_graph, sources, targets)
