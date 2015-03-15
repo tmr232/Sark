@@ -115,6 +115,14 @@ def _try_get_function_start(ea):
 
 
 def idb_to_graph():
+    """Export IDB to a NetworkX graph.
+
+    Use xrefs to and from functions to build a DiGraph containing all
+    the functions in the IDB and all the links between them.
+    The graph can later be used to perform analysis on the IDB.
+
+    :return: nx.DiGraph()
+    """
     digraph = nx.DiGraph()
 
     for function in iter_functions():

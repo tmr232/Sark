@@ -53,6 +53,7 @@ def get_block_start(ea):
 
 
 def get_nx_graph(ea):
+    """Convert an IDA flowchart to a NetworkX graph."""
     nx_graph = networkx.DiGraph()
     func = idaapi.get_func(ea)
     flowchart = FlowChart(func)
