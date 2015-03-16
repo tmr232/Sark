@@ -17,6 +17,20 @@ class GraphCloser(action_handler_t):
     def update(self, ctx):
         return AST_ENABLE_ALWAYS
 
+class GraphTest(action_handler_t):
+    def __init__(self, graph):
+        action_handler_t.__init__(self)
+        self.graph = graph
+
+    def activate(self, ctx):
+        a = idaapi.action_activation_ctx_t()
+        print a.cur_ea
+        print ctx
+
+    def update(self, ctx):
+        return AST_ENABLE_ALWAYS
+
+
 
 class NxGraph(GraphViewer):
     def __init__(self, name, graph, sources, targets):
@@ -53,23 +67,28 @@ class NxGraph(GraphViewer):
             return False
         actname = "graph_closer:%s" % self.title
         register_action(action_desc_t(actname, "Close %s" % self.title, GraphCloser(self)))
+        register_action(action_desc_t("Bla", "Do Something", GraphTest(self)))
         attach_action_to_popup(self.GetTCustomControl(), None, actname)
+        attach_action_to_popup(self.GetTCustomControl(), None, "Bla")
 
         ids = self._ids
 
         for source in self._sources:
             ni = idaapi.node_info_t()
-            ni.bg_color = 0xFF00FF
+            ni.bg_color = 0x660066
             self.SetNodeInfo(ids[source], ni, idaapi.NIF_BG_COLOR)
 
         for target in self._targets:
             ni = idaapi.node_info_t()
-            ni.bg_color = 0xFFFF00
+            ni.bg_color = 0x666600
             self.SetNodeInfo(ids[target], ni, idaapi.NIF_BG_COLOR)
 
 
     def OnDblClick(self, node_id):
         Jump(self[node_id])
+
+    def OnSelect(self, node_id):
+        idaapi.msg("\nNode ID: {}".format(node_id))
 
 
 
@@ -79,7 +98,7 @@ class NxGraph(GraphViewer):
 def show_graph():
     idb_graph = sark.graph.idb_to_graph()
     targets = [0x004243C8, 0x004243DC, 0x004243E8, 0x004243F0]
-    targets = [0x00441580, 0x00441584, 0x0044157C]
+    # targets = [0x00441580, 0x00441584, 0x0044157C]
     sources = sark.graph.lowest_common_ancestors(idb_graph, targets)
     lca_graph = sark.graph.get_lca_graph(idb_graph, targets, sources)
     ida_g = NxGraph("Test", lca_graph, sources, targets)
