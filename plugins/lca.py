@@ -57,6 +57,7 @@ class NxGraph(GraphViewer):
 
         self._ids = ids
 
+        self.paint_nodes()
         return True
 
     def OnGetText(self, node_id):
@@ -71,17 +72,10 @@ class NxGraph(GraphViewer):
         attach_action_to_popup(self.GetTCustomControl(), None, actname)
         attach_action_to_popup(self.GetTCustomControl(), None, "Bla")
 
-        ids = self._ids
+        self.paint_nodes()
 
-        for source in self._sources:
-            ni = idaapi.node_info_t()
-            ni.bg_color = 0x660066
-            self.SetNodeInfo(ids[source], ni, idaapi.NIF_BG_COLOR)
+        return True
 
-        for target in self._targets:
-            ni = idaapi.node_info_t()
-            ni.bg_color = 0x666600
-            self.SetNodeInfo(ids[target], ni, idaapi.NIF_BG_COLOR)
 
 
     def OnDblClick(self, node_id):
@@ -90,8 +84,23 @@ class NxGraph(GraphViewer):
     def OnSelect(self, node_id):
         idaapi.msg("\nNode ID: {}".format(node_id))
 
+        return True
 
+    def paint_nodes(self):
+        ids = self._ids
+        for source in self._sources:
+            ni = idaapi.node_info_t()
+            ni.bg_color = 0x660066
+            self.SetNodeInfo(ids[source], ni, idaapi.NIF_BG_COLOR)
+        for target in self._targets:
+            ni = idaapi.node_info_t()
+            ni.bg_color = 0x666600
+            self.SetNodeInfo(ids[target], ni, idaapi.NIF_BG_COLOR)
 
+    def OnActivate(self):
+        self.Refresh()
+
+        self.paint_nodes()
         return True
 
 
