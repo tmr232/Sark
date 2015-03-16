@@ -6,6 +6,8 @@ import sark
 import sark.graph
 import networkx as nx
 import sark.ui
+import idc
+
 
 class GraphCloser(action_handler_t):
     def __init__(self, graph):
@@ -18,6 +20,7 @@ class GraphCloser(action_handler_t):
     def update(self, ctx):
         return AST_ENABLE_ALWAYS
 
+
 class GraphTest(action_handler_t):
     def __init__(self, graph):
         action_handler_t.__init__(self)
@@ -28,6 +31,62 @@ class GraphTest(action_handler_t):
 
     def update(self, ctx):
         return AST_ENABLE_ALWAYS
+
+
+class LCAGraph(GraphViewer):
+    def __init__(self, title):
+        self._title = title
+        GraphViewer.__init__(self, self._title)
+
+        self._targets = set()
+        self._sources = None
+
+        # This might take a while...
+        self._idb_graph = sark.graph.idb_to_graph()
+
+        self._lca_graph = None
+
+    def OnGetText(self, node_id):
+        return idc.Name(self[node_id])
+
+    def Show(self):
+        if not GraphViewer.Show(self):
+            return False
+
+        return True
+
+    def add_target(self, target):
+        self._targets.add(target)
+
+    def add_targets(self, targets):
+        for target in targets:
+            self.add_target(target)
+
+    def OnRefresh(self):
+        self.Clear()
+
+        if self._targets and self._lca_graph is None:
+            # This might take a while...
+            self._lca_graph = sark.graph.get_lca_graph(self._idb_graph, self._targets, self._sources)
+
+        node_ids = {node: self.AddNode(node) for node in self._lca_graph.nodes_iter()}
+
+        for frm, to in self._lca_graph.edges_iter():
+            self.AddEdge(node_ids[frm], node_ids[to])
+
+        return True
+
+    def OnActivate(self):
+        # Refresh on every activation to make sure the names are up to date.
+        self.Refresh()
+
+        return True
+
+    def OnDblClick(self, node_id):
+        # On double-click, jump to the clicked address.
+        idaapi.jumpto(self[node_id])
+
+        return True
 
 
 class NxGraph(GraphViewer):
@@ -143,7 +202,8 @@ def show_graph():
     ida_g.Show()
     return ida_g
 
-g = show_graph()
+
+# g = show_graph()
 
 ######################################################################
 class LCA(idaapi.plugin_t):
@@ -160,7 +220,9 @@ class LCA(idaapi.plugin_t):
         pass
 
     def run(self, arg):
-        pass
+        lca_viewer = LCAGraph("My LCA Graph")
+        map(lca_viewer.add_target, [0x004243C8, 0x004243DC, 0x004243E8, 0x004243F0])
+        lca_viewer.Show()
 
 
 def PLUGIN_ENTRY():
