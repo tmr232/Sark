@@ -33,13 +33,20 @@ class GraphTest(action_handler_t):
         return AST_ENABLE_ALWAYS
 
 
+class ClickHandler(sark.ui.ActionHandler):
+    TEXT = "On Click!"
+
+    def _activate(self, ctx):
+        idaapi.msg("\nHello, World!")
+
+
 class LCAGraph(GraphViewer):
     def __init__(self, title):
         self._title = title
         GraphViewer.__init__(self, self._title)
 
         self._targets = set()
-        self._sources = None
+        self._sources = set()
 
         # This might take a while...
         self._idb_graph = sark.graph.idb_to_graph()
@@ -69,6 +76,7 @@ class LCAGraph(GraphViewer):
 
         if self._targets and self._lca_graph is None:
             # This might take a while...
+            self._sources = sark.graph.lowest_common_ancestors(self._idb_graph, self._targets)
             self._lca_graph = sark.graph.get_lca_graph(self._idb_graph, self._targets, self._sources)
 
         node_ids = {node: self.AddNode(node) for node in self._lca_graph.nodes_iter()}
@@ -96,25 +104,15 @@ class LCAGraph(GraphViewer):
         return True
 
     def OnClick(self, node_id):
-        class Hooks(idaapi.UI_Hooks):
-            def __init__(self, viewer):
-                super(Hooks, self).__init__()
-                self._viewer = viewer
+        ClickHandler.unregister()
+        if self[node_id] in self._targets:
+            return
 
-            def finish_populating_tform_popup(self, form, popup):
-                if form != self._viewer.GetTForm():
-                    idaapi.msg("\nForm Mismatch: {!r} {!r} {!r}".format(form, self._viewer.GetTForm(),
-                                                                        self._viewer.GetTCustomControl()))
-                class ClickHandler(sark.ui.ActionHandler):
-                    TEXT = "On Click!"
+        if self[node_id] in self._sources:
+            return
 
-                    def _activate(self, ctx):
-                        idaapi.msg("\nHello, World!")
-
-                idaapi.attach_dynamic_action_to_popup(form, popup, ClickHandler.get_desc(), None)
-
-        self.hooks = Hooks(self)
-        self.hooks.hook()
+        ClickHandler.register()
+        idaapi.attach_action_to_popup(self.GetTCustomControl(), None, ClickHandler.get_name())
 
 
 class NxGraph(GraphViewer):
