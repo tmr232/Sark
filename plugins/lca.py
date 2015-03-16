@@ -4,7 +4,8 @@ from idautils import *
 from idc import *
 import sark
 import sark.graph
-
+import networkx as nx
+import sark.ui
 
 class GraphCloser(action_handler_t):
     def __init__(self, graph):
@@ -23,13 +24,10 @@ class GraphTest(action_handler_t):
         self.graph = graph
 
     def activate(self, ctx):
-        a = idaapi.action_activation_ctx_t()
-        print a.cur_ea
-        print ctx
+        idaapi.msg("\nNode ID: {}".format(self.graph._current_node_id))
 
     def update(self, ctx):
         return AST_ENABLE_ALWAYS
-
 
 
 class NxGraph(GraphViewer):
@@ -40,22 +38,28 @@ class NxGraph(GraphViewer):
         self._sources = sources
         self._targets = targets
         self._ids = {}
+        self._rids = {}
+        self._current_node_id = 0
 
     def OnRefresh(self):
         self.Clear()
         ids = {}
+        rids = {}
         for frm, to in self._graph.edges_iter():
             if frm not in ids:
                 ids[frm] = self.AddNode(frm)
+                rids[ids[frm]] = frm
             frm = ids[frm]
 
             if to not in ids:
                 ids[to] = self.AddNode(to)
+                rids[ids[to]] = to
             to = ids[to]
 
             self.AddEdge(frm, to)
 
         self._ids = ids
+        self._rids = rids
 
         self.paint_nodes()
         return True
@@ -68,14 +72,29 @@ class NxGraph(GraphViewer):
             return False
         actname = "graph_closer:%s" % self.title
         register_action(action_desc_t(actname, "Close %s" % self.title, GraphCloser(self)))
-        register_action(action_desc_t("Bla", "Do Something", GraphTest(self)))
+        register_action(action_desc_t("Bla1", "Do Something", GraphTest(self)))
         attach_action_to_popup(self.GetTCustomControl(), None, actname)
-        attach_action_to_popup(self.GetTCustomControl(), None, "Bla")
+        attach_action_to_popup(self.GetTCustomControl(), None, "Bla1")
 
         self.paint_nodes()
 
         return True
 
+
+    def OnClick(self, node_id):
+        self.paint_nodes()
+        self._current_node_id = node_id
+
+        # TODO: Use a different color for every target path.
+        if self._rids[node_id] in self._sources:
+            for node in nx.descendants(self._graph, self._rids[node_id]):
+                if node not in self._sources and node not in self._targets:
+                    self.set_node_color(self._ids[node], 0x006666)
+
+        if self._rids[node_id] in self._targets:
+            for node in nx.ancestors(self._graph, self._rids[node_id]):
+                if node not in self._sources and node not in self._targets:
+                    self.set_node_color(self._ids[node], 0x006666)
 
 
     def OnDblClick(self, node_id):
@@ -86,16 +105,26 @@ class NxGraph(GraphViewer):
 
         return True
 
+    def set_node_color(self, node_id, color):
+        ni = idaapi.node_info_t()
+        ni.bg_color = color
+        self.SetNodeInfo(node_id, ni, idaapi.NIF_BG_COLOR)
+
+    def clear_nodes(self):
+        for nid in xrange(self.Count()):
+            self.set_node_color(nid, 0xFFFFFFFF)
+
     def paint_nodes(self):
+        self.clear_nodes()
         ids = self._ids
         for source in self._sources:
-            ni = idaapi.node_info_t()
-            ni.bg_color = 0x660066
-            self.SetNodeInfo(ids[source], ni, idaapi.NIF_BG_COLOR)
+            node_id = ids[source]
+            color = 0x660066
+            self.set_node_color(node_id, color)
         for target in self._targets:
-            ni = idaapi.node_info_t()
-            ni.bg_color = 0x666600
-            self.SetNodeInfo(ids[target], ni, idaapi.NIF_BG_COLOR)
+            node_id = ids[target]
+            color = 0x666600
+            self.set_node_color(node_id, color)
 
     def OnActivate(self):
         self.Refresh()
