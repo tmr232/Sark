@@ -46,6 +46,8 @@ class LCAGraph(GraphViewer):
 
         self._lca_graph = None
 
+        self.hooks = None
+
     def OnGetText(self, node_id):
         return idc.Name(self[node_id])
 
@@ -82,11 +84,37 @@ class LCAGraph(GraphViewer):
 
         return True
 
+    def OnDeactivate(self):
+        # This is an ugly hack. There probably are better ways.
+        if self.hooks:
+            self.hooks.unhook()
+
     def OnDblClick(self, node_id):
         # On double-click, jump to the clicked address.
         idaapi.jumpto(self[node_id])
 
         return True
+
+    def OnClick(self, node_id):
+        class Hooks(idaapi.UI_Hooks):
+            def __init__(self, viewer):
+                super(Hooks, self).__init__()
+                self._viewer = viewer
+
+            def finish_populating_tform_popup(self, form, popup):
+                if form != self._viewer.GetTForm():
+                    idaapi.msg("\nForm Mismatch: {!r} {!r} {!r}".format(form, self._viewer.GetTForm(),
+                                                                        self._viewer.GetTCustomControl()))
+                class ClickHandler(sark.ui.ActionHandler):
+                    TEXT = "On Click!"
+
+                    def _activate(self, ctx):
+                        idaapi.msg("\nHello, World!")
+
+                idaapi.attach_dynamic_action_to_popup(form, popup, ClickHandler.get_desc(), None)
+
+        self.hooks = Hooks(self)
+        self.hooks.hook()
 
 
 class NxGraph(GraphViewer):

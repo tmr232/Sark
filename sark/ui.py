@@ -80,19 +80,13 @@ if idaapi.IDA_SDK_VERSION >= 670:
             return "{}:{}".format(cls.__name__, id(cls))
 
         @classmethod
-        def register(cls):
-            """Register the action.
-
-            Each action MUST be registered before it can be used. To remove the action
-            use the `unregister` method.
-            """
+        def get_desc(cls):
             name = cls.get_name()
             text = cls.TEXT
             handler = cls()
             hotkey = cls.HOTKEY
             tooltip = cls.TOOLTIP
             icon = cls.ICON
-
             action_desc = idaapi.action_desc_t(
                 name,
                 text,
@@ -101,6 +95,16 @@ if idaapi.IDA_SDK_VERSION >= 670:
                 tooltip,
                 icon,
             )
+            return action_desc
+
+        @classmethod
+        def register(cls):
+            """Register the action.
+
+            Each action MUST be registered before it can be used. To remove the action
+            use the `unregister` method.
+            """
+            action_desc = cls.get_desc()
 
             return idaapi.register_action(action_desc)
 
