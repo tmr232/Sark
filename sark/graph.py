@@ -100,9 +100,10 @@ def lowest_common_ancestors(G, targets):
             common_ancestors &= parents
 
     lowest_common = set()
-    for p in common_ancestors:
-        if any(child not in common_ancestors and child in all_ancestors for child in G.successors_iter(p)):
-            lowest_common.add(p)
+    if common_ancestors is not None:
+        for p in common_ancestors:
+            if any(child not in common_ancestors and child in all_ancestors for child in G.successors_iter(p)):
+                lowest_common.add(p)
 
     return lowest_common
 
