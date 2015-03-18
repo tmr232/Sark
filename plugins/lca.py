@@ -1,19 +1,25 @@
-import idaapi
-from idaapi import *
-from idautils import *
-from idc import *
 import sark
 import sark.graph
 import networkx as nx
 import sark.ui
 import idc
+import idaapi
 
 
-class ClickHandler(sark.ui.ActionHandler):
-    TEXT = "On Click!"
+COLOR_SOURCE = 0x364b00
+COLOR_TARGET = 0x601116
+COLOR_DISABLED = 0x000673
+COLOR_PATH = 0x004773
+COLOR_SOURCE_TARGET = 0x634107
 
-    def _activate(self, ctx):
-        idaapi.msg("\nHello, World!")
+PADDING = 1
+PAD_WIDTH = 3
+
+
+def pad(text, padding=PADDING):
+    top_bottom = ("\n" * padding) + " "
+    right_left = " " * padding * PAD_WIDTH
+    return top_bottom + right_left + text + right_left + top_bottom
 
 
 def remove_target_handler(lca_viewer):
@@ -97,10 +103,10 @@ def add_function_handler(lca_viewer):
     return AddFunctionHandler
 
 
-class LCAGraph(GraphViewer):
+class LCAGraph(idaapi.GraphViewer):
     def __init__(self, title):
         self._title = title
-        GraphViewer.__init__(self, self._title)
+        idaapi.GraphViewer.__init__(self, self._title)
 
         self._targets = set()
         self._sources = set()
@@ -121,24 +127,26 @@ class LCAGraph(GraphViewer):
         self._enable_source_handler = enable_source_handler(self)
         self._disable_source_handler = disable_source_handler(self)
 
+        self._node_ids = {}
+
 
     @property
     def current_node_id(self):
         return self._current_node_id
 
     def OnGetText(self, node_id):
-        return idc.Name(self[node_id])
+        return pad(idc.Name(self[node_id]))
 
     def _register_handlers(self):
         for handler in self._handlers:
             handler.register()
 
     def Show(self):
-        if not GraphViewer.Show(self):
+        if not idaapi.GraphViewer.Show(self):
             return False
 
         self._register_handlers()
-
+        self.color_nodes()
         return True
 
     def disable_source(self, source):
@@ -171,6 +179,31 @@ class LCAGraph(GraphViewer):
         # Make sure the disabled sources are still shown.
         self._lca_graph.add_nodes_from(self._disabled_sources)
 
+    def _set_node_bg_color(self, node_id, bg_color):
+        node_info = idaapi.node_info_t()
+        node_info.bg_color = bg_color
+        self.SetNodeInfo(node_id, node_info, idaapi.NIF_BG_COLOR)
+
+    def color_nodes(self):
+        self.clear_nodes()
+        for node_id, node_ea in enumerate(self):
+            if node_ea in self._targets and node_ea in self._sources:
+                self._set_node_bg_color(node_id, COLOR_SOURCE_TARGET)
+
+            elif node_ea in self._disabled_sources:
+                self._set_node_bg_color(node_id, COLOR_DISABLED)
+
+            elif node_ea in self._targets:
+                self._set_node_bg_color(node_id, COLOR_TARGET)
+
+            elif node_ea in self._sources:
+                self._set_node_bg_color(node_id, COLOR_SOURCE)
+
+
+    def clear_nodes(self):
+        for node_id in xrange(self.Count()):
+            self._set_node_bg_color(node_id, 0xFFFFFFFF)
+
 
     def OnRefresh(self):
         self.Clear()
@@ -181,8 +214,12 @@ class LCAGraph(GraphViewer):
 
         node_ids = {node: self.AddNode(node) for node in self._lca_graph.nodes_iter()}
 
+        self._node_ids = node_ids
+
         for frm, to in self._lca_graph.edges_iter():
             self.AddEdge(node_ids[frm], node_ids[to])
+
+        self.color_nodes()
 
         return True
 
@@ -190,6 +227,7 @@ class LCAGraph(GraphViewer):
         # Refresh on every activation to make sure the names are up to date.
         self.Refresh()
         self._register_handlers()
+        self.color_nodes()
         return True
 
     def _unregister_handlers(self):
@@ -209,6 +247,7 @@ class LCAGraph(GraphViewer):
         idaapi.attach_action_to_popup(self.GetTCustomControl(), None, action_name)
 
     def OnClick(self, node_id):
+        self.color_nodes()
         self._current_node_id = node_id
         node_ea = self[node_id]
 
@@ -220,6 +259,10 @@ class LCAGraph(GraphViewer):
             self._remove_target_handler.register()
             self._attach_to_popup(self._remove_target_handler.get_name())
 
+            for ea in nx.ancestors(self._lca_graph, node_ea):
+                if ea not in self._targets and ea not in self._sources:
+                    self._set_node_bg_color(self._node_ids[ea], COLOR_PATH)
+
         if node_ea in self._sources:
             if node_ea in self._disabled_sources:
                 self._enable_source_handler.register()
@@ -228,10 +271,23 @@ class LCAGraph(GraphViewer):
                 self._disable_source_handler.register()
                 self._attach_to_popup(self._disable_source_handler.get_name())
 
+                for ea in nx.descendants(self._lca_graph, node_ea):
+                    if ea not in self._targets and ea not in self._sources:
+                        self._set_node_bg_color(self._node_ids[ea], COLOR_PATH)
+
         return False
 
 
-######################################################################
+def lca_viewer_starter(lca_plugin):
+    class LCAViewerStarter(sark.ui.ActionHandler):
+        TEXT = "LCA Graph"
+        TOOLTIP = "Show an interactive lowest-common-ancestors graph."
+
+        def _activate(self, ctx):
+            lca_plugin.show_graph()
+
+    return LCAViewerStarter
+
 class LCA(idaapi.plugin_t):
     flags = 0
     comment = "Lowest Common Ancestors"
@@ -240,16 +296,25 @@ class LCA(idaapi.plugin_t):
     wanted_hotkey = ""
 
     def init(self):
-        return idaapi.PLUGIN_PROC
+        self._lca_viewer = None
+
+        self._lca_starter = lca_viewer_starter(self)
+        self._lca_starter.register()
+        idaapi.attach_action_to_menu("View/Graph Overview", self._lca_starter.get_name(), idaapi.SETMENU_APP)
+
+        return idaapi.PLUGIN_KEEP
 
     def term(self):
-        pass
+        self._lca_starter.unregister()
+
+    def show_graph(self):
+        if self._lca_viewer is None:
+            self._lca_viewer = LCAGraph("LCA Graph")
+        self._lca_viewer.Show()
+
 
     def run(self, arg):
-        lca_viewer = LCAGraph("My LCA Graph")
-        # map(lca_viewer.add_target, [0x004243C8, 0x004243DC, 0x004243E8, 0x004243F0])
-        lca_viewer.Show()
-
+        self.show_graph()
 
 def PLUGIN_ENTRY():
     return LCA()
