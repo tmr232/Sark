@@ -1,3 +1,4 @@
+from awesome.context import ignored
 import sark
 import sark.graph
 import networkx as nx
@@ -28,10 +29,10 @@ def remove_target_handler(lca_viewer):
 
         def _activate(self, ctx):
             node_id = lca_viewer.current_node_id
-            idaapi.msg("\nLCA: Removing Target: {}".format(idc.Name(lca_viewer[node_id])))
             lca_viewer.remove_target(lca_viewer[node_id])
             lca_viewer.rebuild_graph()
             lca_viewer.Refresh()
+            idaapi.msg("\n[LCA] Target Removed: {}".format(idc.Name(lca_viewer[node_id])))
 
 
     return RemoveTargetHandler
@@ -92,8 +93,6 @@ def add_function_handler(lca_viewer):
             func = idaapi.choose_func("Add LCA Target", 0)
             if not func:
                 return
-
-            idaapi.msg("Got func at {}".format(func.startEA))
 
             lca_viewer.add_target(func.startEA)
             lca_viewer.rebuild_graph()
@@ -156,6 +155,10 @@ class LCAGraph(idaapi.GraphViewer):
         self._disabled_sources.remove(source)
 
     def add_target(self, target):
+        if target not in self._idb_graph.node:
+            idaapi.msg("\n[LCA] Target {} not in IDB graph. Cannot add.".format(idc.Name(target)))
+            raise KeyError("Target {} not in IDB graph.".format(idc.Name(target)))
+
         self._targets.add(target)
 
     def remove_target(self, target):
@@ -288,6 +291,30 @@ def lca_viewer_starter(lca_plugin):
 
     return LCAViewerStarter
 
+
+def idaview_add_target_handler(lca_plugin):
+    class IDAViewAddTargetHandler(sark.ui.ActionHandler):
+        TEXT = "Add LCA Target"
+
+        def _activate(self, ctx):
+            if lca_plugin._lca_viewer:
+                with ignored(KeyError):
+                    lca_plugin._lca_viewer.add_target(ctx.cur_ea)
+                    lca_plugin._lca_viewer.rebuild_graph()
+                    idaapi.msg("\n[LCA] Target Added: {}".format(idc.Name(ctx.cur_ea)))
+
+    return IDAViewAddTargetHandler
+
+
+def idaview_hooks(idaview_handler):
+    class Hooks(idaapi.UI_Hooks):
+        def finish_populating_tform_popup(self, form, popup):
+            if idaapi.get_tform_type(form) == idaapi.BWN_DISASM:
+                idaapi.attach_action_to_popup(form, popup, idaview_handler.get_name(), "")
+
+    return Hooks
+
+
 class LCA(idaapi.plugin_t):
     flags = idaapi.PLUGIN_PROC
     comment = "Lowest Common Ancestors"
@@ -302,10 +329,17 @@ class LCA(idaapi.plugin_t):
         self._lca_starter.register()
         idaapi.attach_action_to_menu("View/Graph Overview", self._lca_starter.get_name(), idaapi.SETMENU_APP)
 
+        self._idaview_handler  = idaview_add_target_handler(self)
+        self._idaview_handler.register()
+        self._hooks = idaview_hooks(self._idaview_handler)()
+        self._hooks.hook()
+
         return idaapi.PLUGIN_KEEP
 
     def term(self):
         self._lca_starter.unregister()
+        self._idaview_handler.unregister()
+        self._hooks.unhook()
 
     def show_graph(self):
         if self._lca_viewer is None:
@@ -315,6 +349,7 @@ class LCA(idaapi.plugin_t):
 
     def run(self, arg):
         self.show_graph()
+
 
 def PLUGIN_ENTRY():
     return LCA()
