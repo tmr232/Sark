@@ -40,6 +40,45 @@ class ClickHandler(sark.ui.ActionHandler):
         idaapi.msg("\nHello, World!")
 
 
+def add_address_handler(lca_viewer):
+    class AddAddressHandler(sark.ui.ActionHandler):
+        TEXT = "Add Target Function"
+        HOTKEY = "Shift+Space"
+
+        def _activate(self, ctx):
+            ea = idaapi.asklong(0, "Add LCA Target")
+            if ea is None:
+                return
+
+            idaapi.msg("Got func at {}".format(ea))
+
+            lca_viewer.add_target(ea)
+            lca_viewer.rebuild_graph()
+            lca_viewer.Refresh()
+
+    return AddAddressHandler
+
+
+def add_function_handler(lca_viewer):
+    class AddFunctionHandler(sark.ui.ActionHandler):
+        TEXT = "Add Target Function"
+        HOTKEY = "Space"
+
+        def _activate(self, ctx):
+            func = idaapi.choose_func("Add LCA Target", 0)
+            if not func:
+                return
+
+            idaapi.msg("Got func at {}".format(func.startEA))
+
+            lca_viewer.add_target(func.startEA)
+            lca_viewer.rebuild_graph()
+            lca_viewer.Refresh()
+            lca_viewer.Show()
+
+    return AddFunctionHandler
+
+
 class LCAGraph(GraphViewer):
     def __init__(self, title):
         self._title = title
@@ -53,14 +92,21 @@ class LCAGraph(GraphViewer):
 
         self._lca_graph = None
 
-        self.hooks = None
+        self._handlers = [add_function_handler(self),
+                          add_address_handler(self)]
 
     def OnGetText(self, node_id):
         return idc.Name(self[node_id])
 
+    def _register_handlers(self):
+        for handler in self._handlers:
+            handler.register()
+
     def Show(self):
         if not GraphViewer.Show(self):
             return False
+
+        self._register_handlers()
 
         return True
 
@@ -71,13 +117,20 @@ class LCAGraph(GraphViewer):
         for target in targets:
             self.add_target(target)
 
+    def rebuild_graph(self):
+        self._sources = sark.graph.lowest_common_ancestors(self._idb_graph, self._targets)
+        if self._sources:
+            self._lca_graph = sark.graph.get_lca_graph(self._idb_graph, self._targets, self._sources)
+        else:
+            self._lca_graph = nx.DiGraph()
+            self._lca_graph.add_nodes_from(self._targets)
+
     def OnRefresh(self):
         self.Clear()
 
         if self._targets and self._lca_graph is None:
             # This might take a while...
-            self._sources = sark.graph.lowest_common_ancestors(self._idb_graph, self._targets)
-            self._lca_graph = sark.graph.get_lca_graph(self._idb_graph, self._targets, self._sources)
+            self.rebuild_graph()
 
         node_ids = {node: self.AddNode(node) for node in self._lca_graph.nodes_iter()}
 
@@ -89,13 +142,15 @@ class LCAGraph(GraphViewer):
     def OnActivate(self):
         # Refresh on every activation to make sure the names are up to date.
         self.Refresh()
-
+        self._register_handlers()
         return True
 
+    def _unregister_handlers(self):
+        for handler in self._handlers:
+            handler.unregister()
+
     def OnDeactivate(self):
-        # This is an ugly hack. There probably are better ways.
-        if self.hooks:
-            self.hooks.unhook()
+        self._unregister_handlers()
 
     def OnDblClick(self, node_id):
         # On double-click, jump to the clicked address.
@@ -240,14 +295,14 @@ class LCA(idaapi.plugin_t):
     wanted_hotkey = ""
 
     def init(self):
-        return idaapi.PLUGIN_KEEP
+        return idaapi.PLUGIN_PROC
 
     def term(self):
         pass
 
     def run(self, arg):
         lca_viewer = LCAGraph("My LCA Graph")
-        map(lca_viewer.add_target, [0x004243C8, 0x004243DC, 0x004243E8, 0x004243F0])
+        # map(lca_viewer.add_target, [0x004243C8, 0x004243DC, 0x004243E8, 0x004243F0])
         lca_viewer.Show()
 
 
