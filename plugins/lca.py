@@ -114,7 +114,7 @@ class LCAGraph(idaapi.GraphViewer):
         # This might take a while...
         self._idb_graph = sark.graph.idb_to_graph()
 
-        self._lca_graph = None
+        self._lca_graph = nx.DiGraph()
 
         self._handlers = [add_function_handler(self),
                           add_address_handler(self)]
@@ -289,7 +289,7 @@ def lca_viewer_starter(lca_plugin):
     return LCAViewerStarter
 
 class LCA(idaapi.plugin_t):
-    flags = 0
+    flags = idaapi.PLUGIN_PROC
     comment = "Lowest Common Ancestors"
     help = "Lowest Common Ancestors"
     wanted_name = "Lowest Common Ancestors"
