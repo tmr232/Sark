@@ -20,6 +20,16 @@ import wrapt
 
 
 class Update(object):
+    """
+    A context manager that refreshes the UI on `__exit__`.
+
+    When nested, only the topmost context manager can update the UI.
+    This is used to make sure that UI-heavy code does not update the
+    UI until it is finished.
+
+    Note that this does not prevent updates via other APIs, so be sure
+    to use this and the `updates_ui` decorator.
+    """
     LOCK = RLock()
 
     def __enter__(self):
@@ -36,6 +46,7 @@ class Update(object):
 
 @wrapt.decorator
 def updates_ui(wrapped, instance, args, kwargs):
+    """Refresh UI on return."""
     with Update():
         return wrapped(*args, **kwargs)
 

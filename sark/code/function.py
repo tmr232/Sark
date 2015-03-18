@@ -7,12 +7,48 @@ from .line import Line
 from .xref import Xref
 
 
+class Comments(object):
+    def __init__(self, function):
+        self._function = function
+
+    @property
+    def regular(self):
+        return idaapi.get_func_cmt(self._function._func, False)
+
+    @regular.setter
+    def regular(self, comment):
+        idaapi.set_func_cmt(self._function._func, comment, False)
+
+    @property
+    def repeat(self):
+        return idaapi.get_func_cmt(self._function._func, True)
+
+    @repeat.setter
+    def repeat(self, comment):
+        idaapi.set_func_cmt(self._function._func, comment, True)
+
+
+    def __repr__(self):
+        return ("Comments("
+                "func={name},"
+                " reqular={regular},"
+                " repeat={repeat})").format(
+            name=self._function.name,
+            regular=repr(self.regular),
+            repeat=repr(self.repeat))
+
+
 class Function(object):
     def __init__(self, ea=None):
         if ea is None:
             ea = idc.here()
 
         self._func = get_func(ea)
+        self._comments = Comments(self)
+
+    @property
+    def comments(self):
+        return self._comments
 
     def __eq__(self, other):
         try:
@@ -78,14 +114,6 @@ class Function(object):
 
     def __repr__(self):
         return 'Function(name="{}", addr=0x{:08X})'.format(self.name, self.startEA)
-
-    @property
-    def comment(self):
-        return idaapi.get_func_cmt(self._func, False)
-
-    @comment.setter
-    def comment(self, value):
-        idaapi.set_func_cmt(self._func, value, False)
 
     @property
     def frame_size(self):

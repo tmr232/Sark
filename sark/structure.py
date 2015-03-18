@@ -7,7 +7,6 @@ from collections import namedtuple, defaultdict
 import operator
 from .code import iter_lines, dtyp_to_size
 
-
 FF_TYPES = [idc.FF_BYTE, idc.FF_WORD, idc.FF_DWRD, idc.FF_QWRD, idc.FF_OWRD, ]
 FF_SIZES = [1, 2, 4, 8, 16, ]
 
@@ -105,6 +104,16 @@ def infer_struct_offsets(start, end, reg_name):
 
 
 def get_common_register(start, end):
+    """Get the register most commonly used in accessing structs.
+
+    Access to is considered for every opcode that accesses memory
+    in an offset from a register::
+
+        mov eax, [ebx + 5]
+
+    For every access, the struct-referencing registers, in this case
+    `ebx`, are counted. The most used one is returned.
+    """
     registers = defaultdict(int)
     for line in iter_lines(start, end):
         inst = line.inst
