@@ -50,6 +50,30 @@ Usage
 	0x0044C0C9    0x0044C1C8    'CompareCalendarDates'
     
     
+LCA Graph
+=========
+
+Filename: :code:`lca.py`
+
+Menu: :code:`View/LCA Graph`
+
+Shows a lowest-common-ancestor graph for selected addresses in the code.
+
+Helps in finding core-functions in complex flows.
+
+Usage
+-----
+
+1. Start the viewer (`View/LCA Graph`);
+2. Press `Space` to add a function using the function selector;
+3. Press `Shift + Space` to add an address manually;
+4. When lowest common ancestors exist, a graph will be displayed;
+5. Right click ancestors to disable / enable them;
+6. Right click targets to remote them;
+7. Click on sources or targets to highlight paths.
+
+
+
 Autostruct
 ==========
 
