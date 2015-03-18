@@ -9,35 +9,54 @@ import sark.ui
 import idc
 
 
-class GraphCloser(action_handler_t):
-    def __init__(self, graph):
-        action_handler_t.__init__(self)
-        self.graph = graph
-
-    def activate(self, ctx):
-        self.graph.Close()
-
-    def update(self, ctx):
-        return AST_ENABLE_ALWAYS
-
-
-class GraphTest(action_handler_t):
-    def __init__(self, graph):
-        action_handler_t.__init__(self)
-        self.graph = graph
-
-    def activate(self, ctx):
-        idaapi.msg("\nNode ID: {}".format(self.graph._current_node_id))
-
-    def update(self, ctx):
-        return AST_ENABLE_ALWAYS
-
-
 class ClickHandler(sark.ui.ActionHandler):
     TEXT = "On Click!"
 
     def _activate(self, ctx):
         idaapi.msg("\nHello, World!")
+
+
+def remove_target_handler(lca_viewer):
+    class RemoveTargetHandler(sark.ui.ActionHandler):
+        TEXT = "Remove Target"
+
+        def _activate(self, ctx):
+            node_id = lca_viewer.current_node_id
+            idaapi.msg("\nLCA: Removing Target: {}".format(idc.Name(lca_viewer[node_id])))
+            lca_viewer.remove_target(lca_viewer[node_id])
+            lca_viewer.rebuild_graph()
+            lca_viewer.Refresh()
+
+
+    return RemoveTargetHandler
+
+
+def disable_source_handler(lca_viewer):
+    class DisableSourceHandler(sark.ui.ActionHandler):
+        TEXT = "Disable Source"
+
+        def _activate(self, ctx):
+            node_id = lca_viewer.current_node_id
+            lca_viewer.disable_source(lca_viewer[node_id])
+            lca_viewer.rebuild_graph()
+            lca_viewer.Refresh()
+
+
+    return DisableSourceHandler
+
+
+def enable_source_handler(lca_viewer):
+    class EnableSourceHandler(sark.ui.ActionHandler):
+        TEXT = "Enable Source"
+
+        def _activate(self, ctx):
+            node_id = lca_viewer.current_node_id
+            lca_viewer.enable_source(lca_viewer[node_id])
+            lca_viewer.rebuild_graph()
+            lca_viewer.Refresh()
+
+
+    return EnableSourceHandler
 
 
 def add_address_handler(lca_viewer):
@@ -50,11 +69,10 @@ def add_address_handler(lca_viewer):
             if ea is None:
                 return
 
-            idaapi.msg("Got func at {}".format(ea))
-
             lca_viewer.add_target(ea)
             lca_viewer.rebuild_graph()
             lca_viewer.Refresh()
+
 
     return AddAddressHandler
 
@@ -95,6 +113,19 @@ class LCAGraph(GraphViewer):
         self._handlers = [add_function_handler(self),
                           add_address_handler(self)]
 
+        self._current_node_id = 0
+
+        self._disabled_sources = set()
+
+        self._remove_target_handler = remove_target_handler(self)
+        self._enable_source_handler = enable_source_handler(self)
+        self._disable_source_handler = disable_source_handler(self)
+
+
+    @property
+    def current_node_id(self):
+        return self._current_node_id
+
     def OnGetText(self, node_id):
         return idc.Name(self[node_id])
 
@@ -110,8 +141,17 @@ class LCAGraph(GraphViewer):
 
         return True
 
+    def disable_source(self, source):
+        self._disabled_sources.add(source)
+
+    def enable_source(self, source):
+        self._disabled_sources.remove(source)
+
     def add_target(self, target):
         self._targets.add(target)
+
+    def remove_target(self, target):
+        self._targets.remove(target)
 
     def add_targets(self, targets):
         for target in targets:
@@ -119,11 +159,18 @@ class LCAGraph(GraphViewer):
 
     def rebuild_graph(self):
         self._sources = sark.graph.lowest_common_ancestors(self._idb_graph, self._targets)
-        if self._sources:
-            self._lca_graph = sark.graph.get_lca_graph(self._idb_graph, self._targets, self._sources)
+
+        # Remove disabled sources from the connected graph.
+        active_sources = self._sources - self._disabled_sources
+        if active_sources:
+            self._lca_graph = sark.graph.get_lca_graph(self._idb_graph, self._targets, active_sources)
         else:
             self._lca_graph = nx.DiGraph()
             self._lca_graph.add_nodes_from(self._targets)
+
+        # Make sure the disabled sources are still shown.
+        self._lca_graph.add_nodes_from(self._disabled_sources)
+
 
     def OnRefresh(self):
         self.Clear()
@@ -158,133 +205,31 @@ class LCAGraph(GraphViewer):
 
         return True
 
-    def OnClick(self, node_id):
-        ClickHandler.unregister()
-        if self[node_id] in self._targets:
-            return
-
-        if self[node_id] in self._sources:
-            return
-
-        ClickHandler.register()
-        idaapi.attach_action_to_popup(self.GetTCustomControl(), None, ClickHandler.get_name())
-
-
-class NxGraph(GraphViewer):
-    def __init__(self, name, graph, sources, targets):
-        self.title = name
-        GraphViewer.__init__(self, self.title)
-        self._graph = graph
-        self._sources = sources
-        self._targets = targets
-        self._ids = {}
-        self._rids = {}
-        self._current_node_id = 0
-
-    def OnRefresh(self):
-        self.Clear()
-        ids = {}
-        rids = {}
-        for frm, to in self._graph.edges_iter():
-            if frm not in ids:
-                ids[frm] = self.AddNode(frm)
-                rids[ids[frm]] = frm
-            frm = ids[frm]
-
-            if to not in ids:
-                ids[to] = self.AddNode(to)
-                rids[ids[to]] = to
-            to = ids[to]
-
-            self.AddEdge(frm, to)
-
-        self._ids = ids
-        self._rids = rids
-
-        self.paint_nodes()
-        return True
-
-    def OnGetText(self, node_id):
-        return Name(self[node_id])
-
-    def Show(self):
-        if not GraphViewer.Show(self):
-            return False
-        actname = "graph_closer:%s" % self.title
-        register_action(action_desc_t(actname, "Close %s" % self.title, GraphCloser(self)))
-        register_action(action_desc_t("Bla1", "Do Something", GraphTest(self)))
-        attach_action_to_popup(self.GetTCustomControl(), None, actname)
-        attach_action_to_popup(self.GetTCustomControl(), None, "Bla1")
-
-        self.paint_nodes()
-
-        return True
-
+    def _attach_to_popup(self, action_name):
+        idaapi.attach_action_to_popup(self.GetTCustomControl(), None, action_name)
 
     def OnClick(self, node_id):
-        self.paint_nodes()
         self._current_node_id = node_id
+        node_ea = self[node_id]
 
-        # TODO: Use a different color for every target path.
-        if self._rids[node_id] in self._sources:
-            for node in nx.descendants(self._graph, self._rids[node_id]):
-                if node not in self._sources and node not in self._targets:
-                    self.set_node_color(self._ids[node], 0x006666)
+        self._remove_target_handler.unregister()
+        self._disable_source_handler.unregister()
+        self._enable_source_handler.unregister()
 
-        if self._rids[node_id] in self._targets:
-            for node in nx.ancestors(self._graph, self._rids[node_id]):
-                if node not in self._sources and node not in self._targets:
-                    self.set_node_color(self._ids[node], 0x006666)
+        if node_ea in self._targets:
+            self._remove_target_handler.register()
+            self._attach_to_popup(self._remove_target_handler.get_name())
 
+        if node_ea in self._sources:
+            if node_ea in self._disabled_sources:
+                self._enable_source_handler.register()
+                self._attach_to_popup(self._enable_source_handler.get_name())
+            else:
+                self._disable_source_handler.register()
+                self._attach_to_popup(self._disable_source_handler.get_name())
 
-    def OnDblClick(self, node_id):
-        Jump(self[node_id])
+        return False
 
-    def OnSelect(self, node_id):
-        idaapi.msg("\nNode ID: {}".format(node_id))
-
-        return True
-
-    def set_node_color(self, node_id, color):
-        ni = idaapi.node_info_t()
-        ni.bg_color = color
-        self.SetNodeInfo(node_id, ni, idaapi.NIF_BG_COLOR)
-
-    def clear_nodes(self):
-        for nid in xrange(self.Count()):
-            self.set_node_color(nid, 0xFFFFFFFF)
-
-    def paint_nodes(self):
-        self.clear_nodes()
-        ids = self._ids
-        for source in self._sources:
-            node_id = ids[source]
-            color = 0x660066
-            self.set_node_color(node_id, color)
-        for target in self._targets:
-            node_id = ids[target]
-            color = 0x666600
-            self.set_node_color(node_id, color)
-
-    def OnActivate(self):
-        self.Refresh()
-
-        self.paint_nodes()
-        return True
-
-
-def show_graph():
-    idb_graph = sark.graph.idb_to_graph()
-    targets = [0x004243C8, 0x004243DC, 0x004243E8, 0x004243F0]
-    # targets = [0x00441580, 0x00441584, 0x0044157C]
-    sources = sark.graph.lowest_common_ancestors(idb_graph, targets)
-    lca_graph = sark.graph.get_lca_graph(idb_graph, targets, sources)
-    ida_g = NxGraph("Test", lca_graph, sources, targets)
-    ida_g.Show()
-    return ida_g
-
-
-# g = show_graph()
 
 ######################################################################
 class LCA(idaapi.plugin_t):
