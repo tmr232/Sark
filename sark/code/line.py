@@ -75,6 +75,13 @@ class Comments(object):
 
 class Line(object):
     def __init__(self, ea=None):
+        """An IDA Line.
+
+        This objects encapsulates many of IDA's line-handling APIs in an easy to use
+        and object oriented way.
+
+        :param ea: Line address. Uses current GUI position if `None`.
+        """
         if ea is None:
             ea = idc.here()
 
@@ -83,14 +90,17 @@ class Line(object):
 
     @property
     def comments(self):
+        """Comments"""
         return self._comments
 
     @property
     def ea(self):
+        """Line EA"""
         return self._ea
 
     @property
     def disasm(self):
+        """Line Disassembly"""
         return idc.GetDisasm(self.ea)
 
     def __repr__(self):
@@ -98,30 +108,43 @@ class Line(object):
 
     @property
     def xrefs_from(self):
+        """Xrefs from this line.
+
+        :return: Xrefs as `sark.code.xref.Xref` objects.
+        """
         return map(Xref, idautils.XrefsFrom(self.ea))
 
     @property
     def drefs_from(self):
+        """Destination addresses of data references from this line."""
         return idautils.DataRefsFrom(self.ea)
 
     @property
     def crefs_from(self):
+        """Destination addresses of code references from this line."""
         return idautils.CodeRefsFrom(self.ea, 1)
 
     @property
     def xrefs_to(self):
+        """Xrefs to this line.
+
+        :return: Xrefs as `sark.code.xref.Xref` objects.
+        """
         return map(Xref, idautils.XrefsTo(self.ea))
 
     @property
     def drefs_to(self):
+        """Source addresses of data references from this line."""
         return idautils.DataRefsTo(self.ea)
 
     @property
     def crefs_to(self):
+        """Source addresses of data references to this line."""
         return idautils.CodeRefsTo(self.ea, 1)
 
     @property
     def size(self):
+        """Size (in bytes) of the line."""
         return idaapi.get_item_size(self.ea)
 
     @property
@@ -130,6 +153,7 @@ class Line(object):
 
     @property
     def name(self):
+        """Name of the line (the label shown in IDA)."""
         return idc.Name(self.ea)
 
     @name.setter
@@ -153,6 +177,12 @@ class Line(object):
 
 
 def lines(start=None, end=None):
+    """Iterate lines in range.
+
+    :param start: Starting address, start of IDB if `None`.
+    :param end: End address, end of IDB if `None`.
+    :return: iterator of `Line` objects.
+    """
     start, end = fix_addresses(start, end)
 
     item = idaapi.get_item_head(start)
