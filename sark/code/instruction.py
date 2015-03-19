@@ -73,12 +73,12 @@ class Operand(object):
 class Instruction(object):
     def __init__(self, ea):
         self._ea = ea
-        self._inst = idautils.DecodeInstruction(ea)
+        self._insn = idautils.DecodeInstruction(ea)
         self._operands = self._make_operands()
 
     def _make_operands(self):
         operands = []
-        for index, operand in enumerate(self._inst.Operands):
+        for index, operand in enumerate(self._insn.Operands):
             if operand.type == idaapi.o_void:
                 break  # No more operands.
             operands.append(Operand(operand,
@@ -93,11 +93,11 @@ class Instruction(object):
 
     @property
     def feature(self):
-        return self._inst.get_canon_feature()
+        return self._insn.get_canon_feature()
 
     @property
     def mnem(self):
-        return self._inst.get_canon_mnem()
+        return self._insn.get_canon_mnem()
 
     def has_reg(self, reg_name):
         return any(operand.has_reg(reg_name) for operand in self.operands)

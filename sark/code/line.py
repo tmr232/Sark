@@ -161,7 +161,7 @@ class Line(object):
         idc.MakeName(self.ea, value)
 
     @property
-    def inst(self):
+    def insn(self):
         return Instruction(self.ea)
 
     @property

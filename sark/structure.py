@@ -84,11 +84,11 @@ def infer_struct_offsets(start, end, reg_name):
     offsets = set()
     operands = []
     for line in lines(start, end):
-        inst = line.inst
-        if not inst.has_reg(reg_name):
+        insn = line.insn
+        if not insn.has_reg(reg_name):
             continue
 
-        for operand in inst.operands:
+        for operand in insn.operands:
             if not operand.has_reg(reg_name):
                 continue
 
@@ -116,9 +116,9 @@ def get_common_register(start, end):
     """
     registers = defaultdict(int)
     for line in lines(start, end):
-        inst = line.inst
+        insn = line.insn
 
-        for operand in inst.operands:
+        for operand in insn.operands:
 
             if not operand.has_displacement:
                 continue
