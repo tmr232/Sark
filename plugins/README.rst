@@ -55,6 +55,8 @@ LCA Graph
 
 Filename: :code:`lca.py`
 
+IDA Version: :code:`>=6.7`
+
 Menu: :code:`View/LCA Graph`
 
 Shows a lowest-common-ancestor graph for selected addresses in the code.
