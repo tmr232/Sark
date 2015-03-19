@@ -6,7 +6,23 @@ import idaapi
 from ..exceptions import SarkNotASwitch
 
 class Switch(object):
+    """IDA Switch
+
+    Access IDA switch data with ease.
+
+    Usage:
+
+        >>> my_switch = Switch(switch_jump_address)
+        >>> for case, target in my_switch:
+        ...     print "{} -> 0x{:08X}".format(case, target)
+
+    """
     def __init__(self, ea):
+        """Initialize a switch parser.
+
+        :param ea: An address of a switch jump instruction.
+        :return:
+        """
         self._ea = ea
 
         results = self._calc_cases()
@@ -37,19 +53,24 @@ class Switch(object):
 
     @property
     def targets(self):
+        """Switch Targets"""
         return self._map.values()
 
     @property
     def cases(self):
+        """Switch Cases"""
         return self._map.keys()
 
     def __iter__(self):
+        """Iterate switch case-target pairs."""
         return self._map.iteritems()
 
     def __getitem__(self, case):
+        """switch[case] -> target"""
         return self._map[case]
 
     def get_case(self, target):
+        """switch.get_case(target) -> case"""
         if target in self.targets:
             return self._reverse_map[target]
 

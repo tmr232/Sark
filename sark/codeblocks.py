@@ -49,6 +49,7 @@ def codeblock(ea):
 
 
 def get_block_start(ea):
+    """Get the start address of an IDA Graph block."""
     return codeblock(ea).startEA
 
 
