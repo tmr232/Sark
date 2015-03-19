@@ -10,11 +10,16 @@ from ..ui import updates_ui
 
 
 class Comments(object):
+    """IDA Line Comments
+
+    Provides easy access to all types of comments for an IDA line.
+    """
     def __init__(self, ea):
         self._ea = ea
 
     @property
     def regular(self):
+        """Regular Comment"""
         return idc.Comment(self._ea)
 
     @regular.setter
@@ -23,6 +28,7 @@ class Comments(object):
 
     @property
     def repeat(self):
+        """Repeatable Comment"""
         return idc.RptCmt(self._ea)
 
     @repeat.setter
@@ -31,6 +37,7 @@ class Comments(object):
 
     @property
     def anterior(self):
+        """Anterior Comment"""
         lines = (idc.LineA(self._ea, index) for index in itertools.count())
         return "\n".join(iter(lines.next, None))
 
@@ -46,6 +53,7 @@ class Comments(object):
 
     @property
     def posterior(self):
+        """Posterior Comment"""
         lines = (idc.LineB(self._ea, index) for index in itertools.count())
         return "\n".join(iter(lines.next, None))
 
@@ -74,11 +82,14 @@ class Comments(object):
 
 
 class Line(object):
-    def __init__(self, ea=None):
-        """An IDA Line.
+    """
+    An IDA Line.
 
-        This objects encapsulates many of IDA's line-handling APIs in an easy to use
-        and object oriented way.
+    This objects encapsulates many of IDA's line-handling APIs in an easy to use
+    and object oriented way.
+    """
+    def __init__(self, ea=None):
+        """__init__
 
         :param ea: Line address. Uses current GUI position if `None`.
         """
@@ -162,10 +173,12 @@ class Line(object):
 
     @property
     def insn(self):
+        """Instruction"""
         return Instruction(self.ea)
 
     @property
     def color(self):
+        """Line color in IDA View"""
         return idc.GetColor(self.ea, idc.CIC_ITEM)
 
     @color.setter
