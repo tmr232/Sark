@@ -17,6 +17,6 @@ from . import instruction
 reload(instruction)
 
 from .base import *
-from .line import Line, iter_lines
-from .function import Function, iter_functions
+from .line import Line, lines
+from .function import Function, functions
 from .switch import Switch

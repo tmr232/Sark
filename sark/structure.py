@@ -5,7 +5,7 @@ import idautils
 import idc
 from collections import namedtuple, defaultdict
 import operator
-from .code import iter_lines, dtyp_to_size
+from .code import lines, dtyp_to_size
 
 FF_TYPES = [idc.FF_BYTE, idc.FF_WORD, idc.FF_DWRD, idc.FF_QWRD, idc.FF_OWRD, ]
 FF_SIZES = [1, 2, 4, 8, 16, ]
@@ -83,7 +83,7 @@ OperandRef = namedtuple("OperandRef", "ea n")
 def infer_struct_offsets(start, end, reg_name):
     offsets = set()
     operands = []
-    for line in iter_lines(start, end):
+    for line in lines(start, end):
         inst = line.inst
         if not inst.has_reg(reg_name):
             continue
@@ -115,7 +115,7 @@ def get_common_register(start, end):
     `ebx`, are counted. The most used one is returned.
     """
     registers = defaultdict(int)
-    for line in iter_lines(start, end):
+    for line in lines(start, end):
         inst = line.inst
 
         for operand in inst.operands:

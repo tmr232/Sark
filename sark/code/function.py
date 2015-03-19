@@ -125,7 +125,7 @@ def iter_function_lines(func_ea):
         yield Line(line)
 
 
-def iter_functions(start=None, end=None):
+def functions(start=None, end=None):
     start, end = fix_addresses(start, end)
 
     for func_t in idautils.Functions(start, end):

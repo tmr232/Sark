@@ -2,7 +2,7 @@ import collections
 import itertools
 import networkx as nx
 from .codeblocks import get_nx_graph, get_block_start, codeblock, flowchart
-from .code.function import iter_functions, Function
+from .code.function import functions, Function
 from awesome.context import ignored
 from .exceptions import SarkNoFunction
 
@@ -126,7 +126,7 @@ def idb_to_graph():
     """
     digraph = nx.DiGraph()
 
-    for function in iter_functions():
+    for function in functions():
         for xref in itertools.chain(function.xrefs_from, function.xrefs_to):
             frm = _try_get_function_start(xref.frm)
             to = _try_get_function_start(xref.to)

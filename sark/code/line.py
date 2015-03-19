@@ -152,7 +152,7 @@ class Line(object):
         idc.SetColor(self.ea, idc.CIC_ITEM, color)
 
 
-def iter_lines(start=None, end=None):
+def lines(start=None, end=None):
     start, end = fix_addresses(start, end)
 
     item = idaapi.get_item_head(start)
