@@ -2,6 +2,11 @@ import idaapi
 
 
 class XrefType(object):
+    """Xref Type Wrapper.
+
+    Provides easy to use parsing of xref types.
+    All the properties are flag checks on the type value.
+    """
     TYPES = {
         0x00: 'Data_Unknown',
         0x01: 'Data_Offset',
@@ -21,7 +26,16 @@ class XrefType(object):
         self._type = type_
 
     @property
+    def type(self):
+        """Raw `type` value
+
+        Use this if you need to pass the xref type around as a number.
+        """
+        return self._type
+
+    @property
     def name(self):
+        """Name of the xref type."""
         return self.TYPES[self._type]
 
     def __repr__(self):
@@ -93,6 +107,12 @@ class XrefType(object):
 
 
 class Xref(object):
+    """Xref Object
+
+    Provides easy access to xref attributes.
+    Most interesting data (xref type) is accessible via the `.type`
+    attribute.
+    """
     def __init__(self, xref):
         for attr in [ 'frm', 'to', 'iscode', 'user' ]:
             setattr(self, attr, getattr(xref, attr))
