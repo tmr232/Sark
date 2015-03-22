@@ -5,6 +5,16 @@ from . import exceptions
 
 
 def get_func(func_ea):
+    """get_func(func_t or ea) -> func_t
+
+    Take an IDA function (`idaapi.func_t`) or an address (EA) and return
+    an IDA function object.
+
+    Use this when APIs can take either a function or an address.
+
+    :param func_ea: `idaapi.func_t` or ea of the function.
+    :return: `idaapi.func_t`
+    """
     if isinstance(func_ea, idaapi.func_t):
         return func_ea
     func = idaapi.get_func(func_ea)
@@ -15,12 +25,20 @@ def get_func(func_ea):
 
 
 def get_ea(func_ea):
+    """get_ea(func_t or ea) -> ea
+
+    Same as `get_func`, but returns the EA.
+
+    :param func_ea: `idaapi.func_t` or EA.
+    :return: The ea.
+    """
     if isinstance(func_ea, idaapi.func_t):
         return func_ea.startEA
     return func_ea
 
 
 def is_string_printable(string_):
+    """Check if a string is printable"""
     return all(char in string.printable for char in string_)
 
 
