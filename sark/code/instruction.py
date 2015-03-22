@@ -22,16 +22,92 @@ OPND_READ_FLAGS = {
 }
 
 
+class OperandType(object):
+    TYPES = {
+        idaapi.o_void: "No_Operand",
+        idaapi.o_reg: "General_Register",
+        idaapi.o_mem: "Direct_Memory_Reference",
+        idaapi.o_phrase: "Memory_Phrase",
+        idaapi.o_displ: "Memory_Displacement",
+        idaapi.o_imm: "Immediate_Value",
+        idaapi.o_far: "Immediate_Far_Address",
+        idaapi.o_near: "Immediate_Near_Address",
+        idaapi.o_idpspec0: "Processor_specific_type",
+    }
+
+    def __init__(self, type_):
+        super(OperandType, self).__init__()
+
+        self._type = type_
+
+    @property
+    def type(self):
+        """Raw `type` value
+
+        Use this if you need to pass the operand type around as a number.
+        """
+        return self._type
+
+    @property
+    def name(self):
+        """Name of the xref type."""
+        return self.TYPES[self._type]
+
+    def __repr__(self):
+        return self.name
+
+    @property
+    def is_void(self):
+        return self._type == idaapi.o_void
+
+    @property
+    def is_reg(self):
+        return self._type == idaapi.o_reg
+
+    @property
+    def is_mem(self):
+        return self._type == idaapi.o_mem
+
+    @property
+    def is_phrase(self):
+        return self._type == idaapi.o_phrase
+
+    @property
+    def is_displ(self):
+        return self._type == idaapi.o_displ
+
+    @property
+    def is_imm(self):
+        return self._type == idaapi.o_imm
+
+    @property
+    def is_far(self):
+        return self._type == idaapi.o_far
+
+    @property
+    def is_near(self):
+        return self._type == idaapi.o_near
+
+    @property
+    def is_special(self):
+        return self._type >= idaapi.o_idpspec0
+
+
 class Operand(object):
     def __init__(self, operand, write=False, read=False):
         self._operand = operand
         self._write = write
         self._read = read
+        self._type = OperandType(operand.type)
 
     @property
     def n(self):
         """Index of the operand in the instruction."""
         return self._operand.n
+
+    @property
+    def type(self):
+        return self._type
 
     @property
     def has_displacement(self):
