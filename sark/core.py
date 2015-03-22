@@ -69,6 +69,15 @@ def iter_find_query(query, start=None, end=None, down=True):
 
 
 def fix_addresses(start=None, end=None):
+    """Set missing addresses to start and end of IDB.
+
+    Take a start and end addresses. If an address is None or `BADADDR`,
+    return start or end addresses of the IDB instead.
+
+    :param start: Start EA. Use `None` to get IDB start.
+    :param end:  End EA. Use `None` to get IDB end.
+    :return: (start, end)
+    """
     if start in (None, idaapi.BADADDR):
         start = idaapi.cvar.inf.minEA
 
@@ -79,6 +88,19 @@ def fix_addresses(start=None, end=None):
 
 
 def set_name(address, name, anyway=False):
+    """Set the name of an address.
+
+    Sets the name of an address in IDA.
+    If the name already exists, check the `anyway` parameter:
+
+        True - Add `_COUNTER` to the name (default IDA behaviour)
+        False - Raise an `exceptions.SarkErrorNameAlreadyExists` exception.
+
+    :param address: The address to rename.
+    :param name: The desired name.
+    :param anyway: Set anyway or not. Defualt `False`.
+    :return: None
+    """
     success = idaapi.set_name(address, name, idaapi.SN_NOWARN | idaapi.SN_NOCHECK)
     if success:
         return
