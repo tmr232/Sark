@@ -1,6 +1,10 @@
 from . import base
 
 reload(base)
+
+from . import xref
+
+reload(xref)
 from . import line
 
 reload(line)

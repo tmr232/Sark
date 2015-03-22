@@ -1,4 +1,5 @@
 import idaapi
+import idc
 
 
 class XrefType(object):
@@ -122,3 +123,12 @@ class Xref(object):
     @property
     def type(self):
         return self._type
+
+    def __repr__(self):
+        return "<Xref(frm={frm}, to={to}, iscode={iscode}, user={user}, type={type})>".format(
+            frm=idc.Name(self.frm) or "0x{:08X}".format(self.frm),
+            to=idc.Name(self.to) or "0x{:08X}".format(self.to),
+            iscode=self.iscode,
+            user=self.user,
+            type=self.type,
+        )
