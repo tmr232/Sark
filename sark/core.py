@@ -39,7 +39,7 @@ def get_ea(func_ea):
 
 def is_string_printable(string_):
     """Check if a string is printable"""
-    return all(char in string.printable for char in string_)
+    return set(string_) - set(string.printable)
 
 
 def string_to_query(string_):
