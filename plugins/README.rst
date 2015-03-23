@@ -131,12 +131,10 @@ Function Flow
 
 Filename: :code:`function_flow.py`
 
-IDA Version: :code:`>=6.7`
-
 Visualize code flow in functions.
 
-Usage
------
+Usage for IDA >= 6.7
+--------------------
 
 1. Go to graph-view;
 2. Right-click the desired block (you may have to left-click it first to set the cursor to it);
@@ -144,17 +142,8 @@ Usage
 4. Click :code:`Mark->Clear` to remove the marks.
 
 
-Function Flow For IDA <=6.6
-===========================
-
-Filename: :code:`function_flow_66.py`
-
-Visualize code flow in functions.
-
-Modified to work with IDA 6.6. This does mean that the UI is a bit less friendly.
-
-Usage
------
+Usage for IDA <= 6.6
+--------------------
 
 1. Go to graph-view;
 2. Left-click the desired block;
