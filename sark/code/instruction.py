@@ -1,5 +1,6 @@
 import idaapi
 import idautils
+import idc
 
 from . import base
 from .. import exceptions
@@ -95,11 +96,12 @@ class OperandType(object):
 
 
 class Operand(object):
-    def __init__(self, operand, write=False, read=False):
+    def __init__(self, operand, ea, write=False, read=False):
         self._operand = operand
         self._write = write
         self._read = read
         self._type = OperandType(operand.type)
+        self._ea = ea
 
     @property
     def n(self):
@@ -147,6 +149,9 @@ class Operand(object):
         """Name of the register used in the operand."""
         return base.get_register_name(self.reg_id, self.size)
 
+    def __repr__(self):
+        return idc.GetOpnd(self._ea, self.n)
+
 
 class Instruction(object):
     def __init__(self, ea):
@@ -164,6 +169,7 @@ class Instruction(object):
             if operand.type == idaapi.o_void:
                 break  # No more operands.
             operands.append(Operand(operand,
+                                    self._ea,
                                     write=self.is_operand_written_to(index),
                                     read=self.is_operand_read_from(index)))
         return operands
