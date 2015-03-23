@@ -110,3 +110,6 @@ class SarkSwitchError(SarkError):
 
 class SarkNotASwitch(SarkSwitchError):
     pass
+
+class SarkNoInstruction(SarkError):
+    pass

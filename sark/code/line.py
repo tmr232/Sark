@@ -14,6 +14,7 @@ class Comments(object):
 
     Provides easy access to all types of comments for an IDA line.
     """
+
     def __init__(self, ea):
         self._ea = ea
 
@@ -88,6 +89,7 @@ class Line(object):
     This objects encapsulates many of IDA's line-handling APIs in an easy to use
     and object oriented way.
     """
+
     def __init__(self, ea=None):
         """__init__
 
@@ -98,6 +100,26 @@ class Line(object):
 
         self._ea = idaapi.get_item_head(ea)
         self._comments = Comments(ea)
+
+    @property
+    def flags(self):
+        return idaapi.getFlags(self.ea)
+
+    @property
+    def is_code(self):
+        return idaapi.isCode(self.flags)
+
+    @property
+    def is_data(self):
+        return idaapi.isData(self.flags)
+
+    @property
+    def is_unknown(self):
+        return idaapi.isUnknown(self.flags)
+
+    @property
+    def is_tail(self):
+        return idaapi.isTail(self.flags)
 
     @property
     def comments(self):
@@ -159,10 +181,6 @@ class Line(object):
         return idaapi.get_item_size(self.ea)
 
     @property
-    def is_call(self):
-        return is_ea_call(self.ea)
-
-    @property
     def name(self):
         """Name of the line (the label shown in IDA)."""
         return idc.Name(self.ea)
@@ -179,10 +197,18 @@ class Line(object):
     @property
     def color(self):
         """Line color in IDA View"""
-        return idc.GetColor(self.ea, idc.CIC_ITEM)
+        color = idc.GetColor(self.ea, idc.CIC_ITEM)
+        if color == 0xFFFFFFFF:
+            return None
+
+        return color
 
     @color.setter
     def color(self, color):
+        """Line Color in IDA View.
+
+        Set color to `None` to clear the color.
+        """
         if color is None:
             color = 0xFFFFFFFF
 

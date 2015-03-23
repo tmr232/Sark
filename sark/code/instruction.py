@@ -2,6 +2,7 @@ import idaapi
 import idautils
 
 from . import base
+from .. import exceptions
 
 OPND_WRITE_FLAGS = {
     0: idaapi.CF_CHG1,
@@ -150,6 +151,10 @@ class Instruction(object):
     def __init__(self, ea):
         self._ea = ea
         self._insn = idautils.DecodeInstruction(ea)
+
+        if self._insn is None:
+            raise exceptions.SarkNoInstruction("No Instruction at 0x{:08X}.".format(ea))
+
         self._operands = self._make_operands()
 
     def _make_operands(self):
@@ -188,3 +193,15 @@ class Instruction(object):
     def regs(self):
         """Names of all registers used by the instruction."""
         return set(operand.reg for operand in self.operands)
+
+    @property
+    def is_call(self):
+        return idaapi.is_call_insn(self._ea)
+
+    @property
+    def is_ret(self):
+        return idaapi.is_ret_insn(self._ea)
+
+    @property
+    def is_indirect_jump(self):
+        return idaapi.is_indirect_jump_insn(self._ea)
