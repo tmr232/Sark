@@ -2,7 +2,6 @@ import itertools
 import idaapi
 import idautils
 import idc
-from .base import is_ea_call
 from ..core import fix_addresses
 from .xref import Xref
 from .instruction import Instruction
@@ -103,22 +102,27 @@ class Line(object):
 
     @property
     def flags(self):
+        """`FF_*` Flags. See `bytes.hpp`."""
         return idaapi.getFlags(self.ea)
 
     @property
     def is_code(self):
+        """Is the line code."""
         return idaapi.isCode(self.flags)
 
     @property
     def is_data(self):
+        """Is the line data."""
         return idaapi.isData(self.flags)
 
     @property
     def is_unknown(self):
+        """Is the line unknown."""
         return idaapi.isUnknown(self.flags)
 
     @property
     def is_tail(self):
+        """Is the line a tail."""
         return idaapi.isTail(self.flags)
 
     @property

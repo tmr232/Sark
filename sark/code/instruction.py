@@ -108,6 +108,7 @@ class Operand(object):
 
     @property
     def type(self):
+        """Operand type."""
         return self._type
 
     @property
@@ -170,23 +171,29 @@ class Instruction(object):
 
     @property
     def operands(self):
+        """Instruction's Operands."""
         return self._operands
 
     @property
     def feature(self):
+        """Canonical Features"""
         return self._insn.get_canon_feature()
 
     @property
     def mnem(self):
+        """Instruction Mnemonic"""
         return self._insn.get_canon_mnem()
 
     def has_reg(self, reg_name):
+        """Check if a register is used in the instruction."""
         return any(operand.has_reg(reg_name) for operand in self.operands)
 
     def is_operand_written_to(self, operand_index):
+        """Check if an operand is written to (destination operand)."""
         return bool(self.feature & OPND_WRITE_FLAGS[operand_index])
 
     def is_operand_read_from(self, operand_index):
+        """Check if an operand is read from (source operand)."""
         return bool(self.feature & OPND_READ_FLAGS[operand_index])
 
     @property
@@ -196,12 +203,15 @@ class Instruction(object):
 
     @property
     def is_call(self):
+        """Is the instruction a call instruction."""
         return idaapi.is_call_insn(self._ea)
 
     @property
     def is_ret(self):
+        """Is the instruction a return instruction."""
         return idaapi.is_ret_insn(self._ea)
 
     @property
     def is_indirect_jump(self):
+        """Is the instruction an indirect jump instruction."""
         return idaapi.is_indirect_jump_insn(self._ea)
