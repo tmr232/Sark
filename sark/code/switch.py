@@ -43,6 +43,8 @@ class Switch(object):
         if not results:
             raise SarkNotASwitch("Seems like 0x{:08X} is not a switch jump instruction.".format(self._ea))
 
+        return results
+
     def _build_map(self, results):
         switch_map = {}
         for cases, target in izip(results.cases, results.targets):
