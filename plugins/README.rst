@@ -29,8 +29,9 @@ Function Strings
 Filename: :code:`function_strings.py`
 
 Hotkey: :code:`Alt + 9`
+Hotkey: :code:`Ctrl + Alt + 9`
 
-Quickly see all strings referenced by the current function.
+Quickly see all strings referenced by the current function or highlighted function.
 
 Usage
 -----
@@ -39,16 +40,19 @@ Usage
 2. Press :code:`Alt+9`;
 3. Check the output window::
 
-	String References in ??0CDateTime@@QAE@XZ:0x0044C057
-	From          To            String
-	0x0044C06B    0x0044C10C    'k'
-	0x0044C07E    0x0044C128    'AdjustCalendarDate'
-	0x0044C089    0x0044C13C    'ConvertCalDateTimeToSystemTime'
-	0x0044C095    0x0044C15C    'ConvertSystemTimeToCalDateTime'
-	0x0044C0A2    0x0044C17C    'GetCalendarMonthsInYear'
-	0x0044C0AF    0x0044C194    'GetCalendarDaysInMonth'
-	0x0044C0BC    0x0044C1AC    'GetCalendarDifferenceInDays'
-	0x0044C0C9    0x0044C1C8    'CompareCalendarDates'
+    String References in ??0CDateTime@@QAE@XZ:0x0044C057
+    From          To            String
+    0x0044C06B    0x0044C10C    'k'
+    0x0044C07E    0x0044C128    'AdjustCalendarDate'
+    0x0044C089    0x0044C13C    'ConvertCalDateTimeToSystemTime'
+    0x0044C095    0x0044C15C    'ConvertSystemTimeToCalDateTime'
+    0x0044C0A2    0x0044C17C    'GetCalendarMonthsInYear'
+    0x0044C0AF    0x0044C194    'GetCalendarDaysInMonth'
+    0x0044C0BC    0x0044C1AC    'GetCalendarDifferenceInDays'
+    0x0044C0C9    0x0044C1C8    'CompareCalendarDates'
+
+4. To show the strings for a highlighted function (the function name is under the cursor),
+    use :code:`Ctrl + Alt + 9`.
     
     
 LCA Graph
@@ -94,12 +98,12 @@ Usage
 
 1. Select the desired code (highlight it)::
 
-	# IDA-view
-	mov     eax, [ebx]
-	mov     cx, [ebx+4]
-	mov     dl, [ebx+6]
-	mov     dh, [ebx+7]
-	mov     esi, [ebx+8]
+    # IDA-view
+    mov     eax, [ebx]
+    mov     cx, [ebx+4]
+    mov     dl, [ebx+6]
+    mov     dh, [ebx+7]
+    mov     esi, [ebx+8]
     
 2. Press :code:`Shift + T`;
 
@@ -109,21 +113,21 @@ Usage
 
 5. Enjoy your new struct::
 
-	# IDA-view
-	mov     eax, [ebx+my_struct.offset_0]
-	mov     cx, [ebx+my_struct.offset_4]
-	mov     dl, [ebx+my_struct.offset_6]
-	mov     dh, [ebx+my_struct.offset_7]
-	mov     esi, [ebx+my_struct.offset_8]
+    # IDA-view
+    mov     eax, [ebx+my_struct.offset_0]
+    mov     cx, [ebx+my_struct.offset_4]
+    mov     dl, [ebx+my_struct.offset_6]
+    mov     dh, [ebx+my_struct.offset_7]
+    mov     esi, [ebx+my_struct.offset_8]
 
-	# Structure-view
-	         my_struct       struc ; (sizeof=0xC)
-	00000000 offset_0        dd ?                    ; XREF: .text:_createnum(ulong)/r
-	00000004 offset_4        dw ?                    ; XREF: .text:004044E5/r
-	00000006 offset_6        db ?                    ; XREF: .text:004044E9/r
-	00000007 offset_7        db ?                    ; XREF: .text:004044EC/r
-	00000008 offset_8        dd ?                    ; XREF: .text:004044EF/r
-	0000000C my_struct       ends
+    # Structure-view
+             my_struct       struc ; (sizeof=0xC)
+    00000000 offset_0        dd ?                    ; XREF: .text:_createnum(ulong)/r
+    00000004 offset_4        dw ?                    ; XREF: .text:004044E5/r
+    00000006 offset_6        db ?                    ; XREF: .text:004044E9/r
+    00000007 offset_7        db ?                    ; XREF: .text:004044EC/r
+    00000008 offset_8        dd ?                    ; XREF: .text:004044EF/r
+    0000000C my_struct       ends
 
 
 
