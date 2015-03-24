@@ -35,78 +35,91 @@ Dependencies
 Installation
 ------------
 
-### Guidelines
+General
+^^^^^^^
+1. Clone the entire Sark repository;
+2. Add a :code:`*.pth` file to point to it;
+3. Run :code:`pip install -r requirements.txt` to install the requirements;
+4. Install plugins and codecs.
 
-1. Put the :code:`sark` package in your :code:`site-packages` directory.
-2. Run :code:`pip install -r requirements.txt` to install the requirements.
-3. Install the plugins and the codecs.
+Windows
+^^^^^^^
 
-### Windows
-
-First, clone the repository
+First, clone the repository::
 
     git clone https://github.com/tmr232/Sark.git && cd Sark
 
-And install dependencies
+And install dependencies::
 
     pip install -r requirements.txt
 
-Then, add a `*.pth` file to the Python site-packages to point to it
+Then, add a :code:`*.pth` file to the Python site-packages to point to it::
 
     for /f %i in ('python -m site --user-site') do (
         mkdir %i
         echo %cd% > %i\sark.pth
     )
 
-To install plugins, copy `plugins\proxy.py` into IDA's plugin directory (`C:\Program Files (x86)\IDA X.X\plugins`)
-and name it the same as the desired plugin
+To install plugins, copy :code:`plugins\proxy.py` into IDA's plugin directory
+(:code:`C:\Program Files (x86)\IDA X.X\plugins`)
+and name it the same as the desired plugin::
 
     # Installing `autostruct.py`
-    set idaPlugins="C:\Program Files (x86)\IDA X.X\plugins"
-    copy %sarkPlugins%\proxy.py %idaPlugins%\autostruct.py
+    copy plugins\proxy.py C:\Program Files (x86)\IDA 6.7\plugins\autostruct.py
 
-And do the same for codecs (from `codecs\proxy.py` to `C:\Python2.7\lib\encodings`)
+And do the same for codecs (from :code:`codecs\proxy.py` to :code:`C:\Python2.7\lib\encodings`)::
 
     # Installing `hex_bytes.py`
-    set pythonCodecs="C:\Python2.7\lib\encodings"
-    copy %sarkCodecs%\proxy.py %pythonCodecs%\hex_bytes.py
+    copy codecs\proxy.py C:\Python2.7\lib\encodings\hex_bytes.py
+
+To update the code to the latest version simply use::
+
+    git pull
 
 
-### Linux
+Linux
+^^^^^
 
-First, clone the repository
+First, clone the repository::
 
     git clone https://github.com/tmr232/Sark.git && cd Sark
 
-And install dependencies
+And install dependencies::
 
     pip install -r requirements.txt
 
-Then, add a `*.pth` file to the Python site-packages to point to it
+Then, add a :code:`*.pth` file to the Python site-packages to point to it::
 
     mkdir /p $(python -m site --user-site)
     echo $(pwd) > $(python -m site --user-site)/sark.pth
 
-To install plugins, copy `plugins/proxy.py` into IDA's plugin directory and name it the same as the desired plugin
+To install plugins, copy :code:`plugins/proxy.py` into IDA's plugin directory and name it the same as the desired plugin.
+The same goes for codecs (from :code:`codecs/proxy.py`).
 
-    # Installing `autostruct.py`
-    set idaPlugins="C:\Program Files (x86)\IDA X.X\plugins"
-    copy %sarkPlugins%\proxy.py %idaPlugins%\autostruct.py
+To update the code to the latest version simply use::
 
-And do the same for codecs (from `codecs\proxy.py` to `C:\Python2.7\lib\encodings`)
+    git pull
 
-    # Installing `hex_bytes.py`
-    set pythonCodecs="C:\Python2.7\lib\encodings"
-    copy %sarkCodecs%\proxy.py %pythonCodecs%\hex_bytes.py
+Plugins and Codecs
+------------------
 
+The :code:`proxy.py` files in the codecs and the plugins directories enable rapid development
+and deployment by enabling you to use them directly from the Sark repository, without needing
+to copy them again and again.
 
-Plugin Installation
--------------------
+Both proxy files use the location of the Sark module itself to find the their corresponding
+directories. If your directory structure differs from::
 
-1. Set the :code:`sarkPlugins` environment variable to point to your Sark plugins directory, or modify
-   :code:`proxy.py` to contain the correct path.
-2. For every plugin you want to use, copy :code:`proxy.py` to the IDA plugins directory, and rename it
-   to the name of the desired plugin.
+    Sark
+    +---codecs
+    +---plugins
+    +---sark
+
+You need to set two environment variables to get the proxies to work. Set :code:`sarkPlugins`
+to the location of the plugins directory, and :code:`sarkCodecs` to the codecs directory.
+
+However, I highly recommend adhering to the aforementioned directory structure as it enables
+quick updates (:code:`git pull`.)
 
 
 Other Useful Plugins

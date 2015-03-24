@@ -16,7 +16,8 @@ from any directory you choose.
 Usage
 -----
 
-1. Set the :code:`sarkPlugins` environment variable to point to your Sark plugins directory;
+1. Set the :code:`sarkPlugins` environment variable to point to your Sark plugins directory
+    if not set, the path will default to :code:`sarkPackagePath/../plugins`;
 2. Place a copy of :code:`proxy.py` in the IDA plugins directory;
 3. Rename the copy to the name of the plugin you want;
 4. Repeat steps 2 and 3 as needed.

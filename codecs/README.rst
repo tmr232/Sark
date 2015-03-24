@@ -16,6 +16,8 @@ To install, set the :code:`sarkCodecs` environment variable to the Sark codecs d
 then copy the proxy to Python's codec directory (:code:`C:\Python27\Lib\encodings`)
 and rename it to the name of the desired Sark-codec.
 
+If :code:`sarkCodecs` is not set, the path will default to :code:`sarkPackagePath/../codecs`.
+
 Codecs
 ------
 
