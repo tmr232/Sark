@@ -89,11 +89,18 @@ class Line(object):
     and object oriented way.
     """
 
-    def __init__(self, ea=None):
+    def __init__(self, ea=None, name=None):
         """__init__
 
         :param ea: Line address. Uses current GUI position if `None`.
         """
+        if None not in (ea, name):
+            raise ValueError(("Either supply a name or an address (ea). "
+                              "Not both. (ea={!r}, name={!r})").format(ea, name))
+
+        if name is not None:
+            ea = idc.LocByName(name)
+
         if ea is None:
             ea = idc.here()
 
@@ -219,7 +226,7 @@ class Line(object):
         idc.SetColor(self.ea, idc.CIC_ITEM, color)
 
 
-def lines(start=None, end=None):
+def lines(start=None, end=None, reverse=False):
     """Iterate lines in range.
 
     :param start: Starting address, start of IDB if `None`.
@@ -228,7 +235,14 @@ def lines(start=None, end=None):
     """
     start, end = fix_addresses(start, end)
 
-    item = idaapi.get_item_head(start)
-    while item < end:
-        yield Line(item)
-        item += idaapi.get_item_size(item)
+    if not reverse:
+        item = idaapi.get_item_head(start)
+        while item < end:
+            yield Line(item)
+            item += idaapi.get_item_size(item)
+
+    else:  # if reverse:
+        item = idaapi.get_item_head(end - 1)
+        while item > start:
+            yield Line(item)
+            item = idaapi.get_item_head(item - 1)

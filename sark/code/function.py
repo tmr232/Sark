@@ -12,6 +12,7 @@ class Comments(object):
 
     Provides easy access to all types of comments for an IDA Function.
     """
+
     def __init__(self, function):
         self._function = function
 
@@ -49,7 +50,15 @@ class Function(object):
 
     Provides easy access to function related APIs in IDA.
     """
-    def __init__(self, ea=None):
+
+    def __init__(self, ea=None, name=None):
+        if None not in (ea, name):
+            raise ValueError(("Either supply a name or an address (ea). "
+                              "Not both. (ea={!r}, name={!r})").format(ea, name))
+
+        if name is not None:
+            ea = idc.LocByName(name)
+
         if ea is None:
             ea = idc.here()
 

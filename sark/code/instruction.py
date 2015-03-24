@@ -147,10 +147,16 @@ class Operand(object):
     @property
     def reg(self):
         """Name of the register used in the operand."""
-        return base.get_register_name(self.reg_id, self.size)
+        if self.type.is_reg:
+            return base.get_register_name(self.reg_id, self.size)
+        else:
+            raise exceptions.SarkOperandWithoutReg("Operand does not have a register.")
+
+    def __str__(self):
+        return idc.GetOpnd(self._ea, self.n)
 
     def __repr__(self):
-        return idc.GetOpnd(self._ea, self.n)
+        return "<Operand(n={}, text={!r})>".format(self.n, str(self))
 
 
 class Instruction(object):
@@ -205,7 +211,7 @@ class Instruction(object):
     @property
     def regs(self):
         """Names of all registers used by the instruction."""
-        return set(operand.reg for operand in self.operands)
+        return set(operand.reg for operand in self.operands if operand.type.is_reg)
 
     @property
     def is_call(self):

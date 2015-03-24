@@ -125,9 +125,21 @@ class Xref(object):
         return self._type
 
     def __repr__(self):
+        frm = idc.Name(self.frm)
+        if frm:
+            frm = repr(frm)
+        else:
+            frm = "0x{:08X}".format(self.frm)
+
+        to = idc.Name(self.to)
+        if frm:
+            to = repr(to)
+        else:
+            to = "0x{:08X}".format(self.to)
+
         return "<Xref(frm={frm}, to={to}, iscode={iscode}, user={user}, type={type})>".format(
-            frm=idc.Name(self.frm) or "0x{:08X}".format(self.frm),
-            to=idc.Name(self.to) or "0x{:08X}".format(self.to),
+            frm=frm,
+            to=to,
             iscode=self.iscode,
             user=self.user,
             type=self.type,
