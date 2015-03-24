@@ -4,8 +4,9 @@ Python Codec Proxy
 import imp
 from os import path
 
-# Set this to the folder where your codecs are stored.
-CODECS_DIR = path.expandvars("$sarkCodecs")
+# `CODECS_DIR` should point to your custom codecs directory.
+# To get it to work without sark, just replace the `CODECS_DIR` with an actual path.
+from sark.plumbing import CODECS_DIR
 
 # Load the codecs based on the filename of the proxy
 name = __name__.split(".")[-1]

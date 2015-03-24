@@ -35,9 +35,70 @@ Dependencies
 Installation
 ------------
 
+### Guidelines
+
 1. Put the :code:`sark` package in your :code:`site-packages` directory.
 2. Run :code:`pip install -r requirements.txt` to install the requirements.
-3. Install the plugins.
+3. Install the plugins and the codecs.
+
+### Windows
+
+First, clone the repository
+
+    git clone https://github.com/tmr232/Sark.git && cd Sark
+
+And install dependencies
+
+    pip install -r requirements.txt
+
+Then, add a `*.pth` file to the Python site-packages to point to it
+
+    for /f %i in ('python -m site --user-site') do (
+        mkdir %i
+        echo %cd% > %i\sark.pth
+    )
+
+To install plugins, copy `plugins\proxy.py` into IDA's plugin directory (`C:\Program Files (x86)\IDA X.X\plugins`)
+and name it the same as the desired plugin
+
+    # Installing `autostruct.py`
+    set idaPlugins="C:\Program Files (x86)\IDA X.X\plugins"
+    copy %sarkPlugins%\proxy.py %idaPlugins%\autostruct.py
+
+And do the same for codecs (from `codecs\proxy.py` to `C:\Python2.7\lib\encodings`)
+
+    # Installing `hex_bytes.py`
+    set pythonCodecs="C:\Python2.7\lib\encodings"
+    copy %sarkCodecs%\proxy.py %pythonCodecs%\hex_bytes.py
+
+
+### Linux
+
+First, clone the repository
+
+    git clone https://github.com/tmr232/Sark.git && cd Sark
+
+And install dependencies
+
+    pip install -r requirements.txt
+
+Then, add a `*.pth` file to the Python site-packages to point to it
+
+    mkdir /p $(python -m site --user-site)
+    echo $(pwd) > $(python -m site --user-site)/sark.pth
+
+To install plugins, copy `plugins/proxy.py` into IDA's plugin directory and name it the same as the desired plugin
+
+    # Installing `autostruct.py`
+    set idaPlugins="C:\Program Files (x86)\IDA X.X\plugins"
+    copy %sarkPlugins%\proxy.py %idaPlugins%\autostruct.py
+
+And do the same for codecs (from `codecs\proxy.py` to `C:\Python2.7\lib\encodings`)
+
+    # Installing `hex_bytes.py`
+    set pythonCodecs="C:\Python2.7\lib\encodings"
+    copy %sarkCodecs%\proxy.py %pythonCodecs%\hex_bytes.py
+
 
 Plugin Installation
 -------------------
