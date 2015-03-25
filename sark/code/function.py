@@ -89,6 +89,9 @@ class Function(object):
         """Start Address"""
         return self._func.startEA
 
+    # Alias for `startEA` for increased guessability and less typing.
+    ea = startEA
+
     @property
     def endEA(self):
         """End Address
