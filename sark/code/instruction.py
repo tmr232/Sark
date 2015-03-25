@@ -147,7 +147,7 @@ class Operand(object):
     @property
     def reg(self):
         """Name of the register used in the operand."""
-        if self.type.is_reg:
+        if self.type.is_reg or self.type.is_displ or self.type.is_phrase:
             return base.get_register_name(self.reg_id, self.size)
         else:
             raise exceptions.SarkOperandWithoutReg("Operand does not have a register.")
