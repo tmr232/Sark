@@ -16,6 +16,7 @@ Return values for update:
 import idaapi
 import idc
 from threading import RLock
+import itertools
 import wrapt
 
 
@@ -49,6 +50,109 @@ def updates_ui(wrapped, instance, args, kwargs):
     """Refresh UI on return."""
     with Update():
         return wrapped(*args, **kwargs)
+
+
+class BasicNodeHandler(object):
+    @classmethod
+    def on_get_text(cls, value):
+        return str(value)
+
+    @classmethod
+    def on_click(cls, value):
+        return False
+
+    @classmethod
+    def on_double_click(cls, value):
+        return False
+
+    @classmethod
+    def on_hint(cls, value):
+        return None
+
+
+class AddressNodeHandler(BasicNodeHandler):
+    @classmethod
+    def on_get_text(cls, value):
+        return idc.Name(value)
+
+    @classmethod
+    def on_double_click(cls, value):
+        idaapi.jumpto(value)
+        return False
+
+
+class NXGraph(idaapi.GraphViewer):
+    PAD_WIDTH = 3
+    PADDING = 1
+    HANDLER = "HANDLER"
+    DEFAULT_HANDLER = BasicNodeHandler
+
+    def __init__(self, title, graph, default_handler=DEFAULT_HANDLER):
+        title = self._make_unique_title(title)
+
+        idaapi.GraphViewer.__init__(self, title)
+
+        self._graph = graph
+        self._default_handler = default_handler
+
+    def _pad(self, text, padding=PADDING):
+        top_bottom = ("\n" * padding) + " "
+        right_left = " " * padding * self.PAD_WIDTH
+        return top_bottom + right_left + text + right_left + top_bottom
+
+    def _make_unique_title(self, title):
+        unique_title = title
+
+        for counter in itertools.count():
+            unique_title = "{}-{}".format(title, counter)
+            if not idaapi.find_tform(unique_title):
+                break
+
+        return unique_title
+
+    def _get_handler(self, node_id):
+        node_value = self[node_id]
+        return self._graph.node[node_value].get(self.HANDLER, self._default_handler)
+
+    def OnGetText(self, node_id):
+        handler = self._get_handler(node_id)
+        return self._pad(handler.on_get_text(self[node_id]))
+
+    def Show(self):
+        if not idaapi.GraphViewer.Show(self):
+            return False
+
+        return True
+
+    def OnRefresh(self):
+        self.Clear()
+
+        node_ids = {node: self.AddNode(node) for node in self._graph.nodes_iter()}
+
+        for frm, to in self._graph.edges_iter():
+            self.AddEdge(node_ids[frm], node_ids[to])
+
+        return True
+
+    def OnActivate(self):
+        # Refresh on every activation to keep the graph up to date.
+        self.Refresh()
+        return True
+
+    def OnDeactivate(self):
+        pass
+
+    def OnDblClick(self, node_id):
+        handler = self._get_handler(node_id)
+        return handler.on_double_click(self[node_id])
+
+    def OnClick(self, node_id):
+        handler = self._get_handler(node_id)
+        return handler.on_click(self[node_id])
+
+    def OnHint(self, node_id):
+        handler = self._get_handler(node_id)
+        return handler.on_hint(self[node_id])
 
 
 # Make sure API is supported to enable use of other functionality in older versions.
