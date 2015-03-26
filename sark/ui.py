@@ -120,6 +120,7 @@ class NXGraph(idaapi.GraphViewer):
     Handlers can be specified in one of 2 ways:
         1. By specifying the `default_handler` parameter to the constructor;
         2. By setting the `NXGraph.HANDLER` attribute of a specific node:
+
             >>> my_graph.node[my_node][NXGraph.HANDLER] = MyCustomHandler
 
     Two other useful attribute are `NXGraph.BG_COLOR` and `NXGraph.FRAME_COLOR` that allow
@@ -136,10 +137,8 @@ class NXGraph(idaapi.GraphViewer):
 
 
     To make the graph easier on the eye, node text is padded, adding empty space around it.
-    This behaviour is controlled by the `PAD_WIDTH` and `PADDING` constants. `PADDING`
-    controls the amount of padding to use, `0` is no padding, `2` is two blocks. `PAD_WIDTH`
-    is used to make the left and right padding proportional to the top padding. Since a space
-    is taller than it is wide, it is multiplied by `PAD_WIDTH` to create the padding.
+    `PADDING` is the default amount of padding to use in all directions.
+    `PADDING_WIDTH` scales the padding width.
     To change the padding, simply provide the constructor with a padding to use.
     """
     PAD_WIDTH = 3
