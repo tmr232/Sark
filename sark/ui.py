@@ -1,18 +1,3 @@
-"""
-Reference:
-    http://www.hexblog.com/?p=886
-
-Return values for update:
-    AST_ENABLE_ALWAYS     // enable action and do not call action_handler_t::update() anymore
-    AST_ENABLE_FOR_IDB    // enable action for the current idb. Call action_handler_t::update() when a database is opened/closed
-    AST_ENABLE_FOR_FORM   // enable action for the current form. Call action_handler_t::update() when a form gets/loses focus
-    AST_ENABLE            // enable action - call action_handler_t::update() when anything changes
-
-    AST_DISABLE_ALWAYS    // disable action and do not call action_handler_t::action() anymore
-    AST_DISABLE_FOR_IDB   // analog of ::AST_ENABLE_FOR_IDB
-    AST_DISABLE_FOR_FORM  // analog of ::AST_ENABLE_FOR_FORM
-    AST_DISABLE           // analog of ::AST_ENABLE
-"""
 import idaapi
 import idc
 from threading import RLock
@@ -53,32 +38,63 @@ def updates_ui(wrapped, instance, args, kwargs):
 
 
 class BasicNodeHandler(object):
+    """Basic Node Handler
+
+    This is the base class for all node handlers (for NXGraph).
+    It implements usable defaults for all required events.
+
+    When subclassing, simply replace the events you want to modify.
+    """
     @classmethod
     def on_get_text(cls, value, attrs):
+        """Get the text to display on the node."""
         return str(value)
 
     @classmethod
     def on_click(cls, value, attrs):
+        """Action to perform on click.
+
+        Return `True` to accept the click.
+        """
         return False
 
     @classmethod
     def on_double_click(cls, value, attrs):
+        """Action to perform on double click.
+
+        Return `True` to accept the click.
+        """
         return False
 
     @classmethod
     def on_hint(cls, value, attrs):
+        """Hint to show."""
         return None
 
     @classmethod
     def on_bg_color(cls, value, attrs):
+        """Background color.
+
+        Return `None` for default."""
         return attrs.get(NXGraph.BG_COLOR, None)
 
     @classmethod
     def on_frame_color(cls, value, attrs):
+        """Frame color.
+
+        Return `None` for default."""
         return attrs.get(NXGraph.FRAME_COLOR, None)
 
 
 class AddressNodeHandler(BasicNodeHandler):
+    """Address Node Handler
+
+    Used to display addresses.
+    In addition to the default functionality:
+        1. Shows the name of an address (hex value if no name exists) instead of
+            just the number;
+        2. On double-click, jumps to the address clicked.
+    """
     @classmethod
     def on_get_text(cls, value, attrs):
         return idc.Name(value) or "0x{:08X}".format(value)
@@ -90,6 +106,42 @@ class AddressNodeHandler(BasicNodeHandler):
 
 
 class NXGraph(idaapi.GraphViewer):
+    """NetworkX Graph Viewer
+
+    A utility class for displaying NetworkX graphs inside IDA with ease.
+
+    When showing a graph, the nodes and edges are iterated to create the graph structure.
+    For every node, a "handler" is used to get display parameters:
+        - Text to display
+        - Background and Frame colors
+        - Hint
+        - Actions on click and double-click
+
+    Handlers can be specified in one of 2 ways:
+        1. By specifying the `default_handler` parameter to the constructor;
+        2. By setting the `NXGraph.HANDLER` attribute of a specific node:
+            >>> my_graph.node[my_node][NXGraph.HANDLER] = MyCustomHandler
+
+    Two other useful attribute are `NXGraph.BG_COLOR` and `NXGraph.FRAME_COLOR` that allow
+    specifying colors for your nodes. If not provided, the default color will be used.
+    Note that the handler is responsible for using those attributes, and can therefore
+    modify their behaviour or ignore them completely.
+
+    for more information about handlers see the `BasicNodeHandler` class.
+
+    To display a graph, use:
+
+        >>> viewer = sark.ui.NXGraph(my_graph, title="My Graph")
+        >>> viewer.Show()
+
+
+    To make the graph easier on the eye, node text is padded, adding empty space around it.
+    This behaviour is controlled by the `PAD_WIDTH` and `PADDING` constants. `PADDING`
+    controls the amount of padding to use, `0` is no padding, `2` is two blocks. `PAD_WIDTH`
+    is used to make the left and right padding proportional to the top padding. Since a space
+    is taller than it is wide, it is multiplied by `PAD_WIDTH` to create the padding.
+    To change the padding, simply provide the constructor with a padding to use.
+    """
     PAD_WIDTH = 3
     PADDING = 1
     HANDLER = "HANDLER"
@@ -97,20 +149,37 @@ class NXGraph(idaapi.GraphViewer):
     FRAME_COLOR = "FRAME_COLOR"
     DEFAULT_HANDLER = BasicNodeHandler
 
-    def __init__(self, title, graph, default_handler=DEFAULT_HANDLER):
+    def __init__(self, graph, title="GraphViewer", default_handler=DEFAULT_HANDLER, padding=PADDING):
+        """Initialize the graph viewer.
+
+        To avoid bizarre IDA errors (crashing when creating 2 graphs with the same title,)
+        a counter is appended to the title (similar to "Hex View-1".)
+
+        :param graph: A NetworkX graph to display.
+        :param title: The graph title.
+        :param default_handler: The default node handler to use when accessing node data.
+        :return:
+        """
         title = self._make_unique_title(title)
 
         idaapi.GraphViewer.__init__(self, title)
 
         self._graph = graph
         self._default_handler = default_handler
+        self._padding = padding
 
-    def _pad(self, text, padding=PADDING):
-        top_bottom = ("\n" * padding) + " "
-        right_left = " " * padding * self.PAD_WIDTH
+    def _pad(self, text):
+        """Pad the text."""
+        top_bottom = ("\n" * self._padding) + " "
+        right_left = " " * self._padding * self.PAD_WIDTH
         return top_bottom + right_left + text + right_left + top_bottom
 
     def _make_unique_title(self, title):
+        """Make the title unique.
+
+        Adds a counter to the title to prevent duplicates (which can result
+        in IDA crashing.)
+        """
         unique_title = title
 
         for counter in itertools.count():
@@ -121,19 +190,23 @@ class NXGraph(idaapi.GraphViewer):
         return unique_title
 
     def _get_handler(self, node_id):
+        """Get the handler of a given node."""
         return self._get_attrs(node_id).get(self.HANDLER, self._default_handler)
 
     def _get_attrs(self, node_id):
+        """Get the node's attributes"""
         return self._graph.node[self[node_id]]
 
     def _get_handling_triplet(self, node_id):
+        """_get_handling_triplet(node_id) -> (handler, value, attrs)"""
         handler = self._get_handler(node_id)
-        attrs = self._get_attrs(node_id)
         value = self[node_id]
+        attrs = self._get_attrs(node_id)
 
         return handler, value, attrs
 
     def _OnNodeInfo(self, node_id):
+        """Sets the node info based on its attributes."""
         handler, value, attrs = self._get_handling_triplet(node_id)
         bg_color = handler.on_bg_color(value, attrs)
         frame_color = handler.on_frame_color(value, attrs)
@@ -151,6 +224,7 @@ class NXGraph(idaapi.GraphViewer):
         self.SetNodeInfo(node_id, node_info, flags)
 
     def update_node_info(self):
+        """Sets the node info for all nodes."""
         for node_id, node in enumerate(self):
             self._OnNodeInfo(node_id)
 
@@ -219,6 +293,21 @@ if idaapi.IDA_SDK_VERSION >= 670:
                     idaapi.msg("Activated!")
 
             MyAction.register()
+
+        Additional Documentation:
+            Introduction to `idaapi.action_handler_t`:
+                http://www.hexblog.com/?p=886
+
+            Return values for update (from the SDK):
+                AST_ENABLE_ALWAYS     // enable action and do not call action_handler_t::update() anymore
+                AST_ENABLE_FOR_IDB    // enable action for the current idb. Call action_handler_t::update() when a database is opened/closed
+                AST_ENABLE_FOR_FORM   // enable action for the current form. Call action_handler_t::update() when a form gets/loses focus
+                AST_ENABLE            // enable action - call action_handler_t::update() when anything changes
+
+                AST_DISABLE_ALWAYS    // disable action and do not call action_handler_t::action() anymore
+                AST_DISABLE_FOR_IDB   // analog of ::AST_ENABLE_FOR_IDB
+                AST_DISABLE_FOR_FORM  // analog of ::AST_ENABLE_FOR_FORM
+                AST_DISABLE           // analog of ::AST_ENABLE
         """
         NAME = None
         TEXT = "Default. Replace me!"
@@ -242,6 +331,7 @@ if idaapi.IDA_SDK_VERSION >= 670:
 
         @classmethod
         def get_desc(cls):
+            """Get a descriptor for this handler."""
             name = cls.get_name()
             text = cls.TEXT
             handler = cls()
