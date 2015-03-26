@@ -73,6 +73,10 @@ class BasicNodeHandler(object):
     def on_bg_color(cls, value, attrs):
         return attrs.get(NXGraph.BG_COLOR, None)
 
+    @classmethod
+    def on_frame_color(cls, value, attrs):
+        return attrs.get(NXGraph.FRAME_COLOR, None)
+
 
 class AddressNodeHandler(BasicNodeHandler):
     @classmethod
@@ -90,6 +94,7 @@ class NXGraph(idaapi.GraphViewer):
     PADDING = 1
     HANDLER = "HANDLER"
     BG_COLOR = "BG_COLOR"
+    FRAME_COLOR = "FRAME_COLOR"
     DEFAULT_HANDLER = BasicNodeHandler
 
     def __init__(self, title, graph, default_handler=DEFAULT_HANDLER):
@@ -128,32 +133,37 @@ class NXGraph(idaapi.GraphViewer):
 
         return handler, value, attrs
 
-
-    def _OnBgColor(self, node_id):
+    def _OnNodeInfo(self, node_id):
         handler, value, attrs = self._get_handling_triplet(node_id)
         bg_color = handler.on_bg_color(value, attrs)
-        if bg_color is None:
-            return
+        frame_color = handler.on_frame_color(value, attrs)
 
         node_info = idaapi.node_info_t()
-        node_info.bg_color = bg_color
-        self.SetNodeInfo(node_id, node_info, idaapi.NIF_BG_COLOR)
 
-    def color_nodes(self):
+        if bg_color is not None:
+            node_info.bg_color = bg_color
+
+        if frame_color is not None:
+            node_info.frame_color = frame_color
+
+        flags = node_info.get_flags_for_valid()
+
+        self.SetNodeInfo(node_id, node_info, flags)
+
+    def update_node_info(self):
         for node_id, node in enumerate(self):
-            self._OnBgColor(node_id)
-
+            self._OnNodeInfo(node_id)
 
     def OnGetText(self, node_id):
         handler, value, attrs = self._get_handling_triplet(node_id)
-        self._OnBgColor(node_id)
+        self._OnNodeInfo(node_id)
         return self._pad(handler.on_get_text(value, attrs))
 
     def Show(self):
         if not idaapi.GraphViewer.Show(self):
             return False
 
-        self.color_nodes()
+        self.update_node_info()
 
         return True
 
@@ -165,14 +175,14 @@ class NXGraph(idaapi.GraphViewer):
         for frm, to in self._graph.edges_iter():
             self.AddEdge(node_ids[frm], node_ids[to])
 
-        self.color_nodes()
+        self.update_node_info()
 
         return True
 
     def OnActivate(self):
         # Refresh on every activation to keep the graph up to date.
         self.Refresh()
-        self.color_nodes()
+        self.update_node_info()
         return True
 
     def OnDeactivate(self):
