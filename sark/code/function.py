@@ -51,16 +51,29 @@ class Function(object):
     Provides easy access to function related APIs in IDA.
     """
 
-    def __init__(self, ea=None, name=None):
-        if None not in (ea, name):
+    class UseCurrentAddress(object):
+        """
+        This is a filler object to replace `None` for the EA.
+        In many cases, a programmer can accidentally initialize the
+        `Function` object with `ea=None`, resulting in the current address.
+        Usually, this is not the desired outcome. This object resolves this issue.
+        """
+        pass
+
+    def __init__(self, ea=UseCurrentAddress, name=None):
+        if name is None and ea == self.UseCurrentAddress:
             raise ValueError(("Either supply a name or an address (ea). "
                               "Not both. (ea={!r}, name={!r})").format(ea, name))
 
         if name is not None:
             ea = idc.LocByName(name)
 
-        if ea is None:
+        if ea == self.UseCurrentAddress:
             ea = idc.here()
+
+        else:
+            raise ValueError("`None` is not a valid address. To use the current screen ea, "
+                             "use `Function(ea=Function.UseCurrentAddress)`")
 
         self._func = get_func(ea)
         self._comments = Comments(self)
@@ -106,9 +119,18 @@ class Function(object):
         """Xrefs from the function.
 
         This includes the xrefs from every line in the function, as `Xref` objects.
+        Xrefs are filtered to exclude xrefs that are internal to the function. This
+        means that every xrefs to the function's code will NOT be returned.
+        To get those extra xrefs, you need to iterate the function's lines yourself.
         """
         for line in self.lines:
             for xref in line.xrefs_from:
+                if xref.type.is_flow:
+                    continue
+
+                if Function(xref.to).ea == self.ea:
+                    continue
+
                 yield xref
 
     @property
@@ -171,6 +193,12 @@ class Function(object):
 
     def __repr__(self):
         return 'Function(name="{}", addr=0x{:08X})'.format(self.name, self.startEA)
+
+    def __contains__(self, item):
+        # If the item has an EA, use it. If not, use the item itself assuming it is an EA.
+        ea = getattr(item, "ea", item)
+
+        return Function(ea)
 
     @property
     def frame_size(self):
