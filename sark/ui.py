@@ -54,29 +54,33 @@ def updates_ui(wrapped, instance, args, kwargs):
 
 class BasicNodeHandler(object):
     @classmethod
-    def on_get_text(cls, value):
+    def on_get_text(cls, value, attrs):
         return str(value)
 
     @classmethod
-    def on_click(cls, value):
+    def on_click(cls, value, attrs):
         return False
 
     @classmethod
-    def on_double_click(cls, value):
+    def on_double_click(cls, value, attrs):
         return False
 
     @classmethod
-    def on_hint(cls, value):
+    def on_hint(cls, value, attrs):
         return None
+
+    @classmethod
+    def on_bg_color(cls, value, attrs):
+        return attrs.get(NXGraph.BG_COLOR, None)
 
 
 class AddressNodeHandler(BasicNodeHandler):
     @classmethod
-    def on_get_text(cls, value):
+    def on_get_text(cls, value, attrs):
         return idc.Name(value)
 
     @classmethod
-    def on_double_click(cls, value):
+    def on_double_click(cls, value, attrs):
         idaapi.jumpto(value)
         return False
 
@@ -85,6 +89,7 @@ class NXGraph(idaapi.GraphViewer):
     PAD_WIDTH = 3
     PADDING = 1
     HANDLER = "HANDLER"
+    BG_COLOR = "BG_COLOR"
     DEFAULT_HANDLER = BasicNodeHandler
 
     def __init__(self, title, graph, default_handler=DEFAULT_HANDLER):
@@ -111,16 +116,44 @@ class NXGraph(idaapi.GraphViewer):
         return unique_title
 
     def _get_handler(self, node_id):
-        node_value = self[node_id]
-        return self._graph.node[node_value].get(self.HANDLER, self._default_handler)
+        return self._get_attrs(node_id).get(self.HANDLER, self._default_handler)
+
+    def _get_attrs(self, node_id):
+        return self._graph.node[self[node_id]]
+
+    def _get_handling_triplet(self, node_id):
+        handler = self._get_handler(node_id)
+        attrs = self._get_attrs(node_id)
+        value = self[node_id]
+
+        return handler, value, attrs
+
+
+    def _OnBgColor(self, node_id):
+        handler, value, attrs = self._get_handling_triplet(node_id)
+        bg_color = handler.on_bg_color(value, attrs)
+        if bg_color is None:
+            return
+
+        node_info = idaapi.node_info_t()
+        node_info.bg_color = bg_color
+        self.SetNodeInfo(node_id, node_info, idaapi.NIF_BG_COLOR)
+
+    def color_nodes(self):
+        for node_id, node in enumerate(self):
+            self._OnBgColor(node_id)
+
 
     def OnGetText(self, node_id):
-        handler = self._get_handler(node_id)
-        return self._pad(handler.on_get_text(self[node_id]))
+        handler, value, attrs = self._get_handling_triplet(node_id)
+        self._OnBgColor(node_id)
+        return self._pad(handler.on_get_text(value, attrs))
 
     def Show(self):
         if not idaapi.GraphViewer.Show(self):
             return False
+
+        self.color_nodes()
 
         return True
 
@@ -132,27 +165,30 @@ class NXGraph(idaapi.GraphViewer):
         for frm, to in self._graph.edges_iter():
             self.AddEdge(node_ids[frm], node_ids[to])
 
+        self.color_nodes()
+
         return True
 
     def OnActivate(self):
         # Refresh on every activation to keep the graph up to date.
         self.Refresh()
+        self.color_nodes()
         return True
 
     def OnDeactivate(self):
         pass
 
     def OnDblClick(self, node_id):
-        handler = self._get_handler(node_id)
-        return handler.on_double_click(self[node_id])
+        handler, value, attrs = self._get_handling_triplet(node_id)
+        return handler.on_double_click(value, attrs)
 
     def OnClick(self, node_id):
-        handler = self._get_handler(node_id)
-        return handler.on_click(self[node_id])
+        handler, value, attrs = self._get_handling_triplet(node_id)
+        return handler.on_click(value, attrs)
 
     def OnHint(self, node_id):
-        handler = self._get_handler(node_id)
-        return handler.on_hint(self[node_id])
+        handler, value, attrs = self._get_handling_triplet(node_id)
+        return handler.on_hint(value, attrs)
 
 
 # Make sure API is supported to enable use of other functionality in older versions.
