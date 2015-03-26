@@ -81,7 +81,7 @@ class BasicNodeHandler(object):
 class AddressNodeHandler(BasicNodeHandler):
     @classmethod
     def on_get_text(cls, value, attrs):
-        return idc.Name(value)
+        return idc.Name(value) or "0x{:08X}".format(value)
 
     @classmethod
     def on_double_click(cls, value, attrs):
