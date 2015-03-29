@@ -116,3 +116,12 @@ def set_name(address, name, anyway=False):
         "Can't rename 0x{:08X}. Name {!r} already exists.".format(address, name))
 
 
+def is_same_function(ea1, ea2):
+    func1 = idaapi.get_func(ea1)
+    func2 = idaapi.get_func(ea2)
+    # This is bloated code. `None in (func1, func2)` will not work because of a
+    # bug in IDAPython in the way functions are compared.
+    if any(func is None for func in (func1, func2)):
+        return False
+
+    return func1.startEA == func2.startEA
