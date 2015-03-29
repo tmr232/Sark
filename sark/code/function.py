@@ -2,7 +2,7 @@ import idaapi
 import idautils
 import idc
 from .base import get_func
-from ..core import set_name, get_ea, fix_addresses
+from ..core import set_name, get_ea, fix_addresses, is_same_function
 from .line import Line
 from .xref import Xref
 
@@ -61,17 +61,17 @@ class Function(object):
         pass
 
     def __init__(self, ea=UseCurrentAddress, name=None):
-        if name is None and ea == self.UseCurrentAddress:
+        if name is not None and ea != self.UseCurrentAddress:
             raise ValueError(("Either supply a name or an address (ea). "
                               "Not both. (ea={!r}, name={!r})").format(ea, name))
 
-        if name is not None:
+        elif name is not None:
             ea = idc.LocByName(name)
 
-        if ea == self.UseCurrentAddress:
+        elif ea == self.UseCurrentAddress:
             ea = idc.here()
 
-        else:
+        elif ea is None:
             raise ValueError("`None` is not a valid address. To use the current screen ea, "
                              "use `Function(ea=Function.UseCurrentAddress)`")
 
@@ -128,7 +128,7 @@ class Function(object):
                 if xref.type.is_flow:
                     continue
 
-                if Function(xref.to).ea == self.ea:
+                if xref.to in self:
                     continue
 
                 yield xref
@@ -195,10 +195,11 @@ class Function(object):
         return 'Function(name="{}", addr=0x{:08X})'.format(self.name, self.startEA)
 
     def __contains__(self, item):
+        """Is an item contained (its EA is in) the function."""
         # If the item has an EA, use it. If not, use the item itself assuming it is an EA.
         ea = getattr(item, "ea", item)
 
-        return Function(ea)
+        return is_same_function(ea, self.ea)
 
     @property
     def frame_size(self):
