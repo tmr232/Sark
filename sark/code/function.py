@@ -195,6 +195,7 @@ class Function(object):
         return 'Function(name="{}", addr=0x{:08X})'.format(self.name, self.startEA)
 
     def __contains__(self, item):
+        """Is an item contained (its EA is in) the function."""
         # If the item has an EA, use it. If not, use the item itself assuming it is an EA.
         ea = getattr(item, "ea", item)
 
