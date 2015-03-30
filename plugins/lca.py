@@ -32,7 +32,7 @@ def remove_target_handler(lca_viewer):
             lca_viewer.remove_target(lca_viewer[node_id])
             lca_viewer.rebuild_graph()
             lca_viewer.Refresh()
-            idaapi.msg("\n[LCA] Target Removed: {}".format(idc.Name(lca_viewer[node_id])))
+            idaapi.msg("[LCA] Target Removed: {}\n".format(idc.Name(lca_viewer[node_id])))
 
 
     return RemoveTargetHandler
@@ -156,7 +156,7 @@ class LCAGraph(idaapi.GraphViewer):
 
     def add_target(self, target):
         if target not in self._idb_graph.node:
-            idaapi.msg("\n[LCA] Target {} not in IDB graph. Cannot add.".format(idc.Name(target)))
+            idaapi.msg("[LCA] Target {} not in IDB graph. Cannot add.\n".format(idc.Name(target)))
             raise KeyError("Target {} not in IDB graph.".format(idc.Name(target)))
 
         self._targets.add(target)
@@ -301,7 +301,7 @@ def idaview_add_target_handler(lca_plugin):
                 with ignored(KeyError):
                     lca_plugin._lca_viewer.add_target(ctx.cur_ea)
                     lca_plugin._lca_viewer.rebuild_graph()
-                    idaapi.msg("\n[LCA] Target Added: {}".format(idc.Name(ctx.cur_ea)))
+                    idaapi.msg("[LCA] Target Added: {}\n".format(idc.Name(ctx.cur_ea)))
 
     return IDAViewAddTargetHandler
 

@@ -33,7 +33,7 @@ def show_current_function_strings():
         show_function_strings(function)
 
     except sark.exceptions.SarkNoFunction:
-        idaapi.msg("[FunctionStrings] No function at 0x{:08X}.".format(idc.here()))
+        idaapi.msg("[FunctionStrings] No function at 0x{:08X}.\n".format(idc.here()))
 
 
 def show_highlighted_function_strings():
@@ -46,7 +46,7 @@ def show_highlighted_function_strings():
         show_function_strings(function)
 
     except sark.exceptions.SarkNoFunction:
-        idaapi.msg("[FunctionStrings] {!r} is not a function.".format(identifier))
+        idaapi.msg("[FunctionStrings] {!r} is not a function.\n".format(identifier))
 
 
 class FunctionStrings(idaapi.plugin_t):
