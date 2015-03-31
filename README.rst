@@ -35,13 +35,6 @@ Dependencies
 Installation
 ------------
 
-General
-^^^^^^^
-1. Clone the entire Sark repository;
-2. Add a :code:`*.pth` file to point to it;
-3. Run :code:`pip install -r requirements.txt` to install the requirements;
-4. Install plugins and codecs.
-
 Windows
 ^^^^^^^
 
@@ -60,17 +53,19 @@ Then, add a :code:`*.pth` file to the Python site-packages to point to it::
         echo %cd% > %i\sark.pth
     )
 
+To get everything to work, we *must* install the codecs as they are used throughout the code.
+To do so, copy the proxy codec into Python's encodings directory, and rename it to match the
+desired codec::
+
+    # Installing `hex_bytes.py`
+    copy codecs\proxy.py C:\Python2.7\lib\encodings\hex_bytes.py
+
 To install plugins, copy :code:`plugins\proxy.py` into IDA's plugin directory
 (:code:`C:\Program Files (x86)\IDA X.X\plugins`)
 and name it the same as the desired plugin::
 
     # Installing `autostruct.py`
     copy plugins\proxy.py C:\Program Files (x86)\IDA 6.7\plugins\autostruct.py
-
-And do the same for codecs (from :code:`codecs\proxy.py` to :code:`C:\Python2.7\lib\encodings`)::
-
-    # Installing `hex_bytes.py`
-    copy codecs\proxy.py C:\Python2.7\lib\encodings\hex_bytes.py
 
 To update the code to the latest version simply use::
 
