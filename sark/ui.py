@@ -118,7 +118,7 @@ class NXGraph(idaapi.GraphViewer):
         - Actions on click and double-click
 
     Handlers can be specified in one of 2 ways:
-        1. By specifying the `default_handler` parameter to the constructor;
+        1. By specifying the `handler` parameter to the constructor;
         2. By setting the `NXGraph.HANDLER` attribute of a specific node:
 
             >>> my_graph.node[my_node][NXGraph.HANDLER] = MyCustomHandler
@@ -148,7 +148,7 @@ class NXGraph(idaapi.GraphViewer):
     FRAME_COLOR = "FRAME_COLOR"
     DEFAULT_HANDLER = BasicNodeHandler
 
-    def __init__(self, graph, title="GraphViewer", default_handler=DEFAULT_HANDLER, padding=PADDING):
+    def __init__(self, graph, title="GraphViewer", handler=DEFAULT_HANDLER, padding=PADDING):
         """Initialize the graph viewer.
 
         To avoid bizarre IDA errors (crashing when creating 2 graphs with the same title,)
@@ -156,7 +156,7 @@ class NXGraph(idaapi.GraphViewer):
 
         :param graph: A NetworkX graph to display.
         :param title: The graph title.
-        :param default_handler: The default node handler to use when accessing node data.
+        :param handler: The default node handler to use when accessing node data.
         :return:
         """
         title = self._make_unique_title(title)
@@ -164,7 +164,7 @@ class NXGraph(idaapi.GraphViewer):
         idaapi.GraphViewer.__init__(self, title)
 
         self._graph = graph
-        self._default_handler = default_handler
+        self._default_handler = handler
         self._padding = padding
 
     def _pad(self, text):
