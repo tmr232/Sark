@@ -225,6 +225,16 @@ class Line(object):
 
         idc.SetColor(self.ea, idc.CIC_ITEM, color)
 
+    @property
+    def next(self):
+        """The next line."""
+        return Line(self.ea + self.size + 1)
+
+    @property
+    def prev(self):
+        """The previous line."""
+        return Line(self.ea - 1)
+
 
 def lines(start=None, end=None, reverse=False):
     """Iterate lines in range.
