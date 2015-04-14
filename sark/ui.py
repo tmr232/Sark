@@ -45,41 +45,35 @@ class BasicNodeHandler(object):
 
     When subclassing, simply replace the events you want to modify.
     """
-    @classmethod
-    def on_get_text(cls, value, attrs):
+    def on_get_text(self, value, attrs):
         """Get the text to display on the node."""
         return str(value)
 
-    @classmethod
-    def on_click(cls, value, attrs):
+    def on_click(self, value, attrs):
         """Action to perform on click.
 
         Return `True` to accept the click.
         """
         return False
 
-    @classmethod
-    def on_double_click(cls, value, attrs):
+    def on_double_click(self, value, attrs):
         """Action to perform on double click.
 
         Return `True` to accept the click.
         """
         return False
 
-    @classmethod
-    def on_hint(cls, value, attrs):
+    def on_hint(self, value, attrs):
         """Hint to show."""
         return None
 
-    @classmethod
-    def on_bg_color(cls, value, attrs):
+    def on_bg_color(self, value, attrs):
         """Background color.
 
         Return `None` for default."""
         return attrs.get(NXGraph.BG_COLOR, None)
 
-    @classmethod
-    def on_frame_color(cls, value, attrs):
+    def on_frame_color(self, value, attrs):
         """Frame color.
 
         Return `None` for default."""
@@ -95,12 +89,10 @@ class AddressNodeHandler(BasicNodeHandler):
             just the number;
         2. On double-click, jumps to the address clicked.
     """
-    @classmethod
-    def on_get_text(cls, value, attrs):
+    def on_get_text(self, value, attrs):
         return idc.Name(value) or "0x{:08X}".format(value)
 
-    @classmethod
-    def on_double_click(cls, value, attrs):
+    def on_double_click(self, value, attrs):
         idaapi.jumpto(value)
         return False
 
@@ -121,7 +113,7 @@ class NXGraph(idaapi.GraphViewer):
         1. By specifying the `handler` parameter to the constructor;
         2. By setting the `NXGraph.HANDLER` attribute of a specific node:
 
-            >>> my_graph.node[my_node][NXGraph.HANDLER] = MyCustomHandler
+            >>> my_graph.node[my_node][NXGraph.HANDLER] = MyCustomHandler()
 
     Two other useful attribute are `NXGraph.BG_COLOR` and `NXGraph.FRAME_COLOR` that allow
     specifying colors for your nodes. If not provided, the default color will be used.
@@ -146,7 +138,7 @@ class NXGraph(idaapi.GraphViewer):
     HANDLER = "HANDLER"
     BG_COLOR = "BG_COLOR"
     FRAME_COLOR = "FRAME_COLOR"
-    DEFAULT_HANDLER = BasicNodeHandler
+    DEFAULT_HANDLER = BasicNodeHandler()
 
     def __init__(self, graph, title="GraphViewer", handler=DEFAULT_HANDLER, padding=PADDING):
         """Initialize the graph viewer.
