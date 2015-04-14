@@ -115,6 +115,14 @@ class Function(object):
         return self._func.endEA
 
     @property
+    def flags(self):
+        """The function flags.
+
+        See `idaapi.FUNC_*` constants.
+        """
+        return self._func.flags
+
+    @property
     def xrefs_from(self):
         """Xrefs from the function.
 
