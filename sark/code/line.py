@@ -89,20 +89,30 @@ class Line(object):
     and object oriented way.
     """
 
-    def __init__(self, ea=None, name=None):
-        """__init__
-
-        :param ea: Line address. Uses current GUI position if `None`.
+    class UseCurrentAddress(object):
         """
-        if None not in (ea, name):
+        This is a filler object to replace `None` for the EA.
+        In many cases, a programmer can accidentally initialize the
+        `Line` object with `ea=None`, resulting in the current address.
+        Usually, this is not the desired outcome. This object resolves this issue.
+        """
+        pass
+
+
+    def __init__(self, ea=UseCurrentAddress, name=None):
+        if name is not None and ea != self.UseCurrentAddress:
             raise ValueError(("Either supply a name or an address (ea). "
                               "Not both. (ea={!r}, name={!r})").format(ea, name))
 
-        if name is not None:
+        elif name is not None:
             ea = idc.LocByName(name)
 
-        if ea is None:
+        elif ea == self.UseCurrentAddress:
             ea = idc.here()
+
+        elif ea is None:
+            raise ValueError("`None` is not a valid address. To use the current screen ea, "
+                             "use `Line(ea=Line.UseCurrentAddress)` or supply no `ea`.")
 
         self._ea = idaapi.get_item_head(ea)
         self._comments = Comments(ea)
