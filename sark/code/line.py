@@ -238,7 +238,7 @@ class Line(object):
     @property
     def next(self):
         """The next line."""
-        return Line(self.ea + self.size + 1)
+        return Line(self.ea + self.size)
 
     @property
     def prev(self):
