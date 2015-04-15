@@ -94,6 +94,10 @@ class OperandType(object):
     def is_special(self):
         return self._type >= idaapi.o_idpspec0
 
+    @property
+    def has_reg(self):
+        return self._type in (idaapi.o_reg, idaapi.o_displ, idaapi.o_phrase)
+
 
 class Operand(object):
     def __init__(self, operand, ea, write=False, read=False):
@@ -120,6 +124,8 @@ class Operand(object):
     @property
     def displacement(self):
         return base.operand_get_displacement(self._operand)
+
+    offset = displacement
 
     def has_reg(self, reg_name):
         return base.is_reg_in_operand(self._operand, reg_name)
@@ -152,8 +158,12 @@ class Operand(object):
         else:
             raise exceptions.SarkOperandWithoutReg("Operand does not have a register.")
 
-    def __str__(self):
+    @property
+    def text(self):
         return idc.GetOpnd(self._ea, self.n)
+
+    def __str__(self):
+        return self.text
 
     def __repr__(self):
         return "<Operand(n={}, text={!r})>".format(self.n, str(self))
@@ -211,7 +221,7 @@ class Instruction(object):
     @property
     def regs(self):
         """Names of all registers used by the instruction."""
-        return set(operand.reg for operand in self.operands if operand.type.is_reg)
+        return set(operand.reg for operand in self.operands if operand.type.has_reg)
 
     @property
     def is_call(self):
