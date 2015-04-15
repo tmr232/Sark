@@ -168,8 +168,12 @@ class NXGraph(idaapi.GraphViewer):
     def _make_unique_title(self, title):
         """Make the title unique.
 
-        Adds a counter to the title to prevent duplicates (which can result
-        in IDA crashing.)
+        Adds a counter to the title to prevent duplicates.
+
+        Prior to IDA 6.8, two graphs with the same title could crash IDA.
+        This has been fixed (https://www.hex-rays.com/products/ida/6.8/index.shtml).
+        The code will not change for support of older versions and as it is
+        more usable this way.
         """
         unique_title = title
 
