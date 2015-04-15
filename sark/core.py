@@ -125,3 +125,13 @@ def is_same_function(ea1, ea2):
         return False
 
     return func1.startEA == func2.startEA
+
+
+def get_name_or_address(ea):
+    name = idc.Name(ea)
+    if name:
+        name = repr(name)
+    else:
+        name = "0x{:08X}".format(ea)
+
+    return name
