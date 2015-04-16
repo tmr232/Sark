@@ -71,9 +71,17 @@ class Switch(object):
         """switch[case] -> target"""
         return self._map[case]
 
-    def get_case(self, target):
-        """switch.get_case(target) -> case"""
+    def get_cases(self, target):
+        """switch.get_cases(target) -> [case]"""
         if target in self.targets:
             return self._reverse_map[target]
 
         raise KeyError("Target 0x{:08X} does not exist.".format(target))
+
+
+def is_switch(ea):
+    try:
+        switch = Switch(ea)
+        return True
+    except SarkNotASwitch:
+        return False
