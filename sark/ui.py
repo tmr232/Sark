@@ -156,6 +156,12 @@ class NXGraph(idaapi.GraphViewer):
         idaapi.GraphViewer.__init__(self, title)
 
         self._graph = graph
+
+        # Here we make sure the handler is an instance of `BasicNodeHandler` or inherited
+        # types. While generally being bad Python practice, we still need it here as an
+        # invalid handler can cause IDA to crash.
+        if not isinstance(handler, BasicNodeHandler):
+            raise TypeError("Node handler must inherit from `BasicNodeHandler`.")
         self._default_handler = handler
         self._padding = padding
 
@@ -186,7 +192,16 @@ class NXGraph(idaapi.GraphViewer):
 
     def _get_handler(self, node_id):
         """Get the handler of a given node."""
-        return self._get_attrs(node_id).get(self.HANDLER, self._default_handler)
+        handler = self._get_attrs(node_id).get(self.HANDLER, self._default_handler)
+        
+        # Here we make sure the handler is an instance of `BasicNodeHandler` or inherited
+        # types. While generally being bad Python practice, we still need it here as an
+        # invalid handler can cause IDA to crash.
+        if not isinstance(handler, BasicNodeHandler):
+            idaapi.msg(("Invalid handler for node {}: {}. All handlers must inherit from"
+                       "`BasicNodeHandler`.").format(node_id, handler))
+            handler = self._default_handler
+        return handler
 
     def _get_attrs(self, node_id):
         """Get the node's attributes"""
