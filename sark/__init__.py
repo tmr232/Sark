@@ -21,6 +21,6 @@ if _in_ida:
     reload(data)
 
     from .code import *
-    from .codeblocks import codeblock, get_nx_graph, get_block_start, flowchart
+    from .codeblocks import get_codeblock, get_nx_graph, get_block_start, get_flowchart
     from .data import read_ascii_string
     from .core import set_name

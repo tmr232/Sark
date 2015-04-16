@@ -25,4 +25,4 @@ reload(instruction)
 from .base import *
 from .line import Line, lines
 from .function import Function, functions
-from .switch import Switch
+from .switch import Switch, is_switch

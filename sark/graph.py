@@ -45,7 +45,7 @@ def _try_get_function_start(ea):
     return ea
 
 
-def idb_to_graph():
+def get_idb_graph():
     """Export IDB to a NetworkX graph.
 
     Use xrefs to and from functions to build a DiGraph containing all

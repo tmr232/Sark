@@ -111,7 +111,7 @@ class LCAGraph(idaapi.GraphViewer):
         self._sources = set()
 
         # This might take a while...
-        self._idb_graph = sark.graph.idb_to_graph()
+        self._idb_graph = sark.graph.get_idb_graph()
 
         self._lca_graph = nx.DiGraph()
 
