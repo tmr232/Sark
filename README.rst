@@ -35,6 +35,23 @@ Dependencies
 Installation
 ------------
 
+Basic
+^^^^^
+
+Simply run::
+
+    pip install -e git+https://github.com/tmr232/Sark.git#egg=Sark
+
+
+Plugins
+^^^^^^^
+
+The plugins are not automatically installed. To install them, simply copy the
+plugin files from the repository to IDA's plugin directory.
+
+Developer Installation
+----------------------
+
 Windows
 ^^^^^^^
 
