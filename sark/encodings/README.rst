@@ -9,14 +9,12 @@ Installation
 ============
 
 To make installation of updates easier, a :code:`proxy.py` codec has been created.
-The proxy codec forwards the codec to a codec in the :code:`sarkCodecs` directory
+The proxy codec forwards the codec to a codec in the :code:`sark.encodings` directory
 based on the filename of the proxy.
 
-To install, set the :code:`sarkCodecs` environment variable to the Sark codecs directory,
-then copy the proxy to Python's codec directory (:code:`C:\Python27\Lib\encodings`)
+To install, copy the proxy to Python's codec directory (:code:`C:\Python27\Lib\encodings`)
 and rename it to the name of the desired Sark-codec.
 
-If :code:`sarkCodecs` is not set, the path will default to :code:`sarkPackagePath/../codecs`.
 
 Codecs
 ------

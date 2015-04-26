@@ -1,16 +1,31 @@
-_in_ida = True
+def register_sark_codecs():
+    import codecs
+    from .encodings.hex_bytes import getregentry
 
-try:
-    import idaapi
-    del idaapi
+    def sark_search_function(encoding):
+        codec_info = getregentry()
+        if encoding == codec_info.name:
+            return codec_info
 
-except ImportError:
-    _in_ida = False
+    codecs.register(sark_search_function)
+
+def is_in_ida():
+
+    try:
+        import idaapi
+        return True
+    except ImportError:
+        return False
+
+
+
+# Register the hex-bytes codec.
+register_sark_codecs()
 
 # Since some of our code can be used outside of IDA, namely the `plumbing` module
 # when used in the codecs proxy, we want to allow importing specific modules outside
 # IDA.
-if _in_ida:
+if is_in_ida():
     from . import (core, code, exceptions, structure, codeblocks, data)
 
     reload(code)

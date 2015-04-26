@@ -53,9 +53,8 @@ Then, add a :code:`*.pth` file to the Python site-packages to point to it::
         echo %cd% > %i\sark.pth
     )
 
-To get everything to work, we *must* install the codecs as they are used throughout the code.
-To do so, copy the proxy codec into Python's encodings directory, and rename it to match the
-desired codec::
+To get the codecs to work without importing sark, copy the proxy codec into
+Python's encodings directory, and rename it to match the desired codec::
 
     # Installing `hex_bytes.py`
     copy codecs\proxy.py C:\Python2.7\lib\encodings\hex_bytes.py
@@ -106,12 +105,11 @@ Both proxy files use the location of the Sark module itself to find the their co
 directories. If your directory structure differs from::
 
     Sark
-    +---codecs
     +---plugins
     +---sark
+        +---encodings
 
-You need to set two environment variables to get the proxies to work. Set :code:`sarkPlugins`
-to the location of the plugins directory, and :code:`sarkCodecs` to the codecs directory.
+To get the plugin proxies to work, set :code:`sarkPlugins` to the location of the plugins directory.
 
 However, I highly recommend adhering to the aforementioned directory structure as it enables
 quick updates (:code:`git pull`.)

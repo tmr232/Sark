@@ -1,7 +1,6 @@
 import os
 
 SARK_PLUGINS_ENV_NAME = "sarkPlugins"
-SARK_CODECS_ENV_NAME = "sarkCodecs"
 
 SARK_DEFAULT_PATH = os.path.normpath(os.path.join(os.path.dirname(__file__), "../"))
 
@@ -17,7 +16,8 @@ def get_plugins_dir():
 
 
 def get_codecs_dir():
-    return get_sark_dir("codecs", SARK_CODECS_ENV_NAME)
+    from sark import encodings
+    return os.path.dirname(encodings.__file__)
 
 CODECS_DIR = get_codecs_dir()
 PLUGINS_DIR = get_plugins_dir()
