@@ -63,9 +63,14 @@ class Switch(object):
         """Switch Cases"""
         return self._map.keys()
 
-    def __iter__(self):
-        """Iterate switch case-target pairs."""
+    @property
+    def pairs(self):
+        """(case, target) pairs"""
         return self._map.iteritems()
+
+    def __iter__(self):
+        """Iterate switch cases."""
+        return self._map.iterkeys()
 
     def __getitem__(self, case):
         """switch[case] -> target"""
