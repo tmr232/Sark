@@ -12,6 +12,8 @@ IDA Plugins & IDAPython Scripting Library.
 
 The library is in early development, so APIs are expected to change.
 
+For documentation, see `wiki <https://github.com/tmr232/Sark/wiki>`_.
+
 
 
 Highlights
@@ -35,81 +37,7 @@ Dependencies
 Installation
 ------------
 
-Basic
-^^^^^
-
-Simply run::
-
-    pip install -e git+https://github.com/tmr232/Sark.git#egg=Sark
-
-
-Plugins
-^^^^^^^
-
-The plugins are not automatically installed. To install them, simply copy the
-plugin files from the repository to IDA's plugin directory.
-
-Developer Installation
-----------------------
-
-Windows
-^^^^^^^
-
-First, clone the repository::
-
-    git clone https://github.com/tmr232/Sark.git && cd Sark
-
-And install dependencies::
-
-    pip install -r requirements.txt
-
-Then, add a :code:`*.pth` file to the Python site-packages to point to it::
-
-    for /f %i in ('python -m site --user-site') do (
-        mkdir %i
-        echo %cd% > %i\sark.pth
-    )
-
-To get the codecs to work without importing sark, copy the proxy codec into
-Python's encodings directory, and rename it to match the desired codec::
-
-    # Installing `hex_bytes.py`
-    copy codecs\proxy.py C:\Python2.7\lib\encodings\hex_bytes.py
-
-To install plugins, copy :code:`plugins\proxy.py` into IDA's plugin directory
-(:code:`C:\Program Files (x86)\IDA X.X\plugins`)
-and name it the same as the desired plugin::
-
-    # Installing `autostruct.py`
-    copy plugins\proxy.py C:\Program Files (x86)\IDA 6.7\plugins\autostruct.py
-
-To update the code to the latest version simply use::
-
-    git pull
-
-
-Linux
-^^^^^
-
-First, clone the repository::
-
-    git clone https://github.com/tmr232/Sark.git && cd Sark
-
-And install dependencies::
-
-    pip install -r requirements.txt
-
-Then, add a :code:`*.pth` file to the Python site-packages to point to it::
-
-    mkdir /p $(python -m site --user-site)
-    echo $(pwd) > $(python -m site --user-site)/sark.pth
-
-To install plugins, copy :code:`plugins/proxy.py` into IDA's plugin directory and name it the same as the desired plugin.
-The same goes for codecs (from :code:`codecs/proxy.py`).
-
-To update the code to the latest version simply use::
-
-    git pull
+See `wiki <https://github.com/tmr232/Sark/wiki/Installation>`_.
 
 Plugins and Codecs
 ------------------
