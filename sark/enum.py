@@ -139,9 +139,19 @@ def iter_enum_constant_ids(eid):
                 yield cid
 
 
+def iter_enum_ids():
+    for index in xrange(idaapi.get_enum_qty()):
+        yield idaapi.getn_enum(index)
+
+
+
 def print_enum(name):
     # First, get the enum_id
     eid = idaapi.get_enum(name)
 
     for cid in iter_enum_constant_ids(eid):
         print idaapi.get_enum_member_name(cid)
+
+def print_enums():
+    for eid in iter_enum_ids():
+        print_enum(idaapi.get_enum_name(eid))
