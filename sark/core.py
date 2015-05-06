@@ -1,28 +1,45 @@
 import idaapi
 import idc
 import string
-
 from . import exceptions
 
 
 def get_func(func_ea):
+    """get_func(func_t or ea) -> func_t
+
+    Take an IDA function (`idaapi.func_t`) or an address (EA) and return
+    an IDA function object.
+
+    Use this when APIs can take either a function or an address.
+
+    :param func_ea: `idaapi.func_t` or ea of the function.
+    :return: `idaapi.func_t`
+    """
     if isinstance(func_ea, idaapi.func_t):
         return func_ea
     func = idaapi.get_func(func_ea)
     if func is None:
-        raise exceptions.SarkNoFunction()
+        raise exceptions.SarkNoFunction("No function at 0x{:08X}".format(func_ea))
 
     return func
 
 
 def get_ea(func_ea):
+    """get_ea(func_t or ea) -> ea
+
+    Same as `get_func`, but returns the EA.
+
+    :param func_ea: `idaapi.func_t` or EA.
+    :return: The ea.
+    """
     if isinstance(func_ea, idaapi.func_t):
         return func_ea.startEA
     return func_ea
 
 
 def is_string_printable(string_):
-    return all(char in string.printable for char in string_)
+    """Check if a string is printable"""
+    return set(string_) - set(string.printable)
 
 
 def string_to_query(string_):
@@ -52,27 +69,69 @@ def iter_find_query(query, start=None, end=None, down=True):
 
 
 def fix_addresses(start=None, end=None):
+    """Set missing addresses to start and end of IDB.
+
+    Take a start and end addresses. If an address is None or `BADADDR`,
+    return start or end addresses of the IDB instead.
+
+    :param start: Start EA. Use `None` to get IDB start.
+    :param end:  End EA. Use `None` to get IDB end.
+    :return: (start, end)
+    """
     if start in (None, idaapi.BADADDR):
         start = idaapi.cvar.inf.minEA
+
     if end in (None, idaapi.BADADDR):
         end = idaapi.cvar.inf.maxEA
 
     return start, end
 
 
-def range(start, end=None, step=1):
-    if end is None:
-        end = start
-        start = 0
+def set_name(address, name, anyway=False):
+    """Set the name of an address.
 
-    if cmp(start, end) * step >= 0:
+    Sets the name of an address in IDA.
+    If the name already exists, check the `anyway` parameter:
+
+        True - Add `_COUNTER` to the name (default IDA behaviour)
+        False - Raise an `exceptions.SarkErrorNameAlreadyExists` exception.
+
+    :param address: The address to rename.
+    :param name: The desired name.
+    :param anyway: Set anyway or not. Defualt `False`.
+    :return: None
+    """
+    success = idaapi.set_name(address, name, idaapi.SN_NOWARN | idaapi.SN_NOCHECK)
+    if success:
         return
 
-    value = start
-    while cmp(start, end) * cmp(value, end) > 0:
-        yield value
-        value += step
+    if anyway:
+        success = idaapi.do_name_anyway(address, name)
+        if success:
+            return
+
+        raise exceptions.SarkSetNameFailed("Failed renaming 0x{:08X} to {!r}.".format(address, name))
+
+    raise exceptions.SarkErrorNameAlreadyExists(
+        "Can't rename 0x{:08X}. Name {!r} already exists.".format(address, name))
 
 
-def ilen(iterator):
-    return sum(1 for item in iterator)
+def is_same_function(ea1, ea2):
+    func1 = idaapi.get_func(ea1)
+    func2 = idaapi.get_func(ea2)
+    # This is bloated code. `None in (func1, func2)` will not work because of a
+    # bug in IDAPython in the way functions are compared.
+    if any(func is None for func in (func1, func2)):
+        return False
+
+    return func1.startEA == func2.startEA
+
+
+def get_name_or_address(ea):
+    name = idc.Name(ea)
+    if name:
+        name = repr(name)
+    else:
+        name = "0x{:08X}".format(ea)
+
+    return name

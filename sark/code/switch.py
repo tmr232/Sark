@@ -1,0 +1,92 @@
+from collections import defaultdict
+from itertools import izip
+
+import idaapi
+
+from ..exceptions import SarkNotASwitch
+
+class Switch(object):
+    """IDA Switch
+
+    Access IDA switch data with ease.
+
+    Usage:
+
+        >>> my_switch = Switch(switch_jump_address)
+        >>> for case, target in my_switch:
+        ...     print "{} -> 0x{:08X}".format(case, target)
+
+    """
+    def __init__(self, ea):
+        """Initialize a switch parser.
+
+        :param ea: An address of a switch jump instruction.
+        :return:
+        """
+        self._ea = ea
+
+        results = self._calc_cases()
+
+        self._map = self._build_map(results)
+
+        self._reverse_map = self._build_reverse(self._map)
+
+    def _build_reverse(self, switch_map):
+        reverse_map = defaultdict(list)
+        for case, target in switch_map.iteritems():
+            reverse_map[target].append(case)
+        return reverse_map
+
+    def _calc_cases(self):
+        si = idaapi.get_switch_info_ex(self._ea)
+        results = idaapi.calc_switch_cases(self._ea, si)
+        if not results:
+            raise SarkNotASwitch("Seems like 0x{:08X} is not a switch jump instruction.".format(self._ea))
+
+        return results
+
+    def _build_map(self, results):
+        switch_map = {}
+        for cases, target in izip(results.cases, results.targets):
+            for case in cases:
+                switch_map[case] = target
+
+        return switch_map
+
+    @property
+    def targets(self):
+        """Switch Targets"""
+        return self._map.values()
+
+    @property
+    def cases(self):
+        """Switch Cases"""
+        return self._map.keys()
+
+    @property
+    def pairs(self):
+        """(case, target) pairs"""
+        return self._map.iteritems()
+
+    def __iter__(self):
+        """Iterate switch cases."""
+        return self._map.iterkeys()
+
+    def __getitem__(self, case):
+        """switch[case] -> target"""
+        return self._map[case]
+
+    def get_cases(self, target):
+        """switch.get_cases(target) -> [case]"""
+        if target in self.targets:
+            return self._reverse_map[target]
+
+        raise KeyError("Target 0x{:08X} does not exist.".format(target))
+
+
+def is_switch(ea):
+    try:
+        switch = Switch(ea)
+        return True
+    except SarkNotASwitch:
+        return False

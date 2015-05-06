@@ -1,13 +1,13 @@
 import networkx
 
 import idaapi
-from . import code
+from .code import lines
 
 
 class CodeBlock(idaapi.BasicBlock):
     @property
     def lines(self):
-        return code.iter_lines(self.startEA, self.endEA)
+        return lines(self.startEA, self.endEA)
 
     @property
     def next(self):
@@ -29,30 +29,35 @@ class CodeBlock(idaapi.BasicBlock):
     def color(self, color):
         self.set_color(color)
 
+    def __repr__(self):
+        return "<CodeBlock(startEA=0x{:08X}, endEA=0x{:08X})>".format(self.startEA, self.endEA)
+
 
 class FlowChart(idaapi.FlowChart):
     def _getitem(self, index):
         return CodeBlock(index, self._q[index], self)
 
 
-def flowchart(ea):
+def get_flowchart(ea):
     func = idaapi.get_func(ea)
-    flowchart = FlowChart(func)
-    return flowchart
+    flowchart_ = FlowChart(func)
+    return flowchart_
 
 
-def codeblock(ea):
-    flowchart_ = flowchart(ea)
+def get_codeblock(ea):
+    flowchart_ = get_flowchart(ea)
     for code_block in flowchart_:
         if code_block.startEA <= ea < code_block.endEA:
             return code_block
 
 
 def get_block_start(ea):
-    return codeblock(ea).startEA
+    """Get the start address of an IDA Graph block."""
+    return get_codeblock(ea).startEA
 
 
 def get_nx_graph(ea):
+    """Convert an IDA flowchart to a NetworkX graph."""
     nx_graph = networkx.DiGraph()
     func = idaapi.get_func(ea)
     flowchart = FlowChart(func)

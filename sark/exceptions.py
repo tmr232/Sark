@@ -86,11 +86,69 @@ class SarkErrorEnumMemberIllv(SarkErrorAddEnumMemeberFailed):
     pass
 
 
-class EnumNotFound(SarkError):
+class SarkEnumError(SarkError):
     pass
 
-class EnumCreationFailed(SarkError):
+
+class EnumNotFound(SarkEnumError):
     pass
 
-class EnumAlreadyExists(SarkError):
+
+class EnumCreationFailed(SarkEnumError):
+    pass
+
+
+class EnumAlreadyExists(SarkEnumError):
+    pass
+
+
+class CantRenameEnumMember(SarkEnumError):
+    pass
+
+
+class CantSetEnumMemberComment(SarkEnumError):
+    pass
+
+
+class SarkErrorNameAlreadyExists(SarkError):
+    pass
+
+
+class SarkSetNameFailed(SarkError):
+    pass
+
+
+class SarkSwitchError(SarkError):
+    pass
+
+
+class SarkNotASwitch(SarkSwitchError):
+    pass
+
+
+class SarkNoInstruction(SarkError):
+    pass
+
+
+class SarkOperandError(SarkError):
+    pass
+
+
+class SarkOperandWithoutReg(SarkOperandError):
+    pass
+
+
+class CantSetEnumComment(SarkEnumError):
+    pass
+
+
+class CantDeleteEnumMember(SarkEnumError):
+    pass
+
+
+class CantSetEnumBitfield(SarkEnumError):
+    pass
+
+
+class CantRenameEnum(SarkEnumError):
     pass

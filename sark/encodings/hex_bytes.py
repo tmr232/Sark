@@ -8,8 +8,7 @@ from string import hexdigits
 
 ### Codec APIs
 
-def hex_encode(input,errors='strict'):
-
+def hex_encode(input, errors='strict'):
     """ Encodes the object input and returns a tuple (output
         object, length consumed).
 
@@ -20,11 +19,11 @@ def hex_encode(input,errors='strict'):
     """
     assert errors == 'strict'
     temp = binascii.b2a_hex(input)
-    output = " ".join(temp[i:i+2] for i in xrange(0, len(temp), 2))
+    output = " ".join(temp[i:i + 2] for i in xrange(0, len(temp), 2))
     return (output, len(input))
 
-def hex_decode(input,errors='strict'):
 
+def hex_decode(input, errors='strict'):
     """ Decodes the object input and returns a tuple (output
         object, length consumed).
 
@@ -41,28 +40,34 @@ def hex_decode(input,errors='strict'):
     output = binascii.a2b_hex("".join(char for char in input if char in hexdigits))
     return (output, len(input))
 
-class Codec(codecs.Codec):
 
-    def encode(self, input,errors='strict'):
-        return hex_encode(input,errors)
-    def decode(self, input,errors='strict'):
-        return hex_decode(input,errors)
+class Codec(codecs.Codec):
+    def encode(self, input, errors='strict'):
+        return hex_encode(input, errors)
+
+    def decode(self, input, errors='strict'):
+        return hex_decode(input, errors)
+
 
 class IncrementalEncoder(codecs.IncrementalEncoder):
     def encode(self, input, final=False):
         assert self.errors == 'strict'
         return binascii.b2a_hex(input)
 
+
 class IncrementalDecoder(codecs.IncrementalDecoder):
     def decode(self, input, final=False):
         assert self.errors == 'strict'
         return binascii.a2b_hex(input)
 
-class StreamWriter(Codec,codecs.StreamWriter):
+
+class StreamWriter(Codec, codecs.StreamWriter):
     pass
 
-class StreamReader(Codec,codecs.StreamReader):
+
+class StreamReader(Codec, codecs.StreamReader):
     pass
+
 
 ### encodings module API
 

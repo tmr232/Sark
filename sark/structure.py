@@ -5,26 +5,12 @@ import idautils
 import idc
 from collections import namedtuple, defaultdict
 import operator
-
+from .code import lines, dtyp_to_size
 
 FF_TYPES = [idc.FF_BYTE, idc.FF_WORD, idc.FF_DWRD, idc.FF_QWRD, idc.FF_OWRD, ]
 FF_SIZES = [1, 2, 4, 8, 16, ]
 
 SIZE_TO_TYPE = dict(zip(FF_SIZES, FF_TYPES))
-
-DTYP_TO_SIZE = {
-    idaapi.dt_byte: 1,
-    idaapi.dt_word: 2,
-    idaapi.dt_dword: 4,
-    idaapi.dt_float: 4,
-    idaapi.dt_double: 8,
-    idaapi.dt_qword: 8,
-    idaapi.dt_byte16: 16,
-    idaapi.dt_fword: 6,
-    idaapi.dt_3byte: 3,
-    idaapi.dt_byte32: 32,
-    idaapi.dt_byte64: 64,
-}
 
 STRUCT_ERROR_MAP = {
     idc.STRUC_ERROR_MEMBER_NAME:
@@ -94,27 +80,23 @@ StructOffset = namedtuple("StructOffset", "offset size")
 OperandRef = namedtuple("OperandRef", "ea n")
 
 
-def dtyp_to_size(dtyp):
-    return DTYP_TO_SIZE[dtyp]
-
-
 def infer_struct_offsets(start, end, reg_name):
     offsets = set()
     operands = []
-    for line in code.iter_lines(start, end):
-        inst = line.inst
-        if not code.is_reg_in_inst(inst, reg_name):
+    for line in lines(start, end):
+        insn = line.insn
+        if not insn.has_reg(reg_name):
             continue
 
-        for operand in inst.Operands:
-            if not code.is_reg_in_operand(operand, reg_name):
+        for operand in insn.operands:
+            if not operand.has_reg(reg_name):
                 continue
 
-            if not code.operand_has_displacement(operand):
+            if not operand.has_displacement:
                 continue
 
-            offset = code.operand_get_displacement(operand)
-            size = dtyp_to_size(operand.dtyp)
+            offset = operand.displacement
+            size = operand.size
             offsets.add(StructOffset(offset, size))
             operands.append(OperandRef(line.ea, operand.n))
 
@@ -122,17 +104,26 @@ def infer_struct_offsets(start, end, reg_name):
 
 
 def get_common_register(start, end):
+    """Get the register most commonly used in accessing structs.
+
+    Access to is considered for every opcode that accesses memory
+    in an offset from a register::
+
+        mov eax, [ebx + 5]
+
+    For every access, the struct-referencing registers, in this case
+    `ebx`, are counted. The most used one is returned.
+    """
     registers = defaultdict(int)
-    for line in code.iter_lines(start, end):
-        inst = line.inst
+    for line in lines(start, end):
+        insn = line.insn
 
-        for operand in inst.Operands:
+        for operand in insn.operands:
 
-            if not code.operand_has_displacement(operand):
+            if not operand.has_displacement:
                 continue
 
-            # TODO: use the operand dtyp size here to get the proper register name.
-            register_name = code.get_register_name(operand.reg)
+            register_name = operand.reg
             registers[register_name] += 1
 
     return max(registers.iteritems(), key=operator.itemgetter(1))[0]

@@ -8,33 +8,59 @@ Sark
 General
 -------
 
-IDA Plugins & Scripting Library
+IDA Plugins & IDAPython Scripting Library.
+
+The library is in early development, so APIs are expected to change.
+
+For documentation, see `wiki <https://github.com/tmr232/Sark/wiki>`_.
 
 
 
-**WARNING!**
+Highlights
+----------
 
-Sark is currently in very early development. The code is expected to change a lot. Use at own risk.
+**Autostruct Plugin**
 
-The plugins, however, are expected to remain roughly the same.
+.. image::
+    media/autostruct-demo.gif
+
 
 Dependencies
 ------------
 
 1. `NetworkX <https://networkx.github.io/>`_
 2. `clipboard <https://pypi.python.org/pypi/clipboard/0.0.4>`_
+3. `AwesomeLib <https://github.com/tmr232/awesomelib>`_
+4. `wrapt <https://pypi.python.org/pypi/wrapt>`_
 
 
 Installation
 ------------
 
-1. Put the :code:`sark` package in your :code:`site-packages` directory.
-2. Install the plugins.
+See `wiki <https://github.com/tmr232/Sark/wiki/Installation>`_.
 
-Plugin Installation
--------------------
+Plugins and Codecs
+------------------
 
-1. Set the :code:`sarkPlugins` environment variable to point to your Sark plugins directory, or modify
-   :code:`proxy.py` to contain the correct path.
-2. For every plugin you want to use, copy :code:`proxy.py` to the IDA plugins directory, and rename it
-   to the name of the desired plugin.
+The :code:`proxy.py` files in the codecs and the plugins directories enable rapid development
+and deployment by enabling you to use them directly from the Sark repository, without needing
+to copy them again and again.
+
+Both proxy files use the location of the Sark module itself to find the their corresponding
+directories. If your directory structure differs from::
+
+    Sark
+    +---plugins
+    +---sark
+        +---encodings
+
+To get the plugin proxies to work, set :code:`sarkPlugins` to the location of the plugins directory.
+
+However, I highly recommend adhering to the aforementioned directory structure as it enables
+quick updates (:code:`git pull`.)
+
+
+Other Useful Plugins
+--------------------
+
+1. `IDA IPython <https://github.com/james91b/ida_ipython>`_ - Run IPython inside IDA.
