@@ -36,7 +36,7 @@ def get_common_value():
 
 
 def const_name(enum, value):
-    return "{}_{:X}".format(enum.name.upper(), value)
+    return "{}_{:X}h".format(enum.name.upper(), value)
 
 
 class AutoEnum(idaapi.plugin_t):
