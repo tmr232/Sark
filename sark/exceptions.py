@@ -148,3 +148,7 @@ class CantDeleteEnumMember(SarkEnumError):
 
 class CantSetEnumBitfield(SarkEnumError):
     pass
+
+
+class CantRenameEnum(SarkEnumError):
+    pass

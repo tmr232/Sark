@@ -176,6 +176,13 @@ class Enum(object):
         """Name of the enum"""
         return idaapi.get_enum_name(self.eid)
 
+    @name.setter
+    def name(self, name):
+        """Set the enum name."""
+        success = idaapi.set_enum_name(self.eid, name)
+        if not success:
+            raise exceptions.CantRenameEnum("Cant rename enum {!r} to {!r}.".format(self.name, name))
+
     @property
     def width(self):
         """Width of the enum"""
