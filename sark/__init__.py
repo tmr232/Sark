@@ -26,7 +26,7 @@ register_sark_codecs()
 # when used in the codecs proxy, we want to allow importing specific modules outside
 # IDA.
 if is_in_ida():
-    from . import (core, code, exceptions, structure, codeblocks, data, debug)
+    from . import (core, code, exceptions, structure, codeblocks, data, debug, enum)
 
     reload(code)
     reload(core)
@@ -35,8 +35,10 @@ if is_in_ida():
     reload(codeblocks)
     reload(data)
     reload(debug)
+    reload(enum)
 
     from .code import *
     from .codeblocks import get_codeblock, get_nx_graph, get_block_start, get_flowchart
     from .data import read_ascii_string
     from .core import set_name
+    from .enum import Enum, enums, add_enum, remove_enum
