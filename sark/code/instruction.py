@@ -127,7 +127,6 @@ class Operand(object):
 
     offset = displacement
 
-
     @property
     def flags(self):
         return self._operand.flags
@@ -136,11 +135,9 @@ class Operand(object):
     def dtyp(self):
         return self._operand.dtyp
 
-
     @property
     def phrase(self):
         return self._operand.phrase
-
 
     @property
     def imm(self):
@@ -148,16 +145,13 @@ class Operand(object):
 
     value = imm
 
-
     @property
     def addr(self):
         return self._operand.addr
 
-
     @property
     def specval(self):
         return self._operand.specval
-
 
     @property
     def specflag1(self):
