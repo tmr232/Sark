@@ -55,7 +55,12 @@ def add_enum(name=None, index=idaapi.BADADDR, flags=idaapi.hexflag(), bitfield=F
     if bitfield:
         idaapi.set_enum_bf(eid, bitfield)
 
-    return Enum(eid)
+    return Enum(eid=eid)
+
+def remove_enum(name):
+    """Delete an enum by name."""
+    eid = _get_enum(name)
+    idaapi.del_enum(eid)
 
 
 def _add_enum_member(enum, name, value, bitmask=DEFMASK):
@@ -148,9 +153,9 @@ class EnumMembers(object):
             raise exceptions.CantDeleteEnumMember("Can't delete enum member {!r}.".format(name))
 
     def __repr__(self):
-        return "<EnumMembers(enum={!r}, members=[{}])>".format(
+        return "<EnumMembers(enum={!r}, members={{{}}})>".format(
             Enum(eid=self._eid).name,
-            ", ".join(repr(member.name) for member in self)
+            ", ".join("{member.name!r}: {member.value!r}".format(member=member) for member in self)
         )
 
 
@@ -381,4 +386,4 @@ def iter_enum_ids():
 
 def enums():
     """Iterate all enums in the IDB"""
-    return (Enum(eid) for eid in iter_enum_ids())
+    return (Enum(eid=eid) for eid in iter_enum_ids())

@@ -41,4 +41,4 @@ if is_in_ida():
     from .codeblocks import get_codeblock, get_nx_graph, get_block_start, get_flowchart
     from .data import read_ascii_string
     from .core import set_name
-    from .enum import Enum, enums, add_enum
+    from .enum import Enum, enums, add_enum, remove_enum
