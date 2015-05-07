@@ -163,6 +163,13 @@ def apply_struct(start, end, reg_name, struct_name):
     for ea, n in operands:
         idc.OpStroff(ea, n, sid)
 
+# TODO: Deal with member types and structs in members.
+
+# TODO: Add proper handling to unions. They are significantly different for IDA, but should be seamless here.
+# TODO: First finish regular structs, then go and do unions.
+
+# TODO: Add handling for varstructcs
+
 
 class StructMemberComments(object):
     def __init__(self, member_t):
@@ -221,6 +228,8 @@ class StructMember(object):
 
         return self.member_t.soff
 
+    offset = start
+
     @property
     def end(self):
         # TODO: What to do if it is union?
@@ -228,7 +237,8 @@ class StructMember(object):
 
     @property
     def size(self):
-        return self.end - self.start
+        return idaapi.get_member_size(self.member_t)
+
 
     @property
     def is_union(self):
@@ -320,6 +330,10 @@ class Struct(object):
     @property
     def is_from_til(self):
         return self.struc_t.from_til()
+
+    @property
+    def members(self):
+        return (StructMember(self.struc_t.get_member(index)) for index in xrange(self.struc_t.memqty))
 
 
 def structs():
