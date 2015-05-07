@@ -164,11 +164,35 @@ def apply_struct(start, end, reg_name, struct_name):
         idc.OpStroff(ea, n, sid)
 
 
+class StructMemberComments(object):
+    def __init__(self, member_t):
+        super(StructMemberComments, self).__init__()
+
+        self._member_t = member_t
+
+    @property
+    def regular(self):
+        return idaapi.get_member_cmt(self._member_t.id, False)
+
+    @regular.setter
+    def regular(self, comment):
+        idaapi.set_member_cmt(self._member_t, comment, False)
+        
+    @property
+    def repeat(self):
+        return idaapi.get_member_cmt(self._member_t.id, True)
+
+    @repeat.setter
+    def repeat(self, comment):
+        idaapi.set_member_cmt(self._member_t, comment, True)
+
+
 class StructMember(object):
     def __init__(self, member_t):
         super(StructMember, self).__init__()
 
         self._member_t = member_t
+        self._comments = StructMemberComments(self._member_t)
 
     @property
     def member_t(self):
@@ -189,6 +213,35 @@ class StructMember(object):
     @property
     def fullname(self):
         return idaapi.get_member_fullname(self.id)
+
+    @property
+    def start(self):
+        if self.is_union:
+            return 0
+
+        return self.member_t.soff
+
+    @property
+    def end(self):
+        # TODO: What to do if it is union?
+        return self.member_t.eoff
+
+    @property
+    def size(self):
+        return self.end - self.start
+
+    @property
+    def is_union(self):
+        return self.member_t.unimem()
+
+    @property
+    def has_typeinfo(self):
+        return self.member_t.has_ti()
+
+    @property
+    def comments(self):
+        return self._comments
+
 
 class StructComments(object):
     def __init__(self, sid):
