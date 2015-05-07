@@ -128,6 +128,10 @@ class Operand(object):
     offset = displacement
 
     @property
+    def op_t(self):
+        return self._operand
+
+    @property
     def flags(self):
         return self._operand.flags
 
