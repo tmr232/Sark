@@ -224,6 +224,11 @@ class Enum(object):
         """Get the enum members."""
         return EnumMembers(self.eid)
 
+    @property
+    def is_from_til(self):
+        """Is from type library?"""
+        return idaapi.is_enum_fromtil(self.eid)
+
     def __repr__(self):
         return "<Enum(name={!r})>".format(self.name)
 
