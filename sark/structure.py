@@ -162,3 +162,113 @@ def apply_struct(start, end, reg_name, struct_name):
 
     for ea, n in operands:
         idc.OpStroff(ea, n, sid)
+
+
+class StructMember(object):
+    def __init__(self, member_t):
+        super(StructMember, self).__init__()
+
+        self._member_t = member_t
+
+    @property
+    def member_t(self):
+        return self._member_t
+
+    @property
+    def id(self):
+        return self.member_t.id
+
+    @property
+    def name(self):
+        return idaapi.get_member_name(self.id)
+
+    @name.setter
+    def name(self, name):
+        idaapi.set_member_name(self.id, name)
+
+    @property
+    def fullname(self):
+        return idaapi.get_member_fullname(self.id)
+
+class StructComments(object):
+    def __init__(self, sid):
+        super(StructComments, self).__init__()
+        self._sid = sid
+
+    @property
+    def regular(self):
+        return idaapi.get_struc_cmt(self._sid, False)
+
+    @regular.setter
+    def regular(self, comment):
+        idaapi.set_struc_cmt(self._sid, comment, False)
+
+    @property
+    def repeat(self):
+        return idaapi.get_struc_cmt(self._sid, True)
+
+    @repeat.setter
+    def repeat(self, comment):
+        idaapi.set_struc_cmt(self._sid, comment, True)
+
+
+class Struct(object):
+    def __init__(self, name=None, sid=None, struc_t=None):
+        super(Struct, self).__init__()
+        # Make sure only one value is provided
+        if len(filter(None, (name, sid, struc_t))) != 1:
+            raise TypeError("Provide one of (name, sid, struc_t), and one only.")
+
+        if struc_t is None:
+            self._sid = sid or idaapi.get_struc_id(name)
+            self._comments = StructComments(self._sid)
+            self._struc_t = idaapi.get_struc(self._sid)
+
+        else:
+            self._sid = struc_t.id
+            self._struc_t = struc_t
+
+    @property
+    def sid(self):
+        return self._sid
+
+    @property
+    def struc_t(self):
+        return self._struc_t
+
+    @property
+    def name(self):
+        return idaapi.get_struc_name(self.sid)
+
+    @name.setter
+    def name(self, name):
+        idaapi.set_struc_name(self.sid, name)
+
+    @property
+    def comments(self):
+        return self._comments
+
+    @property
+    def size(self):
+        return idaapi.get_struc_size(self._sid)
+
+    @property
+    def align(self):
+        return self.struc_t.get_alignment()
+
+    @align.setter
+    def align(self, shift):
+        self.struc_t.set_alignment(shift)
+
+    @property
+    def is_union(self):
+        return self.struc_t.is_union()
+
+    @property
+    def is_from_til(self):
+        return self.struc_t.from_til()
+
+
+def structs():
+    for struct_index in xrange(idaapi.get_struc_qty()):
+        yield Struct(sid=idaapi.get_struc_by_idx(struct_index))
