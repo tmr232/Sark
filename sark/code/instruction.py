@@ -140,10 +140,6 @@ class Operand(object):
         return self._operand.dtyp
 
     @property
-    def phrase(self):
-        return self._operand.phrase
-
-    @property
     def imm(self):
         return self._operand.value
 
@@ -152,26 +148,6 @@ class Operand(object):
     @property
     def addr(self):
         return self._operand.addr
-
-    @property
-    def specval(self):
-        return self._operand.specval
-
-    @property
-    def specflag1(self):
-        return self._operand.specflag1
-
-    @property
-    def specflag2(self):
-        return self._operand.specflag2
-
-    @property
-    def specflag3(self):
-        return self._operand.specflag3
-
-    @property
-    def specflag4(self):
-        return self._operand.specflag4
 
     def has_reg(self, reg_name):
         return base.is_reg_in_operand(self._operand, reg_name)
