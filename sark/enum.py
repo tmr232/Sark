@@ -267,7 +267,7 @@ class EnumMemberComments(object):
                 "name={name!r},"
                 " reqular={regular!r},"
                 " repeat={repeat!r})").format(
-            name="{}.{}".format(enum_member.enum.name, enum_member.name),
+            name="{}.{}".format(enum_member.parent.name, enum_member.name),
             regular=self.regular,
             repeat=self.repeat, )
 
@@ -325,12 +325,12 @@ class EnumMember(object):
         return idaapi.get_enum_member_serial(self.cid)
 
     @property
-    def enum(self):
+    def parent(self):
         """Get the enum holding the member."""
         return Enum(eid=idaapi.get_enum_member_enum(self.cid))
 
     def __repr__(self):
-        return "<EnumMember(name='{}.{}')>".format(self.enum.name, self.name)
+        return "<EnumMember(name='{}.{}')>".format(self.parent.name, self.name)
 
 
 def iter_bitmasks(eid):
