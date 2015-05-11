@@ -152,3 +152,12 @@ class CantSetEnumBitfield(SarkEnumError):
 
 class CantRenameEnum(SarkEnumError):
     pass
+
+class SarkMenuError(SarkError):
+    pass
+
+class MenuAlreadyExists(SarkMenuError):
+    pass
+
+class MenuNotFound(SarkMenuError):
+    pass
