@@ -8,4 +8,4 @@ def snap(title=None):
     else:
         w = get_window()
 
-    return display.Image(data=capture_widget(w))
+    display.display_png(capture_widget(w), raw=True)
