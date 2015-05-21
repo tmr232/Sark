@@ -17,17 +17,31 @@ finally:
     sys.path = old_path
 
 
-def capture_widget(widget, path):
-    """Grab an image of a Qt widget and save to file."""
+def capture_widget(widget, path=None):
+    """Grab an image of a Qt widget
+
+    If a path is provided, the image will be saved to it.
+    If not, the PNG buffer will be returned.
+    """
     pixmap = QtGui.QPixmap.grabWidget(widget)
-    pixmap.save(path)
+
+    if path:
+        pixmap.save(path)
+
+    else:
+        image_buffer = QtCore.QBuffer()
+        image_buffer.open(QtCore.QIODevice.ReadWrite)
+
+        pixmap.save(image_buffer, "PNG")
+
+        return image_buffer.data().data()
 
 
 def get_widget(title):
     """Get the Qt widget of the IDA window with the given title."""
     tform = idaapi.find_tform(title)
     if not tform:
-        return
+        raise exceptions.FormNotFound("No form titled {!r} found.".format(title))
 
     return idaapi.PluginForm.FormToPySideWidget(tform)
 
@@ -40,6 +54,11 @@ def resize_widget(widget, width, height):
 def get_window():
     """Get IDA's top level window."""
     tform = idaapi.get_current_tform()
+
+    # Required sometimes when closing IDBs and not IDA.
+    if not tform:
+        tform = idaapi.find_tform("Output window")
+
     widget = idaapi.PluginForm.FormToPySideWidget(tform)
     window = widget.window()
     return window
