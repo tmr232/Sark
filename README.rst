@@ -12,7 +12,7 @@ IDA Plugins & IDAPython Scripting Library.
 
 The library is in early development, so APIs are expected to change.
 
-For documentation, see `wiki <https://github.com/tmr232/Sark/wiki>`_.
+For documentation, see `sark.rtfd.org <http://sark.rtfd.org/>`_.
 
 
 
@@ -37,7 +37,11 @@ Dependencies
 Installation
 ------------
 
-See `wiki <https://github.com/tmr232/Sark/wiki/Installation>`_.
+.. code:: bash
+
+    pip install -e git+https://github.com/tmr232/Sark.git#egg=Sark
+
+Or see `here <http://sark.readthedocs.org/en/latest/Installation.html>`_.
 
 Plugins and Codecs
 ------------------
