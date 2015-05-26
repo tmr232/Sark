@@ -29,14 +29,12 @@ class XrefType(object):
 
     @property
     def type(self):
-        """Raw `type` value
-
-        Use this if you need to pass the xref type around as a number.
-        """
+        """Xref type, flags excluded."""
         return self._type & idaapi.XREF_MASK
 
     @property
     def flags(self):
+        """Xref flags, type excluded."""
         return self._type ^ self.type
 
     @property
