@@ -33,7 +33,11 @@ class XrefType(object):
 
         Use this if you need to pass the xref type around as a number.
         """
-        return self._type
+        return self._type & idaapi.XREF_MASK
+
+    @property
+    def flags(self):
+        return self._type ^ self.type
 
     @property
     def name(self):
@@ -53,51 +57,63 @@ class XrefType(object):
 
     @property
     def is_unknown(self):
-        return self._type == idaapi.fl_U
+        return self.type == idaapi.fl_U
 
     @property
     def is_offset(self):
-        return self._type == idaapi.dr_O
+        return self.type == idaapi.dr_O
 
     @property
     def is_write(self):
-        return self._type == idaapi.dr_W
+        return self.type == idaapi.dr_W
 
     @property
     def is_read(self):
-        return self._type == idaapi.dr_R
+        return self.type == idaapi.dr_R
 
     @property
     def is_text(self):
-        return self._type == idaapi.dr_T
+        return self.type == idaapi.dr_T
 
     @property
     def is_info(self):
-        return self._type == idaapi.dr_I
+        return self.type == idaapi.dr_I
 
     @property
     def is_far_call(self):
-        return self._type == idaapi.fl_CF
+        return self.type == idaapi.fl_CF
 
     @property
     def is_near_call(self):
-        return self._type == idaapi.fl_CN
+        return self.type == idaapi.fl_CN
 
     @property
     def is_far_jump(self):
-        return self._type == idaapi.fl_JF
+        return self.type == idaapi.fl_JF
 
     @property
     def is_near_jump(self):
-        return self._type == idaapi.fl_JN
+        return self.type == idaapi.fl_JN
 
     @property
-    def is_user(self):
-        return self._type == idaapi.fl_U
+    def is_unknown(self):
+        return self.type == idaapi.fl_U
 
     @property
     def is_flow(self):
-        return self._type == idaapi.fl_F
+        return self.type == idaapi.fl_F
+
+    @property
+    def is_user(self):
+        return self.flags & idaapi.XREF_USER
+
+    @property
+    def is_tail(self):
+        return self.flags & idaapi.XREF_TAIL
+
+    @property
+    def is_base(self):
+        return self.flags & idaapi.XREF_BASE
 
     @property
     def is_call(self):

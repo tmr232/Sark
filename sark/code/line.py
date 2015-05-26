@@ -1,4 +1,4 @@
-import itertools
+from itertools import imap, count
 import idaapi
 import idautils
 import idc
@@ -38,7 +38,7 @@ class Comments(object):
     @property
     def anterior(self):
         """Anterior Comment"""
-        lines = (idc.LineA(self._ea, index) for index in itertools.count())
+        lines = (idc.LineA(self._ea, index) for index in count())
         return "\n".join(iter(lines.next, None))
 
     @anterior.setter
@@ -54,7 +54,7 @@ class Comments(object):
     @property
     def posterior(self):
         """Posterior Comment"""
-        lines = (idc.LineB(self._ea, index) for index in itertools.count())
+        lines = (idc.LineB(self._ea, index) for index in count())
         return "\n".join(iter(lines.next, None))
 
     @posterior.setter
@@ -173,7 +173,7 @@ class Line(object):
 
         :return: Xrefs as `sark.code.xref.Xref` objects.
         """
-        return map(Xref, idautils.XrefsFrom(self.ea))
+        return imap(Xref, idautils.XrefsFrom(self.ea))
 
     @property
     def drefs_from(self):
@@ -191,7 +191,7 @@ class Line(object):
 
         :return: Xrefs as `sark.code.xref.Xref` objects.
         """
-        return map(Xref, idautils.XrefsTo(self.ea))
+        return imap(Xref, idautils.XrefsTo(self.ea))
 
     @property
     def drefs_to(self):

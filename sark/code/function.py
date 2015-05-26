@@ -1,3 +1,4 @@
+from itertools import imap
 import idaapi
 import idautils
 import idc
@@ -162,7 +163,7 @@ class Function(object):
 
         This only includes references to that function's start address.
         """
-        return map(Xref, idautils.XrefsTo(self.startEA))
+        return imap(Xref, idautils.XrefsTo(self.startEA))
 
     @property
     def drefs_to(self):
