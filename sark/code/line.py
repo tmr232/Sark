@@ -232,6 +232,7 @@ class Line(object):
         return color
 
     @color.setter
+    @updates_ui
     def color(self, color):
         """Line Color in IDA View.
 

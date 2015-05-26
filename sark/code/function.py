@@ -5,6 +5,7 @@ from .base import get_func
 from ..core import set_name, get_ea, fix_addresses, is_same_function
 from .line import Line
 from .xref import Xref
+from ..ui import updates_ui
 
 
 class Comments(object):
@@ -212,6 +213,27 @@ class Function(object):
     @property
     def frame_size(self):
         return idaapi.get_frame_size(self._func)
+
+    @property
+    def color(self):
+        """Function color in IDA View"""
+        color = idc.GetColor(self.ea, idc.CIC_FUNC)
+        if color == 0xFFFFFFFF:
+            return None
+
+        return color
+
+    @color.setter
+    @updates_ui
+    def color(self, color):
+        """Function Color in IDA View.
+
+        Set color to `None` to clear the color.
+        """
+        if color is None:
+            color = 0xFFFFFFFF
+
+        idc.SetColor(self.ea, idc.CIC_FUNC, color)
 
 
 def iter_function_lines(func_ea):
