@@ -161,3 +161,9 @@ class MenuAlreadyExists(SarkMenuError):
 
 class MenuNotFound(SarkMenuError):
     pass
+
+class SarkGuiError(SarkError):
+    pass
+
+class FormNotFound(SarkGuiError):
+    pass
