@@ -4,6 +4,7 @@ import idc
 
 from . import base
 from .. import exceptions
+from .. import core
 
 OPND_WRITE_FLAGS = {
     0: idaapi.CF_CHG1,
@@ -175,8 +176,13 @@ class Operand(object):
     @property
     def reg(self):
         """Name of the register used in the operand."""
-        if self.type.is_reg or self.type.is_displ or self.type.is_phrase:
+        if self.type.is_displ or self.type.is_phrase:
+            size = core.get_native_size()
+            return base.get_register_name(self.reg_id, size)
+
+        if self.type.is_reg:
             return base.get_register_name(self.reg_id, self.size)
+
         else:
             raise exceptions.SarkOperandWithoutReg("Operand does not have a register.")
 

@@ -135,3 +135,13 @@ def get_name_or_address(ea):
         name = "0x{:08X}".format(ea)
 
     return name
+
+
+def get_native_size():
+    info = idaapi.get_inf_structure()
+    if info.is_32bit():
+        return 4
+    elif info.is_64bit():
+        return 8
+    else:
+        return 2
