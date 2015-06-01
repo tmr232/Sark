@@ -5,6 +5,8 @@ While IDAPython is extremely useful, it can be a bit of a hassle to debug IDA Pr
 This tutorial will give get you started on debugging IDAPython scripts and plugins
 using Python Tools for Visual Studio.
 
+And yes, it is completely free.
+
 
 The Setup
 ---------
