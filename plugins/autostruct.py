@@ -3,8 +3,14 @@ import idc
 import sark
 
 
+def message(*messages):
+    for msg in messages:
+        for line in msg.splitlines():
+            idaapi.msg("[Autostruct] {}\n".format(line))
+
+
 class AutoStruct(idaapi.plugin_t):
-    flags = 0
+    flags = idaapi.PLUGIN_PROC
     comment = "AutoStruct struct creator"
     help = "Automagically Create and Apply Structs"
     wanted_name = "AutoStruct"
@@ -22,15 +28,27 @@ class AutoStruct(idaapi.plugin_t):
 
         struct_name = idc.AskStr(self._prev_struct_name, "Struct Name")
         if not struct_name:
+            message("No structure name provided. Operation cancelled.")
             return
         self._prev_struct_name = struct_name
 
         common_reg = sark.structure.get_common_register(start, end)
         reg_name = idc.AskStr(common_reg, "Register")
         if not reg_name:
+            message("No offsets found. Operation cancelled.")
             return
 
-        offsets, operands = sark.structure.infer_struct_offsets(start, end, reg_name)
+        try:
+            offsets, operands = sark.structure.infer_struct_offsets(start, end, reg_name)
+        except sark.exceptions.InvalidStructOffset:
+            message("Invalid offset found. Cannot create structure.",
+                    "Make sure there are no negative offsets in the selection.")
+            return
+
+        except sark.exceptions.SarkInvalidRegisterName:
+            message("Invalid register name {!r}. Cannot create structs.".format(reg_name))
+            return
+
         try:
             sark.structure.create_struct_from_offsets(struct_name, offsets)
         except sark.exceptions.SarkStructAlreadyExists:
