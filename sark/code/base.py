@@ -40,7 +40,7 @@ def get_register_info(reg_name):
     ri = idaapi.reg_info_t()
     success = idaapi.parse_reg_name(reg_name, ri)
     if not success:
-        raise exceptions.SarkInvalidRegisterName()
+        raise exceptions.SarkInvalidRegisterName("No register named {!r}".format(reg_name))
     return ri
 
 

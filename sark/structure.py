@@ -6,6 +6,7 @@ import idc
 from collections import namedtuple, defaultdict
 import operator
 from .code import lines, dtyp_to_size
+from .core import get_native_size
 
 FF_TYPES = [idc.FF_BYTE, idc.FF_WORD, idc.FF_DWRD, idc.FF_QWRD, idc.FF_OWRD, ]
 FF_SIZES = [1, 2, 4, 8, 16, ]
@@ -69,7 +70,6 @@ def size_to_flags(size):
 
 
 def add_struct_member(sid, name, offset, size):
-    idaapi.msg("{}, {}\n".format(offset, size))
     failure = idc.AddStrucMember(sid, name, offset, size_to_flags(size), -1, size)
 
     if failure:
@@ -78,6 +78,12 @@ def add_struct_member(sid, name, offset, size):
 
 StructOffset = namedtuple("StructOffset", "offset size")
 OperandRef = namedtuple("OperandRef", "ea n")
+
+
+def is_signed(number, size=None):
+    if not size:
+        size = get_native_size()
+    return number & (1 << ((8 * size) - 1))
 
 
 def infer_struct_offsets(start, end, reg_name):
@@ -96,6 +102,9 @@ def infer_struct_offsets(start, end, reg_name):
                 continue
 
             offset = operand.displacement
+            if is_signed(offset):
+                raise exceptions.InvalidStructOffset(
+                    "Invalid structure offset 0x{:08X}, probably negative number.".format(offset))
             size = operand.size
             offsets.add(StructOffset(offset, size))
             operands.append(OperandRef(line.ea, operand.n))
