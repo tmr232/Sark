@@ -180,6 +180,10 @@ class Function(object):
         """Function's Name"""
         return idc.Name(self.startEA)
 
+    @property
+    def demangled(self):
+        return idaapi.demangle_name2(self.name, 0)
+
     @name.setter
     def name(self, name):
         """Set the function name.

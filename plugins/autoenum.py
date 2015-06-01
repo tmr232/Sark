@@ -95,7 +95,7 @@ class AutoEnum(idaapi.plugin_t):
             try:
                 enum.members.add(member_name, const_value)
             except sark.exceptions.SarkErrorAddEnumMemeberFailed as ex:
-                idaapi.msg("[AutoEnum] Adding struct member failed: {}.".format(ex.message))
+                idaapi.msg("[AutoEnum] Adding enum member failed: {}.".format(ex.message))
 
 
         else:
