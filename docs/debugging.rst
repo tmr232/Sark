@@ -14,58 +14,85 @@ For this tutorial, we will be using the following software:
 #. `IDA Pro 6.8`_
 #. `Visual Studio Community 2013`_
 #. `Python Tools for Visual Studio 2.1`_, documentation can be found `here <https://github.com/Microsoft/PTVS/wiki>`_.
+#. Python's ``ptvsd`` module. Install using ``pip install ptvsd``.
+#. The following plugin:
 
-And an IDA Plugin:
+    .. code:: python
+
+        # filename: ptvsd_enable.py
+
+        import idaapi
+        import ptvsd
+
+        try:
+            # Enable the debugger. Raises exception if called more than once.
+            ptvsd.enable_attach(secret="IDA")
+        except:
+            pass
+
+
+        class DebugPlugin(idaapi.plugin_t):
+            flags = idaapi.PLUGIN_FIX
+            comment = "PTVSD Debug Enable"
+            help = "Enable debugging using PTVSD"
+            wanted_name = "PTVSD"
+            wanted_hotkey = ""
+
+            def init(self):
+                return idaapi.PLUGIN_KEEP
+
+            def term(self):
+                pass
+
+            def run(self, arg):
+                pass
+
+
+        def PLUGIN_ENTRY():
+            return DebugPlugin()
+
+For the purposes of this tutorial, you can try and debug this plugin:
 
 .. code:: python
 
+    # filename: sample_debuggee.py
+
     import idaapi
-    import ptvsd
 
-    try:
-        # Enable the debugger. Raises exception if called more than once.
-        ptvsd.enable_attach(secret="IDA")
-    except:
+
+    def my_debugged_function():
+        # Set breakpoint here!
         pass
 
 
-    def raise_exception():
-        raise RuntimeError("Plugin raised an exception to demonstrate debugging.")
-
-
-    def uses_existing_breakpoint():
-        # Set a breakpoint here for the debugger to catch.
-        pass
-
-
-    class DebugPlugin(idaapi.plugin_t):
+    class SamplePlugin(idaapi.plugin_t):
         flags = idaapi.PLUGIN_PROC
-        comment = "Debugging Sampler"
-        help = "Debugging Sampler"
-        wanted_name = "Debugging Sampler"
-        wanted_hotkey = ""
+        comment = "Sample Debuggee"
+        help = "Sample Debuggee"
+        wanted_name = "Sample Debuggee"
+        wanted_hotkey = "Shift+D"
 
         def init(self):
-            idaapi.add_hotkey("Shift+D,1", raise_exception)
-            idaapi.add_hotkey("Shift+D,2", uses_existing_breakpoint)
             return idaapi.PLUGIN_KEEP
 
         def term(self):
             pass
 
         def run(self, arg):
-            pass
+            my_debugged_function()
 
 
     def PLUGIN_ENTRY():
-        return DebugPlugin()
+        return SamplePlugin()
 
 
 Debugging
 ---------
 
-#. Write the plugin code into a ``debug_plugin.py`` in IDA's plugins directory.
-#. Start IDA and load an IDB
+#. Put ``ptvsd_enable.py`` (provided above) in IDA's plugins directory.
+   If you want to use the sample debuggee, put it in the plugins directory as well.
+#. Start IDA and load an IDB (otherwise weird issues arise)
+#. Load the code you want to debug into Visual Studio and set breakpoints.
 #. In Visual Studio (with the plugin file open), use ``DEBUG->Attack to process``
 
     .. image:: media/debugging/debugging_menu.PNG
@@ -76,16 +103,7 @@ Debugging
     .. image:: media/debugging/attach_dialog.PNG
 
 
-#. We are now attached, but before any breakpoints can take effect, you need to break into the code.
-   To do this, use the ``Shift+D,1`` hotkey to raise an exception in the plugin.
-   If all went well, you will see this popup in VS:
-
-    .. image:: media/debugging/break.PNG
-
-
-#. Click break, and have fun debugging. Once you resume execution, all the breakpoints you set will
-   take effect. Set a breakpoint in ``uses_existing_breakpoint()`` resume execution, then press
-   ``Shift+D, 2`` to see it in action.
+#. We are now attached. Once a breakpoint is hit, Visual Studio will break and let you debug.
 
 #. Have fun debugging!
 
@@ -93,8 +111,9 @@ Important Notes
 ---------------
 
 #. When the debugging, IDA will be frozen.
-#. Breakpoints can only be changed when the debugger is active.
-#. (At least) for this demo, load an IDB prior to attaching the debugger.
+#. Load your IDB prior to attaching the debugger.
+#. For easy debug-on-demand, keep ``ptvsd_enable.py`` in IDA's plugins directory at all times.
+#. To set breakpoints, make sure you load into VS the files that are actually loaded by IDA.
 
 If you find any issues with the tutorial, please submit them `here <https://github.com/tmr232/Sark/issues>`_.
 
