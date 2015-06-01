@@ -1,6 +1,4 @@
-from itertools import chain
 import idaapi
-import networkx as nx
 import sark
 import idc
 import sark.ui
