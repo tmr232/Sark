@@ -28,6 +28,10 @@ def get_string(ea):
 
 def get_name(ea):
     name = None
+
+    if not sark.Line(ea).has_name:
+        raise NoName("No non-trivial name for 0x{:08X}".format(ea))
+
     try:
         function = sark.Function(ea)
         if function.ea == ea:

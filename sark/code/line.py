@@ -253,6 +253,11 @@ class Line(object):
         """The previous line."""
         return Line(self.ea - 1)
 
+    @property
+    def has_name(self):
+        """Does the current line have a non-trivial (non-dummy) name?"""
+        return idaapi.has_name(self.flags)
+
 
 def lines(start=None, end=None, reverse=False):
     """Iterate lines in range.
