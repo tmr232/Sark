@@ -14,23 +14,27 @@ class SarkNoFunction(SarkError):
     pass
 
 
+class SarkStructError(SarkError):
+    pass
+
+
 class SarkInvalidRegisterName(SarkError):
     pass
 
 
-class SarkStructAlreadyExists(SarkError):
+class SarkStructAlreadyExists(SarkStructError):
     pass
 
 
-class SarkStructCreationFailed(SarkError):
+class SarkStructCreationFailed(SarkStructError):
     pass
 
 
-class SarkStructNotFound(SarkError):
+class SarkStructNotFound(SarkStructError):
     pass
 
 
-class SarkErrorAddStructMemeberFailed(SarkError):
+class SarkErrorAddStructMemeberFailed(SarkStructError):
     pass
 
 
@@ -62,7 +66,11 @@ class SarkErrorStructMemberVarlast(SarkErrorAddStructMemeberFailed):
     pass
 
 
-class SarkErrorAddEnumMemeberFailed(SarkError):
+class SarkEnumError(SarkError):
+    pass
+
+
+class SarkErrorAddEnumMemeberFailed(SarkEnumError):
     pass
 
 
@@ -83,10 +91,6 @@ class SarkErrorEnumMemberMask(SarkErrorAddEnumMemeberFailed):
 
 
 class SarkErrorEnumMemberIllv(SarkErrorAddEnumMemeberFailed):
-    pass
-
-
-class SarkEnumError(SarkError):
     pass
 
 
@@ -154,7 +158,11 @@ class CantRenameEnum(SarkEnumError):
     pass
 
 
-class SarkMenuError(SarkError):
+class SarkGuiError(SarkError):
+    pass
+
+
+class SarkMenuError(SarkGuiError):
     pass
 
 
@@ -166,13 +174,9 @@ class MenuNotFound(SarkMenuError):
     pass
 
 
-class SarkGuiError(SarkError):
-    pass
-
-
 class FormNotFound(SarkGuiError):
     pass
 
 
-class InvalidStructOffset(SarkError):
+class InvalidStructOffset(SarkStructError):
     pass

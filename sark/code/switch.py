@@ -3,7 +3,7 @@ from itertools import izip
 
 import idaapi
 
-from ..exceptions import SarkNotASwitch
+from .. import exceptions
 
 class Switch(object):
     """IDA Switch
@@ -41,7 +41,7 @@ class Switch(object):
         si = idaapi.get_switch_info_ex(self._ea)
         results = idaapi.calc_switch_cases(self._ea, si)
         if not results:
-            raise SarkNotASwitch("Seems like 0x{:08X} is not a switch jump instruction.".format(self._ea))
+            raise exceptions.SarkNotASwitch("Seems like 0x{:08X} is not a switch jump instruction.".format(self._ea))
 
         return results
 
@@ -88,5 +88,5 @@ def is_switch(ea):
     try:
         switch = Switch(ea)
         return True
-    except SarkNotASwitch:
+    except exceptions.SarkNotASwitch:
         return False
