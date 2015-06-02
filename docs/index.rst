@@ -13,7 +13,7 @@ Getting Started
 
 Install Sark from the command line::
 
-   pip install -e git+http://github.com/tmr232/Sark.git#egg=Sark
+   pip install -U git+https://github.com/tmr232/Sark.git#egg=Sark
 
 Import inside IDA, and start having fun!
 

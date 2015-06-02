@@ -8,7 +8,7 @@ To install Sark, simply run the following command:
 
 .. code:: bash
 
-    pip install -e git+https://github.com/tmr232/Sark.git#egg=Sark
+    pip install -U git+https://github.com/tmr232/Sark.git#egg=Sark
 
 To install the IDA Plugins (optional,) download the entire repository
 from `GitHub <https://github.com/tmr232/Sark>`__ and copy the desired
