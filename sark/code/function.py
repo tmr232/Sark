@@ -257,8 +257,12 @@ def iter_function_lines(func_ea):
 def functions(start=None, end=None):
     """Get all functions in range.
 
-    :param start: Start address of the range. Defaults to IDB start.
-    :param end: End address of the range. Defaults to IDB end.
+    Args:
+        start: Start address of the range. Defaults to IDB start.
+        end: End address of the range. Defaults to IDB end.
+
+    Returns:
+        This is a generator that iterates over all the functions in the IDB.
     """
     start, end = fix_addresses(start, end)
 

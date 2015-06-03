@@ -7,13 +7,17 @@ from . import exceptions
 def get_func(func_ea):
     """get_func(func_t or ea) -> func_t
 
-    Take an IDA function (`idaapi.func_t`) or an address (EA) and return
+    Take an IDA function (``idaapi.func_t``) or an address (EA) and return
     an IDA function object.
 
     Use this when APIs can take either a function or an address.
 
-    :param func_ea: `idaapi.func_t` or ea of the function.
-    :return: `idaapi.func_t`
+    Args:
+        func_ea: ``idaapi.func_t`` or ea of the function.
+
+    Returns:
+        An ``idaapi.func_t`` object for the given address. If a ``func_t`` is
+        provided, it is returned.
     """
     if isinstance(func_ea, idaapi.func_t):
         return func_ea
@@ -29,8 +33,11 @@ def get_ea(func_ea):
 
     Same as `get_func`, but returns the EA.
 
-    :param func_ea: `idaapi.func_t` or EA.
-    :return: The ea.
+    Args:
+        func_ea: `idaapi.func_t` or EA.
+
+    Returns:
+        The ea.
     """
     if isinstance(func_ea, idaapi.func_t):
         return func_ea.startEA
@@ -74,9 +81,12 @@ def fix_addresses(start=None, end=None):
     Take a start and end addresses. If an address is None or `BADADDR`,
     return start or end addresses of the IDB instead.
 
-    :param start: Start EA. Use `None` to get IDB start.
-    :param end:  End EA. Use `None` to get IDB end.
-    :return: (start, end)
+    Args
+        start: Start EA. Use `None` to get IDB start.
+        end:  End EA. Use `None` to get IDB end.
+
+    Returns:
+        (start, end)
     """
     if start in (None, idaapi.BADADDR):
         start = idaapi.cvar.inf.minEA
@@ -96,10 +106,11 @@ def set_name(address, name, anyway=False):
         True - Add `_COUNTER` to the name (default IDA behaviour)
         False - Raise an `exceptions.SarkErrorNameAlreadyExists` exception.
 
-    :param address: The address to rename.
-    :param name: The desired name.
-    :param anyway: Set anyway or not. Defualt `False`.
-    :return: None
+
+    Args
+        address: The address to rename.
+        name: The desired name.
+        anyway: Set anyway or not. Defualt ``False``.
     """
     success = idaapi.set_name(address, name, idaapi.SN_NOWARN | idaapi.SN_NOCHECK)
     if success:
@@ -117,6 +128,7 @@ def set_name(address, name, anyway=False):
 
 
 def is_same_function(ea1, ea2):
+    """Are both addresses in the same function?"""
     func1 = idaapi.get_func(ea1)
     func2 = idaapi.get_func(ea2)
     # This is bloated code. `None in (func1, func2)` will not work because of a
@@ -138,6 +150,7 @@ def get_name_or_address(ea):
 
 
 def get_native_size():
+    """Get the native word size in normal 8-bit bytes."""
     info = idaapi.get_inf_structure()
     if info.is_32bit():
         return 4
