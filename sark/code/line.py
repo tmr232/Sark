@@ -6,6 +6,7 @@ from ..core import fix_addresses
 from .xref import Xref
 from .instruction import Instruction
 from ..ui import updates_ui
+from .base import get_selection
 
 
 class Comments(object):
@@ -259,14 +260,23 @@ class Line(object):
         return idaapi.has_name(self.flags)
 
 
-def lines(start=None, end=None, reverse=False):
+def lines(start=None, end=None, reverse=False, selection=False):
     """Iterate lines in range.
 
-    :param start: Starting address, start of IDB if `None`.
-    :param end: End address, end of IDB if `None`.
-    :return: iterator of `Line` objects.
+    Args:
+        start: Starting address, start of IDB if `None`.
+        end: End address, end of IDB if `None`.
+        reverse: Set to true to iterate in reverse order.
+        selection: If set to True, replaces start and end with current selection.
+
+    Returns:
+        iterator of `Line` objects.
     """
-    start, end = fix_addresses(start, end)
+    if selection:
+        start, end = get_selection()
+
+    else:
+        start, end = fix_addresses(start, end)
 
     if not reverse:
         item = idaapi.get_item_head(start)

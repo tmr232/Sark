@@ -71,16 +71,28 @@ Getting Lines
 There are several ways to get lines. Either directly or from other
 objects.
 
-The ``sark.Line`` object is used to get a single line. Either from the
-current address (``sark.Line()``), a specific address
-(``sark.Line(ea=my_address)``) or given the line's name
-(``sark.Line(name=some_name)``).
++----------------------------------------------+---------------------------------------------------------+
+| Method                                       | Effect                                                  |
++==============================================+=========================================================+
+| **A Single Line**                                                                                      |
++----------------------------------------------+---------------------------------------------------------+
+| ``sark.Line()``                              | Get the current line                                    |
++----------------------------------------------+---------------------------------------------------------+
+| ``sark.Line(ea=my_address)``                 | Get the line at the given address                       |
++----------------------------------------------+---------------------------------------------------------+
+| ``sark.Line(name=some_name)``                | Get the line with the given name                        |
++----------------------------------------------+---------------------------------------------------------+
+| **Multiple Lines**                                                                                     |
++----------------------------------------------+---------------------------------------------------------+
+| ``sark.lines()``                             | Iterate all lines in the IDB                            |
++----------------------------------------------+---------------------------------------------------------+
+| ``sark.lines(start=start_ea, end=end_ea)``   | Iterate all lines between ``start_ea`` and ``end_ea``   |
++----------------------------------------------+---------------------------------------------------------+
+| ``sark.lines(selection=True)``               | Iterate all lines in current selection                  |
++----------------------------------------------+---------------------------------------------------------+
+| ``sark.lines(reverse=True)``                 | Iterate lines in reverse order                          |
++----------------------------------------------+---------------------------------------------------------+
 
-The ``sark.lines`` function is used to iterate over lines.
-``sark.lines()`` will iterate over *all* the lines in the IDB. To limit
-it, set the ``start`` and ``end`` parameters
-(``sark.lines(start=start_ea, end=end_ea)``). To traverse the lines in
-reverse order use ``sark.lines(reverse=True)``.
 
 Objects that contain lines, such as functions and code blocks, can
 return their own set of lines. See ``sark.Function().lines`` for an
