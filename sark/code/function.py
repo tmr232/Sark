@@ -200,8 +200,9 @@ class Function(object):
         the IDB. to make IDA automatically add a counter to the name (like in the GUI,)
         use `anyway=True`.
 
-        :param name: Desired name.
-        :param anyway: `True` to set anyway.
+        Args:
+            name: Desired name.
+            anyway: `True` to set anyway.
         """
         set_name(self.startEA, name, anyway=anyway)
 

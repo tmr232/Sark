@@ -128,9 +128,10 @@ class EnumMembers(object):
     def add(self, name, value, bitmask=DEFMASK):
         """Add an enum member
 
-        :param name: Name of the member
-        :param value: value of the member
-        :param bitmask: bitmask. Only use if enum is a bitfield.
+        Args:
+            name: Name of the member
+            value: value of the member
+            bitmask: bitmask. Only use if enum is a bitfield.
         """
         _add_enum_member(self._eid, name, value, bitmask)
 
@@ -167,8 +168,10 @@ class Enum(object):
         Get an existing enum.
 
         Only provide one of `name` and `eid`.
-        :param name: Name of the enum
-        :param eid: Enum ID
+
+        Args:
+            name: Name of the enum
+            eid: Enum ID
         """
         if None not in (name, eid):
             raise TypeError("Provide only a `name` or an `eid`.")

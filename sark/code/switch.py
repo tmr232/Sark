@@ -20,8 +20,8 @@ class Switch(object):
     def __init__(self, ea):
         """Initialize a switch parser.
 
-        :param ea: An address of a switch jump instruction.
-        :return:
+        Args:
+            ea: An address of a switch jump instruction.
         """
         self._ea = ea
 
