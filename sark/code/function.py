@@ -242,6 +242,14 @@ class Function(object):
 
 
 def iter_function_lines(func_ea):
+    """Iterate the lines of a function.
+
+    Args:
+        func_ea (idaapi.func_t, int): The function to iterate.
+
+    Returns:
+        Iterator over all the lines of the function.
+    """
     for line in idautils.FuncItems(get_ea(func_ea)):
         yield Line(line)
 

@@ -45,38 +45,77 @@ class BasicNodeHandler(object):
 
     When subclassing, simply replace the events you want to modify.
     """
+
     def on_get_text(self, value, attrs):
-        """Get the text to display on the node."""
+        """Get the text to display on the node.
+
+        Args:
+            value: The value of the current node.
+            attrs (dict): The node's attributes.
+
+        Returns:
+            str: The text to display.
+        """
         return str(value)
 
     def on_click(self, value, attrs):
         """Action to perform on click.
 
-        Return `True` to accept the click.
+        Args:
+            value: The value of the current node.
+            attrs (dict): The node's attributes.
+
+        Returns:
+            ``True`` to accept the click, ``False`` to ignore it.
         """
         return False
 
     def on_double_click(self, value, attrs):
         """Action to perform on double click.
 
-        Return `True` to accept the click.
+        Args:
+            value: The value of the current node.
+            attrs (dict): The node's attributes.
+
+        Returns:
+            ``True`` to accept the click, ``False`` to ignore it.
         """
         return False
 
     def on_hint(self, value, attrs):
-        """Hint to show."""
+        """Hint to show.
+
+        Args:
+            value: The value of the current node.
+            attrs (dict): The node's attributes.
+
+        Returns:
+            The hint to show.
+        """
         return None
 
     def on_bg_color(self, value, attrs):
         """Background color.
 
-        Return `None` for default."""
+        Args:
+            value: The value of the current node.
+            attrs (dict): The node's attributes.
+
+        Returns:
+            ``None`` for default color, otherwise the color as a number.
+        """
         return attrs.get(NXGraph.BG_COLOR, None)
 
     def on_frame_color(self, value, attrs):
         """Frame color.
 
-        Return `None` for default."""
+        Args:
+            value: The value of the current node.
+            attrs (dict): The node's attributes.
+
+        Returns:
+            ``None`` for default color, otherwise the color as a number.
+        """
         return attrs.get(NXGraph.FRAME_COLOR, None)
 
 
@@ -89,6 +128,7 @@ class AddressNodeHandler(BasicNodeHandler):
             just the number;
         2. On double-click, jumps to the address clicked.
     """
+
     def on_get_text(self, value, attrs):
         return idc.Name(value) or "0x{:08X}".format(value)
 
@@ -140,16 +180,16 @@ class NXGraph(idaapi.GraphViewer):
     FRAME_COLOR = "FRAME_COLOR"
     DEFAULT_HANDLER = BasicNodeHandler()
 
-    def __init__(self, graph, title="GraphViewer", handler=DEFAULT_HANDLER, padding=PADDING):
+    def __init__(self, graph, title="GraphViewer", handler=None, padding=PADDING):
         """Initialize the graph viewer.
 
         To avoid bizarre IDA errors (crashing when creating 2 graphs with the same title,)
         a counter is appended to the title (similar to "Hex View-1".)
 
-        :param graph: A NetworkX graph to display.
-        :param title: The graph title.
-        :param handler: The default node handler to use when accessing node data.
-        :return:
+        Args:
+            graph: A NetworkX graph to display.
+            title: The graph title.
+            handler: The default node handler to use when accessing node data.
         """
         title = self._make_unique_title(title)
 
@@ -157,11 +197,15 @@ class NXGraph(idaapi.GraphViewer):
 
         self._graph = graph
 
+        if handler is None:
+            handler = self.DEFAULT_HANDLER
+
         # Here we make sure the handler is an instance of `BasicNodeHandler` or inherited
         # types. While generally being bad Python practice, we still need it here as an
         # invalid handler can cause IDA to crash.
         if not isinstance(handler, BasicNodeHandler):
             raise TypeError("Node handler must inherit from `BasicNodeHandler`.")
+
         self._default_handler = handler
         self._padding = padding
 
@@ -193,13 +237,13 @@ class NXGraph(idaapi.GraphViewer):
     def _get_handler(self, node_id):
         """Get the handler of a given node."""
         handler = self._get_attrs(node_id).get(self.HANDLER, self._default_handler)
-        
+
         # Here we make sure the handler is an instance of `BasicNodeHandler` or inherited
         # types. While generally being bad Python practice, we still need it here as an
         # invalid handler can cause IDA to crash.
         if not isinstance(handler, BasicNodeHandler):
             idaapi.msg(("Invalid handler for node {}: {}. All handlers must inherit from"
-                       "`BasicNodeHandler`.").format(node_id, handler))
+                        "`BasicNodeHandler`.").format(node_id, handler))
             handler = self._default_handler
         return handler
 
@@ -283,7 +327,6 @@ class NXGraph(idaapi.GraphViewer):
     def OnHint(self, node_id):
         handler, value, attrs = self._get_handling_triplet(node_id)
         return handler.on_hint(value, attrs)
-
 
 # Make sure API is supported to enable use of other functionality in older versions.
 if idaapi.IDA_SDK_VERSION >= 670:
@@ -401,9 +444,7 @@ if idaapi.IDA_SDK_VERSION >= 670:
             This function contains the action code itself. You MUST implement
             it in your class for the action to work.
 
-            :param ctx: The action context passed from IDA.
-            :return: None
+            Args:
+                ctx: The action context passed from IDA.
             """
             raise NotImplementedError()
-
-

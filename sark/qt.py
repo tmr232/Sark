@@ -20,8 +20,13 @@ finally:
 def capture_widget(widget, path=None):
     """Grab an image of a Qt widget
 
-    If a path is provided, the image will be saved to it.
-    If not, the PNG buffer will be returned.
+    Args:
+        widget: The Qt Widget to capture
+        path (optional): The path to save to. If not provided - will return image data.
+
+    Returns:
+        If a path is provided, the image will be saved to it.
+        If not, the PNG buffer will be returned.
     """
     pixmap = QtGui.QPixmap.grabWidget(widget)
 

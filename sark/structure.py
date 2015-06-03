@@ -32,6 +32,19 @@ STRUCT_ERROR_MAP = {
 
 
 def struct_member_error(err, sid, name, offset, size):
+    """Create and format a struct member exception.
+
+    Args:
+        err: The error value returned from struct member creation
+        sid: The struct id
+        name: The member name
+        offset: Memeber offset
+        size: Member size
+
+    Returns:
+        A ``SarkErrorAddStructMemeberFailed`` derivative exception, with an
+        informative message.
+    """
     exception, msg = STRUCT_ERROR_MAP[err]
     struct_name = idc.GetStrucName(sid)
     return exception(('AddStructMember(struct="{}", member="{}", offset={}, size={}) '
@@ -45,19 +58,42 @@ def struct_member_error(err, sid, name, offset, size):
 
 
 def create_struct(name):
+    """Create a structure.
+
+    Args:
+        name: The structure's name
+
+    Returns:
+        The sturct ID
+
+    Raises:
+        exceptions.SarkStructAlreadyExists: A struct with the same name already exists
+        exceptions.SarkCreationFailed:  Struct creation failed
+    """
     sid = idc.GetStrucIdByName(name)
     if sid != 0xFFFFFFFF:
         # The struct already exists.
-        raise exceptions.SarkStructAlreadyExists()
+        raise exceptions.SarkStructAlreadyExists("A struct names {!r} already exists.".format(name))
 
     sid = idc.AddStrucEx(-1, name, 0)
     if sid == 0xFFFFFFFF:
-        raise exceptions.SarkStructCreationFailed()
+        raise exceptions.SarkStructCreationFailed("Struct creation failed.")
 
     return sid
 
 
 def get_struct(name):
+    """Get a struct by it's name.
+
+    Args:
+        name: The name of the struct
+
+    Returns:
+        The struct's id
+
+    Raises:
+        exceptions.SarkStructNotFound: is the struct does not exist.
+    """
     sid = idc.GetStrucIdByName(name)
     if sid == 0xFFFFFFFF:
         raise exceptions.SarkStructNotFound()
@@ -122,6 +158,10 @@ def get_common_register(start, end):
 
     For every access, the struct-referencing registers, in this case
     `ebx`, are counted. The most used one is returned.
+
+    Args:
+        start: The adderss to start at
+        end: The address to finish at
     """
     registers = defaultdict(int)
     for line in lines(start, end):
@@ -139,6 +179,7 @@ def get_common_register(start, end):
 
 
 def offset_name(offset):
+    """Format an offset into a name."""
     return "offset_{:X}".format(offset.offset)
 
 
