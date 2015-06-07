@@ -43,7 +43,7 @@ single object. Some useful members are:
 +-------------+----------------------------------------------------------------+
 | flags       | function flags                                                 |
 +-------------+----------------------------------------------------------------+
-| lines       | all the lines in the functions (a generator)                   |
+| lines       | all the lines in the function (a generator)                    |
 +-------------+----------------------------------------------------------------+
 | xrefs\_\*   | xrefs to and from the function                                 |
 +-------------+----------------------------------------------------------------+

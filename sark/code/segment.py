@@ -40,7 +40,7 @@ class Segment(object):
             name - name of the segment
             index - index of the segment
         """
-        if sum((ea not in (self.UseCurrentAddress, None), name is not None, index is not None,)) != 1:
+        if sum((ea not in (self.UseCurrentAddress, None), name is not None, index is not None,)) > 1:
             raise ValueError(
                 "Expected only one (ea, name or index). Got (ea={!r}, name={!r}, index={!r})".format(ea, name, index))
 

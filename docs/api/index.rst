@@ -9,6 +9,7 @@ API
     Xrefs
     Instructions
     Code-Blocks
+    segments
     Switch
     Enums
     IDB-Graphs
