@@ -41,6 +41,11 @@ def capture_widget(widget, path=None):
 
         return image_buffer.data().data()
 
+def form_to_widget(tform):
+    class Ctx(object):
+        QtGui = QtGui
+
+    return idaapi.PluginForm.FormToPySideWidget(tform, ctx=Ctx())
 
 def get_widget(title):
     """Get the Qt widget of the IDA window with the given title."""
@@ -48,7 +53,7 @@ def get_widget(title):
     if not tform:
         raise exceptions.FormNotFound("No form titled {!r} found.".format(title))
 
-    return idaapi.PluginForm.FormToPySideWidget(tform)
+    return form_to_widget(tform)
 
 
 def resize_widget(widget, width, height):
@@ -64,7 +69,7 @@ def get_window():
     if not tform:
         tform = idaapi.find_tform("Output window")
 
-    widget = idaapi.PluginForm.FormToPySideWidget(tform)
+    widget = form_to_widget(tform)
     window = widget.window()
     return window
 
