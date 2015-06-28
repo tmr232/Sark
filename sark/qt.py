@@ -93,12 +93,12 @@ class MenuManager(object):
 
     >>> # Use the manager to add top-level menus
     >>> menu_manager = MenuManager()
-    >>> menu_manager.add_menu("MyMenu")
+    >>> menu_manager.add_menu("My Menu")
     >>> # Use the standard API to add menu items
-    >>> idaapi.attach_action_to_menu("MyMenu/", "SomeActionName", idaapi.SETMENU_APP)
+    >>> idaapi.attach_action_to_menu("My Menu/", ":My-Action:", idaapi.SETMENU_APP)
     >>> # When a menu is not needed, remove it
-    >>> menu_manager.remove_menu("MyMenu")
-    >>> # When you are done with the manager (and want to remove all menus you added.)
+    >>> menu_manager.remove_menu("My Menu")
+    >>> # When you are done with the manager (and want to remove all menus you added,)
     >>> # clear it before deleting.
     >>> menu_manager.clear()
     """
@@ -132,10 +132,11 @@ class MenuManager(object):
                 "Menu {!r} was not found. It might be deleted, or belong to another menu manager.".format(name))
 
         self._menu.removeAction(self._menus[name].menuAction())
+        del self._menus[name]
 
     def clear(self):
         """Clear all menus created by this manager."""
         for menu in self._menus.itervalues():
             self._menu.removeAction(menu.menuAction())
-
+        self._menus = {}
 

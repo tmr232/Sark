@@ -3,6 +3,7 @@ import idc
 from threading import RLock
 import itertools
 import wrapt
+from .qt import MenuManager
 
 
 class Update(object):
