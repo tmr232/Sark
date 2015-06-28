@@ -241,6 +241,10 @@ class Function(object):
 
         idc.SetColor(self.ea, idc.CIC_FUNC, color)
 
+    @property
+    def has_name(self):
+        return Line(self.startEA).has_name
+
 
 def iter_function_lines(func_ea):
     """Iterate the lines of a function.
