@@ -9,15 +9,14 @@ def register_sark_codecs():
 
     codecs.register(sark_search_function)
 
-def is_in_ida():
 
+def is_in_ida():
     try:
         import idaapi
+
         return True
     except ImportError:
         return False
-
-
 
 # Register the hex-bytes codec.
 register_sark_codecs()
@@ -26,11 +25,21 @@ register_sark_codecs()
 # when used in the codecs proxy, we want to allow importing specific modules outside
 # IDA.
 if is_in_ida():
-    from . import (core, code, exceptions, structure, codeblocks, data, debug, enum, ui)
+    from . import (core,
+                   code,
+                   exceptions,
+                   structure,
+                   codeblocks,
+                   data,
+                   debug,
+                   enum,
+                   ui,
+                   graph)
 
     reload(code)
     reload(core)
     reload(exceptions)
+    reload(graph)
     reload(structure)
     reload(codeblocks)
     reload(data)
