@@ -64,3 +64,36 @@ There are 2 existing handlers you can use.
 +--------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | ``AddressNodeHandler``   | Assumes all nodes are IDB addresses. For node text, it shows the address' name if it exists, or a hex address otherwise. On double click, it jumps to the clicked address.   |
 +--------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+
+
+Menu Manager
+~~~~~~~~~~~~
+
+Sark provides a menu-manager class to allow the addition of top-level menus to IDA's GUI.
+This is done by abusing QT to find the top level menu, but you don't need to worry about that.
+
+
+
+|menu_image|
+
+
+.. code:: python
+
+    >>> # Use the manager to add top-level menus
+    >>> menu_manager = sark.ui.MenuManager()
+    >>> menu_manager.add_menu("My Menu")
+    >>> # Use the standard API to add menu items
+    >>> # Assume the action's text is "My Action"
+    >>> idaapi.attach_action_to_menu("My Menu/", "SomeActionName", idaapi.SETMENU_APP)
+    >>> # When a menu is not needed, remove it
+    >>> menu_manager.remove_menu("My Menu")
+    >>> # When you are done with the manager (and want to remove all menus you added.)
+    >>> # clear it before deleting.
+    >>> menu_manager.clear()
+
+As you can see in the above code, the `MenuManager` class only handles the addition of
+a top-level menu. After that, IDA's own APIs can be used freely with the created
+menu to add or remove menu items
+
+
+.. |menu_image| image:: ../media/ui/top-level-menu.png
