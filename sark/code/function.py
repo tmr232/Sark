@@ -182,7 +182,11 @@ class Function(object):
 
     @property
     def demangled(self):
-        return idaapi.demangle_name2(self.name, 0)
+        """Return the demangled name of the function. If none exists, return `.name`"""
+        name = idaapi.demangle_name2(self.name, 0)
+        if name:
+            return name
+        return self.name
 
     @name.setter
     def name(self, name):
