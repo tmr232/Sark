@@ -87,6 +87,7 @@ def show_current_function_meaningful():
 
 def show_highlighted_function_meaningful():
     line = sark.Line()
+    meaningful_displayed = False
     for xref in line.xrefs_from:
         try:
             if xref.type.is_flow:
@@ -94,9 +95,13 @@ def show_highlighted_function_meaningful():
 
             function = sark.Function(xref.to)
             show_meaningful_in_function(function)
+            meaningful_displayed = True
 
         except sark.exceptions.SarkNoFunction:
             pass
+
+    if not meaningful_displayed:
+        idaapi.msg("[FunctionStrings] No function referenced by current line: 0x{:08X}.\n".format(idc.here()))
 
 
 class Meaningful(idaapi.plugin_t):
