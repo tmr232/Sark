@@ -54,6 +54,7 @@ Contents:
    Installation
    api/index
    examples/index
+   plugins/index
    debugging
    CONTRIBUTING
    AUTHORS

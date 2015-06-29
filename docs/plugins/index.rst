@@ -1,0 +1,6 @@
+Plugins
+=======
+
+.. toctree::
+
+    meaningful
