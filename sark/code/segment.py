@@ -104,6 +104,10 @@ class Segment(object):
     def __repr__(self):
         return "<Segment(ea=0x{:08X}, name={!r}, size=0x{:08X})>".format(self.ea, self.name, self.size)
 
+    @property
+    def segment_t(self):
+        return self._segment
+
 
 def segments():
     for index in xrange(idaapi.get_segm_qty()):

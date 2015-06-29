@@ -265,3 +265,7 @@ class Instruction(object):
     def is_indirect_jump(self):
         """Is the instruction an indirect jump instruction."""
         return idaapi.is_indirect_jump_insn(self._ea)
+
+    @property
+    def insn_t(self):
+        return self._insn

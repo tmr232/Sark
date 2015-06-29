@@ -190,7 +190,8 @@ class Line(object):
     def xrefs_to(self):
         """Xrefs to this line.
 
-        :return: Xrefs as `sark.code.xref.Xref` objects.
+        Returns:
+            Xrefs as `sark.code.xref.Xref` objects.
         """
         return imap(Xref, idautils.XrefsTo(self.ea))
 

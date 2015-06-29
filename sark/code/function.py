@@ -245,6 +245,10 @@ class Function(object):
     def has_name(self):
         return Line(self.startEA).has_name
 
+    @property
+    def func_t(self):
+        return self._func
+
 
 def iter_function_lines(func_ea):
     """Iterate the lines of a function.
