@@ -95,7 +95,7 @@ Debugging
    If you want to use the sample debuggee, put it in the plugins directory as well.
 #. Start IDA and load an IDB (otherwise weird issues arise)
 #. Load the code you want to debug into Visual Studio and set breakpoints.
-#. In Visual Studio (with the plugin file open), use ``DEBUG->Attack to process``
+#. In Visual Studio (with the plugin file open), use ``DEBUG->Attach to process``
 
     .. image:: media/debugging/debugging_menu.PNG
 
