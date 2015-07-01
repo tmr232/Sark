@@ -112,7 +112,7 @@ Debugging
 Important Notes
 ---------------
 
-#. When the debugging, IDA will be frozen.
+#. When debugging (breaking and stepping), IDA will be frozen.
 #. Load your IDB prior to attaching the debugger.
 #. For easy debug-on-demand, keep ``ptvsd_enable.py`` in IDA's plugins directory at all times.
 #. To set breakpoints, make sure you load into VS the files that are actually loaded by IDA.
