@@ -35,7 +35,7 @@ class SegmentPermissions(object):
 
     @property
     def x(self):
-        return self._segment.perm & idaapi.SEGPERM_EXEC
+        return bool(self._segment.perm & idaapi.SEGPERM_EXEC)
 
     @x.setter
     def x(self, value):
@@ -47,7 +47,7 @@ class SegmentPermissions(object):
 
     @property
     def w(self):
-        return self._segment.perm & idaapi.SEGPERM_WRITE
+        return bool(self._segment.perm & idaapi.SEGPERM_WRITE)
 
     @w.setter
     def w(self, value):
@@ -59,7 +59,7 @@ class SegmentPermissions(object):
 
     @property
     def r(self):
-        return self._segment.perm & idaapi.SEGPERM_READ
+        return bool(self._segment.perm & idaapi.SEGPERM_READ)
 
     @r.setter
     def r(self, value):
@@ -77,7 +77,7 @@ class SegmentPermissions(object):
         return "".join(("R" if self.r else "", "W" if self.w else "", "X" if self.x else ""))
 
     def __repr__(self):
-        return "<SegmentPermissions(read={}, write={}, execute={})>".format(bool(self.r), bool(self.w), bool(self.x))
+        return "<SegmentPermissions(read={}, write={}, execute={})>".format(self.r, self.w, self.x)
 
 
 class Segment(object):
@@ -108,9 +108,14 @@ class Segment(object):
         """
         if sum((ea not in (self.UseCurrentAddress, None), name is not None, index is not None,
                 segment_t is not None,)) > 1:
-            raise ValueError(
-                "Expected only one (ea, name, index or segment_t). Got (ea={!r}, name={!r}, index={!r}, segment_t={!r})".format(
-                    ea, name, index, segment_t))
+            raise ValueError((
+                                 "Expected only one (ea, name, index or segment_t)."
+                                 " Got (ea={!r}, name={!r}, index={!r}, segment_t={!r})"
+                             ).format(ea,
+                                      name,
+                                      index,
+                                      segment_t))
+
 
         elif segment_t is not None:
             seg = segment_t
@@ -228,15 +233,15 @@ class Segment(object):
         return self.endEA - self.startEA
 
     def __repr__(self):
-        return "<Segment(ea=0x{:08X}," \
-               " name={!r}," \
-               " size=0x{:08X}," \
-               " permissions={!r}," \
-               " bitness={})>".format(self.ea,
-                                   self.name,
-                                   self.size,
-                                   str(self.permissions),
-                                   self.bitness)
+        return ("<Segment(ea=0x{:08X},"
+                " name={!r},"
+                " size=0x{:08X},"
+                " permissions={!r},"
+                " bitness={})>").format(self.ea,
+                                        self.name,
+                                        self.size,
+                                        str(self.permissions),
+                                        self.bitness)
 
 
 def segments():
