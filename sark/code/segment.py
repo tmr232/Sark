@@ -3,6 +3,7 @@ import idaapi
 import idautils
 from .function import functions
 from .line import lines
+from .. import exceptions
 
 
 class Comments(object):
@@ -81,7 +82,7 @@ class Segment(object):
     class UseCurrentAddress(object):
         pass
 
-    def __init__(self, ea=UseCurrentAddress, name=None, index=None):
+    def __init__(self, ea=UseCurrentAddress, name=None, index=None, segment_t=None):
         """Wrapper around IDA segments.
 
         There are 3 ways to get a segment - by name, ea or index. Only use one.
@@ -91,9 +92,14 @@ class Segment(object):
             name - name of the segment
             index - index of the segment
         """
-        if sum((ea not in (self.UseCurrentAddress, None), name is not None, index is not None,)) > 1:
+        if sum((ea not in (self.UseCurrentAddress, None), name is not None, index is not None,
+                segment_t is not None,)) > 1:
             raise ValueError(
-                "Expected only one (ea, name or index). Got (ea={!r}, name={!r}, index={!r})".format(ea, name, index))
+                "Expected only one (ea, name, index or segment_t). Got (ea={!r}, name={!r}, index={!r}, segment_t={!r})".format(
+                    ea, name, index, segment_t))
+
+        elif segment_t is not None:
+            seg = segment_t
 
         elif name is not None:
             seg = idaapi.get_segm_by_name(name)
@@ -167,12 +173,22 @@ class Segment(object):
     @property
     def next(self):
         """Get the next segment."""
-        return Segment(idaapi.get_next_seg(self.ea))
+        seg = Segment(segment_t=idaapi.get_next_seg(self.ea))
+
+        if seg.ea <= self.ea:
+            raise exceptions.NoMoreSegments("This is the last segment. No segments exist after it.")
+
+        return seg
 
     @property
     def prev(self):
         """Get the previous segment."""
-        return Segment(idaapi.get_prev_seg(self.ea))
+        seg = Segment(segment_t=idaapi.get_prev_seg(self.ea))
+
+        if seg.ea >= self.ea:
+            raise exceptions.NoMoreSegments("This is the first segment. no segments exist before it.")
+
+        return seg
 
     @property
     def comments(self):

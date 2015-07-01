@@ -180,3 +180,11 @@ class FormNotFound(SarkGuiError):
 
 class InvalidStructOffset(SarkStructError):
     pass
+
+
+class SegmentError(SarkError):
+    pass
+
+
+class NoMoreSegments(SegmentError):
+    pass
