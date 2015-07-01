@@ -43,6 +43,8 @@ single object. Some useful members are:
 +-------------+----------------------------------------------------------------+
 | size        | the size of the segment                                        |
 +-------------+----------------------------------------------------------------+
+| permissions | the segments permissions (r/w/x). Can be modified.             |
++-------------+----------------------------------------------------------------+
 
 All similarly named members between ``sark.Line`` and ``sark.Segment``
 work similarly as well to avoid confusion.
