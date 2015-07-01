@@ -188,3 +188,7 @@ class SegmentError(SarkError):
 
 class NoMoreSegments(SegmentError):
     pass
+
+
+class InvalidBitness(SegmentError):
+    pass

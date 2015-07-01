@@ -45,6 +45,10 @@ single object. Some useful members are:
 +-------------+----------------------------------------------------------------+
 | permissions | the segments permissions (r/w/x). Can be modified.             |
 +-------------+----------------------------------------------------------------+
+| next        | the next segment.                                              |
++-------------+----------------------------------------------------------------+
+| bitness     | the bitness of the segment (16, 32 or 64.)                     |
++-------------+----------------------------------------------------------------+
 
 All similarly named members between ``sark.Line`` and ``sark.Segment``
 work similarly as well to avoid confusion.

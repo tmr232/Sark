@@ -8,6 +8,7 @@ from .. import exceptions
 
 class Comments(object):
     def __init__(self, segment):
+        super(Comments, self).__init__()
         self._segment = segment
 
     @property
@@ -29,6 +30,7 @@ class Comments(object):
 
 class SegmentPermissions(object):
     def __init__(self, segment_t):
+        super(SegmentPermissions, self).__init__()
         self._segment = segment_t
 
     @property
@@ -79,6 +81,18 @@ class SegmentPermissions(object):
 
 
 class Segment(object):
+    BITNESS_TO_BITS = {
+        0: 16,
+        1: 32,
+        2: 64,
+    }
+
+    BITS_TO_BITNESS = {
+        16: 0,
+        32: 1,
+        64: 2,
+    }
+
     class UseCurrentAddress(object):
         pass
 
@@ -171,6 +185,21 @@ class Segment(object):
         return lines(self.startEA, self.endEA)
 
     @property
+    def bitness(self):
+        """Segment's Bitness.
+
+        Can be 16, 32 or 64.
+        """
+        return self.BITNESS_TO_BITS[self.segment_t.bitness]
+
+    @bitness.setter
+    def bitness(self, bits):
+        try:
+            self.segment_t.bitness = self.BITS_TO_BITNESS[bits]
+        except KeyError:
+            raise exceptions.InvalidBitness("Got {}. Expecting 16, 32 or 64.".format(bits))
+
+    @property
     def next(self):
         """Get the next segment."""
         seg = Segment(segment_t=idaapi.get_next_seg(self.ea))
@@ -199,10 +228,15 @@ class Segment(object):
         return self.endEA - self.startEA
 
     def __repr__(self):
-        return "<Segment(ea=0x{:08X}, name={!r}, size=0x{:08X}, permissions={!r})>".format(self.ea,
-                                                                                           self.name,
-                                                                                           self.size,
-                                                                                           str(self.permissions))
+        return "<Segment(ea=0x{:08X}," \
+               " name={!r}," \
+               " size=0x{:08X}," \
+               " permissions={!r}," \
+               " bitness={})>".format(self.ea,
+                                   self.name,
+                                   self.size,
+                                   str(self.permissions),
+                                   self.bitness)
 
 
 def segments():
