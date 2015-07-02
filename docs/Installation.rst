@@ -50,7 +50,7 @@ Install the string codecs by copying and renaming the codec proxy
 
 .. code:: bash
 
-    copy codecs\proxy.py "C:\Python2.7\lib\encodings\hex_bytes.py"
+    copy sark\encodings\proxy.py "C:\Python2.7\lib\encodings\hex_bytes.py"
 
 *optional:* Install IDA plugins by copying and renaming the plugin proxy
 (this is **NOT** the codec proxy.)
