@@ -18,7 +18,7 @@ def copy_current_file_offset():
     # Get current address' file offset.
     start, end = sark.get_selection()
     file_offset = idaapi.get_fileregion_offset(start)
-    if (-1 == get_fileregion_offset):
+    if (-1 == file_offset):
         message("The current address cannot be mapped to a valid offset of the input file.")
         return
         
