@@ -8,6 +8,12 @@ def copy_current_address():
     clipboard.copy("0x{:08X}".format(start))
 
 
+def copy_current_file_offset():
+    start, end = sark.get_selection()
+    file_offset = idaapi.get_fileregion_offset(start)
+    clipboard.copy("0x{:08X}".format(file_offset))
+
+
 def copy_current_selection():
     start, end = sark.get_selection()
     buffer = sark.data.read_memory(start, end)
@@ -24,6 +30,7 @@ class QuickCopy(idaapi.plugin_t):
     def init(self):
         self.hotkeys = []
         self.hotkeys.append(idaapi.add_hotkey("Ctrl+Alt+C", copy_current_address))
+        self.hotkeys.append(idaapi.add_hotkey("Ctrl+Alt+C+O", copy_current_file_offset))
         self.hotkeys.append(idaapi.add_hotkey("Ctrl+Shift+C", copy_current_selection))
         return idaapi.PLUGIN_KEEP
 
