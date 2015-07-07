@@ -15,14 +15,15 @@ def copy_current_address():
 
 
 def copy_current_file_offset():
-    # Get current address' file offset.
+    """Get the file-offset mapped to the current address."""
     start, end = sark.get_selection()
-    file_offset = idaapi.get_fileregion_offset(start)
-    if (-1 == file_offset):
+
+    try:
+        file_offset = sark.core.get_fileregion_offset(start)
+        clipboard.copy("0x{:08X}".format(file_offset))
+
+    except sark.exceptions.NoFileOffset:
         message("The current address cannot be mapped to a valid offset of the input file.")
-        return
-        
-    clipboard.copy("0x{:08X}".format(file_offset))
 
 
 def copy_current_selection():
