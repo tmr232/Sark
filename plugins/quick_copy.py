@@ -3,9 +3,26 @@ import clipboard
 import sark
 
 
+def message(*messages):
+    for msg in messages:
+        for line in msg.splitlines():
+            idaapi.msg("[QuickCopy] {}\n".format(line))
+
+
 def copy_current_address():
     start, end = sark.get_selection()
     clipboard.copy("0x{:08X}".format(start))
+
+
+def copy_current_file_offset():
+    # Get current address' file offset.
+    start, end = sark.get_selection()
+    file_offset = idaapi.get_fileregion_offset(start)
+    if (-1 == file_offset):
+        message("The current address cannot be mapped to a valid offset of the input file.")
+        return
+        
+    clipboard.copy("0x{:08X}".format(file_offset))
 
 
 def copy_current_selection():
@@ -24,6 +41,7 @@ class QuickCopy(idaapi.plugin_t):
     def init(self):
         self.hotkeys = []
         self.hotkeys.append(idaapi.add_hotkey("Ctrl+Alt+C", copy_current_address))
+        self.hotkeys.append(idaapi.add_hotkey("Ctrl+Alt+C+O", copy_current_file_offset))
         self.hotkeys.append(idaapi.add_hotkey("Ctrl+Shift+C", copy_current_selection))
         return idaapi.PLUGIN_KEEP
 
