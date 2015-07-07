@@ -168,4 +168,5 @@ Usage
 
 1. Place your cursor or mark a selection;
 2. Press :code:`Ctrl + Alt + C` to copy the marked address;
-3. Press :code:`Ctrl + Shift + C` to copy the selected bytes (instruction bytes).
+3. Press :code:`Ctrl + Alt + C + O` to copy file offset of the marked address;
+4. Press :code:`Ctrl + Shift + C` to copy the selected bytes (instruction bytes).

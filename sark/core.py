@@ -158,3 +158,11 @@ def get_native_size():
         return 8
     else:
         return 2
+
+
+def get_fileregion_offset(ea):
+    file_offset = idaapi.get_fileregion_offset(ea)
+    if file_offset == -1:
+        raise exceptions.NoFileOffset("Address 0x{:08X} is not mapped to any file offset.".format(ea))
+
+    return file_offset
