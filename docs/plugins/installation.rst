@@ -38,4 +38,5 @@ User-Specific
     Each user can set his own plugins to load, thus eliminating the need for root access.
 
 
-By installing plugins this way, you no longer need to copy the plugins, and can just develop normally.
+To install your plugins, just add them to one of the lists. This allows you to easily update plugins as you go
+without ever needing to copy them.
