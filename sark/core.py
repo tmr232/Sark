@@ -166,3 +166,10 @@ def get_fileregion_offset(ea):
         raise exceptions.NoFileOffset("Address 0x{:08X} is not mapped to any file offset.".format(ea))
 
     return file_offset
+
+def is_function(ea):
+    try:
+        get_func(ea)
+        return True
+    except exceptions.SarkNoFunction:
+        return False
