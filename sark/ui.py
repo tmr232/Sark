@@ -4,6 +4,7 @@ from threading import RLock
 import itertools
 import wrapt
 from .qt import MenuManager
+import traceback
 
 
 class Update(object):
@@ -429,6 +430,8 @@ if idaapi.IDA_SDK_VERSION >= 670:
                 self._activate(ctx)
                 return 1
             except:
+                trace = traceback.format_exc()
+                idaapi.msg("Action {!r} failed to activate. Traceback:\n{}".format(self.get_name(), trace))
                 return 0
 
         def update(self, ctx):
