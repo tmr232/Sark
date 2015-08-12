@@ -7,6 +7,7 @@ from ..core import set_name, get_ea, fix_addresses, is_same_function
 from .line import Line
 from .xref import Xref
 from ..ui import updates_ui
+from .. import exceptions
 
 
 class Comments(object):
@@ -69,6 +70,10 @@ class Function(object):
 
         elif name is not None:
             ea = idc.LocByName(name)
+            if ea == idc.BADADDR:
+                raise exceptions.SarkNoFunction(
+                    "The supplied name does not belong to an existing function. "
+                    "(name = {!r})".format(name))
 
         elif ea == self.UseCurrentAddress:
             ea = idc.here()
