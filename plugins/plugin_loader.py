@@ -59,12 +59,18 @@ class PluginLoader(idaapi.plugin_t):
 
         # Make sure the files exist. If not - create them.
         if not os.path.isfile(SYS_PLUGIN_LIST_PATH):
-            with open(SYS_PLUGIN_LIST_PATH, "wb"):
-                message("Created system plugin list at {}".format(SYS_PLUGIN_LIST_PATH))
+            try:
+                with open(SYS_PLUGIN_LIST_PATH, "wb"):
+                    message("Created system plugin list at {}".format(SYS_PLUGIN_LIST_PATH))
+            except IOError:
+                message("Failed creating system plugin list at {}".format(SYS_PLUGIN_LIST_PATH))
 
         if not os.path.isfile(USER_PLUGIN_LIST_PATH):
-            with open(USER_PLUGIN_LIST_PATH, "wb"):
-                message("Created user plugin list at {}".format(USER_PLUGIN_LIST_PATH))
+            try:
+                with open(USER_PLUGIN_LIST_PATH, "wb"):
+                    message("Created user plugin list at {}".format(USER_PLUGIN_LIST_PATH))
+            except IOError:
+                message("Failed creating user plugin list at {}".format(USER_PLUGIN_LIST_PATH))
 
         for path in iter_plugin_paths():
             # This check is not needed, but saves us from the dreaded error message-box

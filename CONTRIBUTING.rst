@@ -20,6 +20,8 @@ When contributing, try and follow these guidelines:
 - Write meaningful commit messages.
 - No change is too small. You are welcome to fix typos, convention violations,
   or plain ugly code. All contributions are welcome.
+- When submitting a fix to a bug, describe the bug being fixed. Include both
+  the bug and the desired results. Creating an issue for the bug is good practice.
 
 If you can't adhere to the guidelines, **submit your pull requests anyway**.
 Maybe someone else can improve on it.
