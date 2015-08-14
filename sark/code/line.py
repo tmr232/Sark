@@ -45,6 +45,10 @@ class Comments(object):
     @anterior.setter
     @updates_ui
     def anterior(self, comment):
+        if not comment:
+            idc.DelExtLnA(self._ea, 0)
+            return
+        
         index = 0
 
         for index, line in enumerate(comment.splitlines()):
@@ -61,6 +65,10 @@ class Comments(object):
     @posterior.setter
     @updates_ui
     def posterior(self, comment):
+        if not comment:
+            idc.DelExtLnB(self._ea, 0)
+            return
+        
         index = 0
 
         for index, line in enumerate(comment.splitlines()):
