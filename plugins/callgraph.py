@@ -6,6 +6,8 @@ import networkx as nx
 from collections import deque
 from sark import exceptions
 
+MENU_PATH_GRAPHS = 'View/Graphs/'
+
 
 def _try_get_function_start(ea):
     with ignored(exceptions.SarkNoFunction):
@@ -36,7 +38,7 @@ def _xrefs_from(function_ea):
 
 
 def gen_call_graph(ea, to=False, distance=4):
-    graph = nx.DiGraph()
+    call_graph = nx.DiGraph()
 
     ea_queue = deque()
     distance_queue = deque()
@@ -58,12 +60,11 @@ def gen_call_graph(ea, to=False, distance=4):
             continue
 
         new = set()
-        idaapi.msg('{}\n'.format(ea))
         for xref in get_xrefs(ea):
             frm = _try_get_function_start(xref.frm)
             to_ = _try_get_function_start(xref.to)
 
-            graph.add_edge(frm, to_)
+            call_graph.add_edge(frm, to_)
 
             if to:
                 new.add(frm)
@@ -73,10 +74,62 @@ def gen_call_graph(ea, to=False, distance=4):
         ea_queue.extend(new)
         distance_queue.extend(repeat(distance_to_go - 1, len(new)))
 
-    # return graph
+    return call_graph
+
+
+def show_callgraph(ea, to=False, distance=4):
+    ea = _try_get_function_start(ea)
+
+    call_graph = gen_call_graph(ea, to=to, distance=distance)
+
+    call_graph.node[ea][sark.ui.NXGraph.BG_COLOR] = 0x80
 
     # Create an NXGraph viewer
-    viewer = sark.ui.NXGraph(graph, handler=sark.ui.AddressNodeHandler())
+    viewer = sark.ui.NXGraph(call_graph, handler=sark.ui.AddressNodeHandler())
 
     # Show the graph
     viewer.Show()
+
+
+class ShowCallgraphTo(sark.ui.ActionHandler):
+    TEXT = "Show Callgraph To"
+
+    def _activate(self, ctx):
+        distance = idaapi.asklong(4, 'Distance To Source')
+        show_callgraph(ctx.cur_ea, to=True, distance=distance)
+
+
+class ShowCallgraphFrom(sark.ui.ActionHandler):
+    TEXT = "Show Callgraph From"
+
+    def _activate(self, ctx):
+        distance = idaapi.asklong(4, 'Distance From Source')
+        show_callgraph(ctx.cur_ea, to=False, distance=distance)
+
+
+class CallgraphPlugin(idaapi.plugin_t):
+    flags = 0
+    comment = 'Show Callgraphs'
+    help = 'Shows callgraphs.'
+    wanted_name = 'Callgraph'
+    wanted_hotkey = ""
+
+    def init(self):
+        ShowCallgraphTo.register()
+        ShowCallgraphFrom.register()
+        idaapi.attach_action_to_menu(MENU_PATH_GRAPHS, ShowCallgraphTo.get_name(), 0)
+        idaapi.attach_action_to_menu(MENU_PATH_GRAPHS, ShowCallgraphFrom.get_name(), 0)
+        return idaapi.PLUGIN_KEEP
+
+    def term(self):
+        idaapi.detach_action_from_menu(MENU_PATH_GRAPHS, ShowCallgraphTo.get_name())
+        idaapi.detach_action_from_menu(MENU_PATH_GRAPHS, ShowCallgraphFrom.get_name())
+        ShowCallgraphTo.unregister()
+        ShowCallgraphFrom.unregister()
+
+    def run(self, arg):
+        pass
+
+
+def PLUGIN_ENTRY():
+    return CallgraphPlugin()
