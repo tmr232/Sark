@@ -50,7 +50,7 @@ def show_meaningful_in_function(function):
         else:
             try:
                 string = get_string(xref.to)
-            except exceptions.NoString:
+            except exceptions.SarkNoString:
                 continue
 
             # Trim the string for easier display

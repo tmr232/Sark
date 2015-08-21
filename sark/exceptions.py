@@ -198,5 +198,5 @@ class NoFileOffset(SarkError):
     pass
 
 
-class NoString(SarkError):
+class SarkNoString(SarkError):
     pass
