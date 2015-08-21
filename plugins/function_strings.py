@@ -1,3 +1,4 @@
+from awesome.context import ignored
 import idaapi
 import idc
 import sark
@@ -8,23 +9,12 @@ def show_function_strings(function):
     idaapi.msg("From          To            String\n")
 
     for xref in function.xrefs_from:
-        if xref.type.is_code:
-            continue
+        with ignored(sark.exceptions.SarkNoString):
+            string = sark.get_string(xref.to)
+            # Trim the string for easier display
+            string = string[:100]
 
-        string_type = idc.GetStringType(xref.to)
-
-        if string_type is None:
-            continue
-
-        string = idc.GetString(xref.to, strtype=string_type)
-
-        if not string:
-            continue
-
-        # Trim the string for easier display
-        string = string[:100]
-
-        idaapi.msg("0x{:08X}    0x{:08X}    {}\n".format(xref.frm, xref.to, repr(string)))
+            idaapi.msg("0x{:08X}    0x{:08X}    {}\n".format(xref.frm, xref.to, repr(string)))
 
 
 def show_current_function_strings():
