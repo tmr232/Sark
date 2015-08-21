@@ -16,17 +16,12 @@ def _try_get_function_start(ea):
     return ea
 
 
-def _empty_iterator():
-    return
-    yield
-
-
 def _xrefs_to(function_ea):
     try:
         return sark.Function(function_ea).xrefs_to
 
     except exceptions.SarkNoFunction:
-        return _empty_iterator()
+        return sark.Line(function_ea).xrefs_to
 
 
 def _xrefs_from(function_ea):
@@ -34,11 +29,11 @@ def _xrefs_from(function_ea):
         return sark.Function(function_ea).xrefs_from
 
     except exceptions.SarkNoFunction:
-        return _empty_iterator()
+        return sark.Line(function_ea).xrefs_from
 
 
-def gen_call_graph(ea, to=False, distance=4):
-    call_graph = nx.DiGraph()
+def gen_xref_graph(ea, to=False, distance=4):
+    xref_graph = nx.DiGraph()
 
     ea_queue = deque()
     distance_queue = deque()
@@ -64,7 +59,7 @@ def gen_call_graph(ea, to=False, distance=4):
             frm = _try_get_function_start(xref.frm)
             to_ = _try_get_function_start(xref.to)
 
-            call_graph.add_edge(frm, to_)
+            xref_graph.add_edge(frm, to_)
 
             if to:
                 new.add(frm)
@@ -74,13 +69,13 @@ def gen_call_graph(ea, to=False, distance=4):
         ea_queue.extend(new)
         distance_queue.extend(repeat(distance_to_go - 1, len(new)))
 
-    return call_graph
+    return xref_graph
 
 
-def show_callgraph(ea, to=False, distance=4):
+def show_xref_graph(ea, to=False, distance=4):
     ea = _try_get_function_start(ea)
 
-    call_graph = gen_call_graph(ea, to=to, distance=distance)
+    call_graph = gen_xref_graph(ea, to=to, distance=distance)
 
     call_graph.node[ea][sark.ui.NXGraph.BG_COLOR] = 0x80
 
@@ -91,45 +86,59 @@ def show_callgraph(ea, to=False, distance=4):
     viewer.Show()
 
 
-class ShowCallgraphTo(sark.ui.ActionHandler):
-    TEXT = "Show Callgraph To"
+class ShowXrefsGraphTo(sark.ui.ActionHandler):
+    TEXT = "Show xref graph to..."
 
     def _activate(self, ctx):
         distance = idaapi.asklong(4, 'Distance To Source')
-        show_callgraph(ctx.cur_ea, to=True, distance=distance)
+        show_xref_graph(ctx.cur_ea, to=True, distance=distance)
 
 
-class ShowCallgraphFrom(sark.ui.ActionHandler):
-    TEXT = "Show Callgraph From"
+class ShowXrefsGraphFrom(sark.ui.ActionHandler):
+    TEXT = "Show xref graph from..."
 
     def _activate(self, ctx):
         distance = idaapi.asklong(4, 'Distance From Source')
-        show_callgraph(ctx.cur_ea, to=False, distance=distance)
+        show_xref_graph(ctx.cur_ea, to=False, distance=distance)
 
 
-class CallgraphPlugin(idaapi.plugin_t):
+class Hooks(idaapi.UI_Hooks):
+    def finish_populating_tform_popup(self, form, popup):
+        # Or here, after the popup is done being populated by its owner.
+
+        if idaapi.get_tform_type(form) == idaapi.BWN_DISASM:
+            idaapi.attach_action_to_popup(form, popup, ShowXrefsGraphFrom.get_name(), '')
+            idaapi.attach_action_to_popup(form, popup, ShowXrefsGraphTo.get_name(), '')
+
+
+class XrefsGraphPlugins(idaapi.plugin_t):
     flags = 0
-    comment = 'Show Callgraphs'
-    help = 'Shows callgraphs.'
-    wanted_name = 'Callgraph'
+    comment = 'Show xref graphs'
+    help = 'Shows xref graphs.'
+    wanted_name = 'Xref Graphs'
     wanted_hotkey = ""
 
     def init(self):
-        ShowCallgraphTo.register()
-        ShowCallgraphFrom.register()
-        idaapi.attach_action_to_menu(MENU_PATH_GRAPHS, ShowCallgraphTo.get_name(), 0)
-        idaapi.attach_action_to_menu(MENU_PATH_GRAPHS, ShowCallgraphFrom.get_name(), 0)
+        ShowXrefsGraphTo.register()
+        ShowXrefsGraphFrom.register()
+        idaapi.attach_action_to_menu(MENU_PATH_GRAPHS, ShowXrefsGraphTo.get_name(), 0)
+        idaapi.attach_action_to_menu(MENU_PATH_GRAPHS, ShowXrefsGraphFrom.get_name(), 0)
+
+        self.hooks = Hooks()
+        self.hooks.hook()
+
         return idaapi.PLUGIN_KEEP
 
     def term(self):
-        idaapi.detach_action_from_menu(MENU_PATH_GRAPHS, ShowCallgraphTo.get_name())
-        idaapi.detach_action_from_menu(MENU_PATH_GRAPHS, ShowCallgraphFrom.get_name())
-        ShowCallgraphTo.unregister()
-        ShowCallgraphFrom.unregister()
+        self.hooks.unhook()
+        idaapi.detach_action_from_menu(MENU_PATH_GRAPHS, ShowXrefsGraphTo.get_name())
+        idaapi.detach_action_from_menu(MENU_PATH_GRAPHS, ShowXrefsGraphFrom.get_name())
+        ShowXrefsGraphTo.unregister()
+        ShowXrefsGraphFrom.unregister()
 
     def run(self, arg):
         pass
 
 
 def PLUGIN_ENTRY():
-    return CallgraphPlugin()
+    return XrefsGraphPlugins()
