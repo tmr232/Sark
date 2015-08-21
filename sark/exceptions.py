@@ -196,3 +196,7 @@ class InvalidBitness(SegmentError):
 
 class NoFileOffset(SarkError):
     pass
+
+
+class NoString(SarkError):
+    pass

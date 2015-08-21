@@ -6,6 +6,7 @@ import itertools
 import struct
 from awesome.iterator import irange as range
 from .core import fix_addresses
+from . import exceptions
 
 
 def Bytes(start=None, end=None):
@@ -96,3 +97,22 @@ def get_patched_bytes(start=None, end=None):
 
 def undefine(start, end):
     idc.MakeUnknown(start, end - start, idc.DOUNK_SIMPLE)
+
+
+def get_string(ea):
+    """Read the string at the given ea.
+
+    This function uses IDA's string APIs and does not implement any special logic.
+    """
+    # We get the item-head because the `GetStringType` function only works on the head of an item.
+    string_type = idc.GetStringType(idaapi.get_item_head(ea))
+
+    if string_type is None:
+        raise exceptions.NoString("No string at 0x{:08X}".format(ea))
+
+    string = idc.GetString(ea, strtype=string_type)
+
+    if not string:
+        raise exceptions.NoString("No string at 0x{:08X}".format(ea))
+
+    return string

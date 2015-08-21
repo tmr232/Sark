@@ -1,29 +1,14 @@
 import idaapi
-import sark
 import idc
+
+import sark
+from sark.data import get_string
+from sark import exceptions
 import sark.ui
-
-
-class NoString(Exception):
-    pass
 
 
 class NoName(Exception):
     pass
-
-
-def get_string(ea):
-    string_type = idc.GetStringType(ea)
-
-    if string_type is None:
-        raise NoString("No string at 0x{:08X}".format(ea))
-
-    string = idc.GetString(ea, strtype=string_type)
-
-    if not string:
-        raise NoString("No string at 0x{:08X}".format(ea))
-
-    return string
 
 
 def get_name(ea):
@@ -65,7 +50,7 @@ def show_meaningful_in_function(function):
         else:
             try:
                 string = get_string(xref.to)
-            except NoString:
+            except exceptions.NoString:
                 continue
 
             # Trim the string for easier display
