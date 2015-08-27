@@ -5,6 +5,7 @@ import sark
 HIGHLIGHT_COLOR = 0x303060
 
 
+@sark.ui.updates_ui
 def highlight_calls_in_function(ea):
     for line in sark.Function(ea).lines:
         if not line.insn.is_call:
