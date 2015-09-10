@@ -5,6 +5,7 @@ import idaapi
 import networkx as nx
 from collections import deque
 from sark import exceptions
+import idc
 
 MENU_PATH_GRAPHS = 'View/Graphs/'
 
@@ -86,29 +87,14 @@ def show_xref_graph(ea, to=False, distance=4):
     viewer.Show()
 
 
-class ShowXrefsGraphTo(sark.ui.ActionHandler):
-    TEXT = "Show xref graph to..."
 
-    def _activate(self, ctx):
-        distance = idaapi.asklong(4, 'Distance To Source')
-        show_xref_graph(ctx.cur_ea, to=True, distance=distance)
+def show_xrefs_from(*args):
+    distance = idaapi.asklong(4, 'Distance From Source')
+    show_xref_graph(idc.here(), to=False, distance=distance)
 
-
-class ShowXrefsGraphFrom(sark.ui.ActionHandler):
-    TEXT = "Show xref graph from..."
-
-    def _activate(self, ctx):
-        distance = idaapi.asklong(4, 'Distance From Source')
-        show_xref_graph(ctx.cur_ea, to=False, distance=distance)
-
-
-class Hooks(idaapi.UI_Hooks):
-    def finish_populating_tform_popup(self, form, popup):
-        # Or here, after the popup is done being populated by its owner.
-
-        if idaapi.get_tform_type(form) == idaapi.BWN_DISASM:
-            idaapi.attach_action_to_popup(form, popup, ShowXrefsGraphFrom.get_name(), '')
-            idaapi.attach_action_to_popup(form, popup, ShowXrefsGraphTo.get_name(), '')
+def show_xrefs_to(*args):
+    distance = idaapi.asklong(4, 'Distance To Source')
+    show_xref_graph(idc.here(), to=True, distance=distance)
 
 
 class XrefsGraphPlugins(idaapi.plugin_t):
@@ -119,22 +105,16 @@ class XrefsGraphPlugins(idaapi.plugin_t):
     wanted_hotkey = ""
 
     def init(self):
-        ShowXrefsGraphTo.register()
-        ShowXrefsGraphFrom.register()
-        idaapi.attach_action_to_menu(MENU_PATH_GRAPHS, ShowXrefsGraphTo.get_name(), 0)
-        idaapi.attach_action_to_menu(MENU_PATH_GRAPHS, ShowXrefsGraphFrom.get_name(), 0)
+        self.xref_to = idaapi.add_menu_item(MENU_PATH_GRAPHS, 'Xrefs to source', '', 0, show_xrefs_to, None)
+        self.xref_from = idaapi.add_menu_item(MENU_PATH_GRAPHS, 'Xrefs from source', '', 0, show_xrefs_from, None)
 
-        self.hooks = Hooks()
-        self.hooks.hook()
 
         return idaapi.PLUGIN_KEEP
 
     def term(self):
-        self.hooks.unhook()
-        idaapi.detach_action_from_menu(MENU_PATH_GRAPHS, ShowXrefsGraphTo.get_name())
-        idaapi.detach_action_from_menu(MENU_PATH_GRAPHS, ShowXrefsGraphFrom.get_name())
-        ShowXrefsGraphTo.unregister()
-        ShowXrefsGraphFrom.unregister()
+        idaapi.del_menu_item(self.xref_to)
+        idaapi.del_menu_item(self.xref_from)
+
 
     def run(self, arg):
         pass

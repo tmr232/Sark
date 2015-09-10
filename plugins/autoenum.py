@@ -1,5 +1,6 @@
 from collections import defaultdict
 import idaapi
+import sys
 import sark
 import idc
 import sark.exceptions
@@ -64,6 +65,10 @@ class AutoEnum(idaapi.plugin_t):
             enum_name = None
 
         self._last_enum = enum_name
+
+        # Can't ask with negative numbers.
+        if common_value > sys.maxint:
+            common_value = 0
 
         const_value = idc.AskLong(common_value, "Const Value")
         if const_value is None:
