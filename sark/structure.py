@@ -71,12 +71,12 @@ def create_struct(name):
         exceptions.SarkCreationFailed:  Struct creation failed
     """
     sid = idc.GetStrucIdByName(name)
-    if sid != 0xFFFFFFFF:
+    if sid != idaapi.BADADDR:
         # The struct already exists.
         raise exceptions.SarkStructAlreadyExists("A struct names {!r} already exists.".format(name))
 
     sid = idc.AddStrucEx(-1, name, 0)
-    if sid == 0xFFFFFFFF:
+    if sid == idaapi.BADADDR:
         raise exceptions.SarkStructCreationFailed("Struct creation failed.")
 
     return sid
@@ -95,7 +95,7 @@ def get_struct(name):
         exceptions.SarkStructNotFound: is the struct does not exist.
     """
     sid = idc.GetStrucIdByName(name)
-    if sid == 0xFFFFFFFF:
+    if sid == idaapi.BADADDR:
         raise exceptions.SarkStructNotFound()
 
     return sid
