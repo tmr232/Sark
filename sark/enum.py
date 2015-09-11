@@ -40,12 +40,25 @@ def _get_enum(name):
     return eid
 
 
-def add_enum(name=None, index=idaapi.BADADDR, flags=idaapi.hexflag(), bitfield=False):
-    """Create a new enum."""
+def add_enum(name=None, index=None, flags=idaapi.hexflag(), bitfield=False):
+    """Create a new enum.
+
+    Args:
+        name: Name of the enum to create.
+        index: The index of the enum. Leave at default to append the enum as the last enum.
+        flags: Enum type flags.
+        bitfield: Is the enum a bitfield.
+
+    Returns:
+        An `Enum` object.
+    """
     if name is not None:
         with ignored(exceptions.EnumNotFound):
             _get_enum(name)
             raise exceptions.EnumAlreadyExists()
+
+    if index is None or index < 0:
+        index = idaapi.get_enum_qty()
 
     eid = idaapi.add_enum(index, name, flags)
 
