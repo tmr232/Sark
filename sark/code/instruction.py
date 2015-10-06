@@ -1,3 +1,4 @@
+from collections import namedtuple
 import idaapi
 import idautils
 import idc
@@ -270,6 +271,10 @@ class Instruction(object):
         return self._insn
 
 
+MemPhrase = namedtuple('MemPhrase', 'base index scale offset')
+
+
+
 def parse_op_phrase(op):
     specflag1 = op.op_t.specflag1
     specflag2 = op.op_t.specflag2
@@ -280,15 +285,10 @@ def parse_op_phrase(op):
 
     if op.type.is_displ:
         if specflag1 == 0:
-            print 'A'
             index = None
             base_ = op.op_t.reg
             offset = op.op_t.addr
         elif specflag1 == 1:
-            print 'B'
-#             index = (specflag2 & 0x07) >> 0
-#             base_ = None
-
             index = (specflag2 & 0x38) >> 3
             base_ = (specflag2 & 0x07) >> 0
             offset = op.op_t.addr
@@ -297,16 +297,13 @@ def parse_op_phrase(op):
 
     elif op.type.is_phrase:
         if specflag1 == 0:
-            print 'C'
             index = None
             base_ = op.op_t.reg
         elif specflag1 == 1:
-            print 'D'
             index = (specflag2 & 0x38) >> 3
             base_ = (specflag2 & 0x07) >> 0
         else:
             raise TypeError, "o_phrase : Not implemented yet: %x" % specflag1
-        offset = op.op_t.value
 
         offset = op.op_t.addr
 
@@ -316,3 +313,5 @@ def parse_op_phrase(op):
                                      base.get_register_name(index, core.get_native_size()) if index is not None else '',
                                      scale,
                                      offset)
+
+    return MemPhrase(base=base_, index=index, scale=scale, offset=offset)
