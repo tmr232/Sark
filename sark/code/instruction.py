@@ -218,7 +218,6 @@ class Instruction(object):
                                     read=self.is_operand_read_from(index)))
         return operands
 
-
     @property
     def operands(self):
         """Instruction's Operands."""
@@ -269,3 +268,51 @@ class Instruction(object):
     @property
     def insn_t(self):
         return self._insn
+
+
+def parse_op_phrase(op):
+    specflag1 = op.op_t.specflag1
+    specflag2 = op.op_t.specflag2
+    scale = 1 << ((specflag2 & 0xC0) >> 6)
+    index = None
+    base_ = None
+    offset = 0
+
+    if op.type.is_displ:
+        if specflag1 == 0:
+            print 'A'
+            index = None
+            base_ = op.op_t.reg
+            offset = op.op_t.addr
+        elif specflag1 == 1:
+            print 'B'
+#             index = (specflag2 & 0x07) >> 0
+#             base_ = None
+
+            index = (specflag2 & 0x38) >> 3
+            base_ = (specflag2 & 0x07) >> 0
+            offset = op.op_t.addr
+        else:
+            raise TypeError, "o_displ : Not implemented yet : %x" % specflag1
+
+    elif op.type.is_phrase:
+        if specflag1 == 0:
+            print 'C'
+            index = None
+            base_ = op.op_t.reg
+        elif specflag1 == 1:
+            print 'D'
+            index = (specflag2 & 0x38) >> 3
+            base_ = (specflag2 & 0x07) >> 0
+        else:
+            raise TypeError, "o_phrase : Not implemented yet: %x" % specflag1
+        offset = op.op_t.value
+
+        offset = op.op_t.addr
+
+    print hex(specflag1), hex(specflag2)
+    print repr(base_), type(base_), repr(index), scale, offset
+    print '{} + {} * {} + {:08X}'.format(base.get_register_name(base_, core.get_native_size()) if base_ is not None else '',
+                                     base.get_register_name(index, core.get_native_size()) if index is not None else '',
+                                     scale,
+                                     offset)
