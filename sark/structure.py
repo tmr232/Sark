@@ -1,12 +1,12 @@
-from . import exceptions
-import idaapi
-from . import code
-import idautils
-import idc
 from collections import namedtuple, defaultdict
 import operator
-from .code import lines, dtyp_to_size
-from .core import get_native_size
+
+import idaapi
+import idc
+
+from . import exceptions
+from .code import lines
+from .core import is_signed
 
 FF_TYPES = [idc.FF_BYTE, idc.FF_WORD, idc.FF_DWRD, idc.FF_QWRD, idc.FF_OWRD, ]
 FF_SIZES = [1, 2, 4, 8, 16, ]
@@ -114,12 +114,6 @@ def add_struct_member(sid, name, offset, size):
 
 StructOffset = namedtuple("StructOffset", "offset size")
 OperandRef = namedtuple("OperandRef", "ea n")
-
-
-def is_signed(number, size=None):
-    if not size:
-        size = get_native_size()
-    return number & (1 << ((8 * size) - 1))
 
 
 def infer_struct_offsets(start, end, reg_name):
