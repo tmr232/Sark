@@ -5,7 +5,7 @@ import idaapi
 import idc
 import idautils
 
-from ..core import get_func
+from ..core import get_func, get_native_size
 from .. import exceptions
 
 
@@ -78,7 +78,9 @@ def is_reg_in_inst(inst, reg_name):
     return any(is_reg_in_operand(operand, reg) for operand in inst.Operands)
 
 
-def get_register_name(reg_id, size=4):
+def get_register_name(reg_id, size=None):
+    if size is None:
+        size = get_native_size()
     return idaapi.get_reg_name(reg_id, size)
 
 
