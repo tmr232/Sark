@@ -8,7 +8,6 @@ import idautils
 from ..core import get_func, get_native_size
 from .. import exceptions
 
-
 NAME_VALID_CHARS = string.ascii_letters + string.digits + "?_:"
 
 DTYP_TO_SIZE = {
@@ -50,32 +49,6 @@ def get_register_id(reg_name):
 
 def get_register_size(reg_name):
     return get_register_info(reg_name).size
-
-
-def is_reg_in_operand(operand, reg):
-    if not isinstance(reg, int):
-        reg = get_register_id(reg)
-
-    if operand.type == idaapi.o_reg:
-        if operand.reg == reg:
-            return True
-
-    # NOTE: This works for MIPS but was not tested for other archs.
-    elif operand.type == idaapi.o_displ:
-        if operand.reg == reg:
-            return True
-
-    elif operand.type == idaapi.o_phrase:
-        if operand.reg == reg:
-            return True
-
-    return False
-
-
-def is_reg_in_inst(inst, reg_name):
-    reg = get_register_id(reg_name)
-
-    return any(is_reg_in_operand(operand, reg) for operand in inst.Operands)
 
 
 def get_register_name(reg_id, size=None):

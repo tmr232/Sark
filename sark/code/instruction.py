@@ -180,6 +180,10 @@ class OperandType(object):
     def has_reg(self):
         return self._type in (idaapi.o_reg, idaapi.o_displ, idaapi.o_phrase)
 
+    @property
+    def has_phrase(self):
+        return self._type in (idaapi.o_phrase, idaapi.o_displ)
+
 
 class Operand(object):
     def __init__(self, operand, ea, write=False, read=False):
@@ -236,7 +240,7 @@ class Operand(object):
         return self._operand.addr
 
     def has_reg(self, reg_name):
-        return base.is_reg_in_operand(self._operand, reg_name)
+        return any(reg == reg_name for reg in self.regs)
 
     @property
     def size(self):
@@ -268,6 +272,15 @@ class Operand(object):
         if self.type.is_reg:
             return base.get_register_name(self.reg_id, self.size)
 
+        else:
+            raise exceptions.SarkOperandWithoutReg("Operand does not have a register.")
+
+    @property
+    def regs(self):
+        if self.type.has_phrase:
+            return set(reg for reg in (self.base, self.index) if reg)
+        elif self.type.is_reg:
+            return {base.get_register_name(self.reg_id, self.size)}
         else:
             raise exceptions.SarkOperandWithoutReg("Operand does not have a register.")
 
@@ -357,7 +370,12 @@ class Instruction(object):
     @property
     def regs(self):
         """Names of all registers used by the instruction."""
-        return set(operand.reg for operand in self.operands if operand.type.has_reg)
+        regs = set()
+        for operand in self.operands:
+            if not operand.type.has_reg:
+                continue
+            regs.update(operand.regs)
+        return regs
 
     @property
     def is_call(self):
