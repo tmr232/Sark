@@ -125,14 +125,11 @@ def infer_struct_offsets(start, end, reg_name):
             continue
 
         for operand in insn.operands:
-            if not operand.has_reg(reg_name):
+            if not operand.type.has_phrase:
                 continue
 
-            if not operand.has_displacement:
-                continue
-
-            offset = operand.displacement
-            if is_signed(offset):
+            offset = operand.offset
+            if offset < 0:
                 raise exceptions.InvalidStructOffset(
                     "Invalid structure offset 0x{:08X}, probably negative number.".format(offset))
             size = operand.size
@@ -163,10 +160,13 @@ def get_common_register(start, end):
 
         for operand in insn.operands:
 
-            if not operand.has_displacement:
+            if not operand.type.has_phrase:
                 continue
 
-            register_name = operand.reg
+            if not operand.base:
+                continue
+
+            register_name = operand.base
             registers[register_name] += 1
 
     return max(registers.iteritems(), key=operator.itemgetter(1))[0]
