@@ -25,6 +25,87 @@ OPND_READ_FLAGS = {
 }
 
 
+class Phrase(object):
+    def __init__(self, op_t):
+        self.op_t = op_t
+
+        self._initialize()
+
+    def _initialize(self):
+        specflag1 = self.op_t.specflag1
+        specflag2 = self.op_t.specflag2
+        scale = 1 << ((specflag2 & 0xC0) >> 6)
+        index = None
+        base_ = None
+        offset = 0
+
+        if self.op_t.type == idaapi.o_displ:
+            if specflag1 == 0:
+                index = None
+                base_ = self.op_t.reg
+                offset = self.op_t.addr
+            elif specflag1 == 1:
+                index = (specflag2 & 0x38) >> 3
+                base_ = (specflag2 & 0x07) >> 0
+                offset = self.op_t.addr
+            else:
+                raise TypeError, "o_displ : Not implemented yet : %x" % specflag1
+
+        elif self.op_t.type == idaapi.o_phrase:
+            if specflag1 == 0:
+                index = None
+                base_ = self.op_t.reg
+            elif specflag1 == 1:
+                index = (specflag2 & 0x38) >> 3
+                base_ = (specflag2 & 0x07) >> 0
+            else:
+                raise TypeError, "o_phrase : Not implemented yet: %x" % specflag1
+
+            offset = self.op_t.addr
+
+        else:
+            raise exceptions.OperandNotPhrase('Operand is not of type o_phrase or o_displ.')
+
+        self.scale = scale
+        self.index_id = index
+        self.base_id = base_
+        self.offset = offset
+
+    @property
+    def base(self):
+        if self.base_id is None:
+            return None
+        return base.get_register_name(self.base_id)
+
+    @property
+    def index(self):
+        if self.index_id is None:
+            return None
+        return base.get_register_name(self.index_id)
+
+    def __repr__(self):
+        phrase = []
+        if self.base_id is not None:
+            phrase.append(self.base)
+        if self.index_id is not None:
+            if phrase:
+                phrase.append('+')
+            phrase.append('{index}*{scale}'.format(index=self.index, scale=self.scale))
+        if self.offset:
+            offset = self.offset
+            sign = '+'
+            if core.is_signed(offset):
+                offset = offset - (1 << (8 * core.get_native_size()))
+                sign = '-'
+            value = '{:X}'.format(abs(offset))
+            phrase.append('{sign}{prefix}{value}{suffix}'.format(sign=sign if phrase or offset < 0 else '',
+                                                                 prefix='0' if value[0].isalpha() else '',
+                                                                 value=value,
+                                                                 suffix='h' if abs(offset) > 9 else ''))
+
+        return '[{}]'.format(''.join(phrase))
+
+
 class OperandType(object):
     TYPES = {
         idaapi.o_void: "No_Operand",
@@ -107,6 +188,10 @@ class Operand(object):
         self._read = read
         self._type = OperandType(operand.type)
         self._ea = ea
+        try:
+            self._phrase = Phrase(operand)
+        except exceptions.OperandNotPhrase:
+            self._phrase = None
 
     @property
     def n(self):
@@ -196,6 +281,30 @@ class Operand(object):
     def __repr__(self):
         return "<Operand(n={}, text={!r})>".format(self.n, str(self))
 
+    @property
+    def base(self):
+        if self._phrase:
+            return self._phrase.base
+        return self.reg
+
+    @property
+    def scale(self):
+        if self._phrase:
+            return self._phrase.scale
+        return None
+
+    @property
+    def index(self):
+        if self._phrase:
+            return self._phrase.index
+        return None
+
+    @property
+    def offset(self):
+        if self._phrase:
+            return self._phrase.offset
+        return self.addr
+
 
 class Instruction(object):
     def __init__(self, ea):
@@ -268,77 +377,3 @@ class Instruction(object):
     @property
     def insn_t(self):
         return self._insn
-
-
-class Phrase(object):
-    def __init__(self, op_t):
-        self.op_t = op_t
-
-        self._initialize()
-
-    def _initialize(self):
-        specflag1 = self.op_t.specflag1
-        specflag2 = self.op_t.specflag2
-        scale = 1 << ((specflag2 & 0xC0) >> 6)
-        index = None
-        base_ = None
-        offset = 0
-
-        if self.op_t.type == idaapi.o_displ:
-            if specflag1 == 0:
-                index = None
-                base_ = self.op_t.reg
-                offset = self.op_t.addr
-            elif specflag1 == 1:
-                index = (specflag2 & 0x38) >> 3
-                base_ = (specflag2 & 0x07) >> 0
-                offset = self.op_t.addr
-            else:
-                raise TypeError, "o_displ : Not implemented yet : %x" % specflag1
-
-        elif self.op_t.type == idaapi.o_phrase:
-            if specflag1 == 0:
-                index = None
-                base_ = self.op_t.reg
-            elif specflag1 == 1:
-                index = (specflag2 & 0x38) >> 3
-                base_ = (specflag2 & 0x07) >> 0
-            else:
-                raise TypeError, "o_phrase : Not implemented yet: %x" % specflag1
-
-            offset = self.op_t.addr
-
-        self.scale = scale
-        self.index_id = index
-        self.base_id = base_
-        self.offset = offset
-
-    @property
-    def base(self):
-        return base.get_register_name(self.base_id)
-
-    @property
-    def index(self):
-        return base.get_register_name(self.index_id)
-
-    def __repr__(self):
-        phrase = []
-        if self.base_id is not None:
-            phrase.append(self.base)
-        if self.index_id is not None:
-            if phrase:
-                phrase.append('+')
-            phrase.append('{index}*{scale}'.format(index=self.index, scale=self.scale))
-        if self.offset:
-            offset = self.offset
-            sign = '+'
-            if core.is_signed(offset):
-                offset = offset - (1 << (8 * core.get_native_size()))
-                sign = '-'
-            value = '{:X}'.format(abs(offset))
-            phrase.append('{sign}{prefix}{value}{suffix}'.format(sign=sign if phrase or offset < 0 else '',
-                                                                 prefix='0' if value[0].isalpha() else '',
-                                                                 value=value,
-                                                                 suffix='h' if abs(offset) > 9 else ''))
-
-        return '[{}]'.format(''.join(phrase))
