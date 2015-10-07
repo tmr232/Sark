@@ -1,5 +1,6 @@
 import idaapi
 import idc
+
 import sark
 
 
@@ -25,6 +26,11 @@ class AutoStruct(idaapi.plugin_t):
 
     def run(self, arg):
         start, end = sark.get_selection()
+
+        if not sark.structure.selection_has_offsets(start, end):
+            message('No structure offsets in selection. Operation cancelled.')
+            idaapi.warning('No structure offsets in selection. Operation cancelled.')
+            return
 
         struct_name = idc.AskStr(self._prev_struct_name, "Struct Name")
         if not struct_name:

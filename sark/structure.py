@@ -6,7 +6,6 @@ import idc
 
 from . import exceptions
 from .code import lines
-from .core import is_signed
 
 FF_TYPES = [idc.FF_BYTE, idc.FF_WORD, idc.FF_DWRD, idc.FF_QWRD, idc.FF_OWRD, ]
 FF_SIZES = [1, 2, 4, 8, 16, ]
@@ -128,6 +127,9 @@ def infer_struct_offsets(start, end, reg_name):
             if not operand.type.has_phrase:
                 continue
 
+            if not operand.base:
+                continue
+
             offset = operand.offset
             if offset < 0:
                 raise exceptions.InvalidStructOffset(
@@ -206,3 +208,14 @@ def apply_struct(start, end, reg_name, struct_name):
 
     for ea, n in operands:
         idc.OpStroff(ea, n, sid)
+
+
+def selection_has_offsets(start, end):
+    for line in lines(start, end):
+        for operand in line.insn.operands:
+            if not operand.type.has_phrase:
+                continue
+            if not operand.base:
+                continue
+            return True
+    return False
