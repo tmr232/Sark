@@ -10,6 +10,6 @@ the details.
 Getting IDB Graphs
 ~~~~~~~~~~~~~~~~~~
 
-To get an IDB graph, use ``sark.idb_to_graph()``. The function traverses
+To get an IDB graph, use ``sark.graph.get_idb_graph()``. The function traverses
 all xrefs from and to all functions to create a graph of the IDB, with
 each node being the address of a function's ``startEA``.
