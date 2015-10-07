@@ -1,4 +1,3 @@
-from collections import namedtuple
 import idaapi
 import idautils
 import idc
@@ -271,47 +270,75 @@ class Instruction(object):
         return self._insn
 
 
-MemPhrase = namedtuple('MemPhrase', 'base index scale offset')
+class Phrase(object):
+    def __init__(self, op_t):
+        self.op_t = op_t
 
+        self._initialize()
 
+    def _initialize(self):
+        specflag1 = self.op_t.specflag1
+        specflag2 = self.op_t.specflag2
+        scale = 1 << ((specflag2 & 0xC0) >> 6)
+        index = None
+        base_ = None
+        offset = 0
 
-def parse_op_phrase(op):
-    specflag1 = op.op_t.specflag1
-    specflag2 = op.op_t.specflag2
-    scale = 1 << ((specflag2 & 0xC0) >> 6)
-    index = None
-    base_ = None
-    offset = 0
+        if self.op_t.type == idaapi.o_displ:
+            if specflag1 == 0:
+                index = None
+                base_ = self.op_t.reg
+                offset = self.op_t.addr
+            elif specflag1 == 1:
+                index = (specflag2 & 0x38) >> 3
+                base_ = (specflag2 & 0x07) >> 0
+                offset = self.op_t.addr
+            else:
+                raise TypeError, "o_displ : Not implemented yet : %x" % specflag1
 
-    if op.type.is_displ:
-        if specflag1 == 0:
-            index = None
-            base_ = op.op_t.reg
-            offset = op.op_t.addr
-        elif specflag1 == 1:
-            index = (specflag2 & 0x38) >> 3
-            base_ = (specflag2 & 0x07) >> 0
-            offset = op.op_t.addr
-        else:
-            raise TypeError, "o_displ : Not implemented yet : %x" % specflag1
+        elif self.op_t.type == idaapi.o_phrase:
+            if specflag1 == 0:
+                index = None
+                base_ = self.op_t.reg
+            elif specflag1 == 1:
+                index = (specflag2 & 0x38) >> 3
+                base_ = (specflag2 & 0x07) >> 0
+            else:
+                raise TypeError, "o_phrase : Not implemented yet: %x" % specflag1
 
-    elif op.type.is_phrase:
-        if specflag1 == 0:
-            index = None
-            base_ = op.op_t.reg
-        elif specflag1 == 1:
-            index = (specflag2 & 0x38) >> 3
-            base_ = (specflag2 & 0x07) >> 0
-        else:
-            raise TypeError, "o_phrase : Not implemented yet: %x" % specflag1
+            offset = self.op_t.addr
 
-        offset = op.op_t.addr
+        self.scale = scale
+        self.index_id = index
+        self.base_id = base_
+        self.offset = offset
 
-    print hex(specflag1), hex(specflag2)
-    print repr(base_), type(base_), repr(index), scale, offset
-    print '{} + {} * {} + {:08X}'.format(base.get_register_name(base_, core.get_native_size()) if base_ is not None else '',
-                                     base.get_register_name(index, core.get_native_size()) if index is not None else '',
-                                     scale,
-                                     offset)
+    @property
+    def base(self):
+        return base.get_register_name(self.base_id)
 
-    return MemPhrase(base=base_, index=index, scale=scale, offset=offset)
+    @property
+    def index(self):
+        return base.get_register_name(self.index_id)
+
+    def __repr__(self):
+        phrase = []
+        if self.base_id is not None:
+            phrase.append(self.base)
+        if self.index_id is not None:
+            if phrase:
+                phrase.append('+')
+            phrase.append('{index}*{scale}'.format(index=self.index, scale=self.scale))
+        if self.offset:
+            offset = self.offset
+            sign = '+'
+            if core.is_signed(offset):
+                offset = offset - (1 << (8 * core.get_native_size()))
+                sign = '-'
+            value = '{:X}'.format(abs(offset))
+            phrase.append('{sign}{prefix}{value}{suffix}'.format(sign=sign if phrase or offset < 0 else '',
+                                                                 prefix='0' if value[0].isalpha() else '',
+                                                                 value=value,
+                                                                 suffix='h' if abs(offset) > 9 else ''))
+
+        return '[{}]'.format(''.join(phrase))
