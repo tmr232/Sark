@@ -32,39 +32,28 @@ class Phrase(object):
         self._initialize()
 
     def _initialize(self):
+        if self.op_t.type not in (idaapi.o_displ, idaapi.o_phrase):
+            raise exceptions.OperandNotPhrase('Operand is not of type o_phrase or o_displ.')
+
         specflag1 = self.op_t.specflag1
         specflag2 = self.op_t.specflag2
         scale = 1 << ((specflag2 & 0xC0) >> 6)
-        index = None
-        base_ = None
-        offset = 0
+        offset = self.op_t.addr
 
-        if self.op_t.type == idaapi.o_displ:
-            if specflag1 == 0:
-                index = None
-                base_ = self.op_t.reg
-                offset = self.op_t.addr
-            elif specflag1 == 1:
-                index = (specflag2 & 0x38) >> 3
-                base_ = (specflag2 & 0x07) >> 0
-                offset = self.op_t.addr
-            else:
-                raise TypeError, "o_displ : Not implemented yet : %x" % specflag1
+        if specflag1 == 0:
+            index = None
+            base_ = self.op_t.reg
+        elif specflag1 == 1:
+            index = (specflag2 & 0x38) >> 3
+            base_ = (specflag2 & 0x07) >> 0
 
-        elif self.op_t.type == idaapi.o_phrase:
-            if specflag1 == 0:
-                index = None
-                base_ = self.op_t.reg
-            elif specflag1 == 1:
-                index = (specflag2 & 0x38) >> 3
-                base_ = (specflag2 & 0x07) >> 0
-            else:
-                raise TypeError, "o_phrase : Not implemented yet: %x" % specflag1
-
-            offset = self.op_t.addr
-
+            if self.op_t.reg == 0xC:
+                if base_ & 4:
+                    base_ += 8
+                if index & 4:
+                    index += 8
         else:
-            raise exceptions.OperandNotPhrase('Operand is not of type o_phrase or o_displ.')
+            raise TypeError, "o_displ, o_phrase : Not implemented yet : %x" % specflag1
 
         self.scale = scale
         self.index_id = index
