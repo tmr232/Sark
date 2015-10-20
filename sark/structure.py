@@ -1,12 +1,11 @@
-from . import exceptions
-import idaapi
-from . import code
-import idautils
-import idc
 from collections import namedtuple, defaultdict
 import operator
-from .code import lines, dtyp_to_size
-from .core import get_native_size
+
+import idaapi
+import idc
+
+from . import exceptions
+from .code import lines
 
 FF_TYPES = [idc.FF_BYTE, idc.FF_WORD, idc.FF_DWRD, idc.FF_QWRD, idc.FF_OWRD, ]
 FF_SIZES = [1, 2, 4, 8, 16, ]
@@ -116,12 +115,6 @@ StructOffset = namedtuple("StructOffset", "offset size")
 OperandRef = namedtuple("OperandRef", "ea n")
 
 
-def is_signed(number, size=None):
-    if not size:
-        size = get_native_size()
-    return number & (1 << ((8 * size) - 1))
-
-
 def infer_struct_offsets(start, end, reg_name):
     offsets = set()
     operands = []
@@ -131,14 +124,14 @@ def infer_struct_offsets(start, end, reg_name):
             continue
 
         for operand in insn.operands:
-            if not operand.has_reg(reg_name):
+            if not operand.type.has_phrase:
                 continue
 
-            if not operand.has_displacement:
+            if not operand.base:
                 continue
 
-            offset = operand.displacement
-            if is_signed(offset):
+            offset = operand.offset
+            if offset < 0:
                 raise exceptions.InvalidStructOffset(
                     "Invalid structure offset 0x{:08X}, probably negative number.".format(offset))
             size = operand.size
@@ -169,10 +162,13 @@ def get_common_register(start, end):
 
         for operand in insn.operands:
 
-            if not operand.has_displacement:
+            if not operand.type.has_phrase:
                 continue
 
-            register_name = operand.reg
+            if not operand.base:
+                continue
+
+            register_name = operand.base
             registers[register_name] += 1
 
     return max(registers.iteritems(), key=operator.itemgetter(1))[0]
@@ -212,3 +208,14 @@ def apply_struct(start, end, reg_name, struct_name):
 
     for ea, n in operands:
         idc.OpStroff(ea, n, sid)
+
+
+def selection_has_offsets(start, end):
+    for line in lines(start, end):
+        for operand in line.insn.operands:
+            if not operand.type.has_phrase:
+                continue
+            if not operand.base:
+                continue
+            return True
+    return False

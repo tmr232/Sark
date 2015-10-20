@@ -200,3 +200,7 @@ class NoFileOffset(SarkError):
 
 class SarkNoString(SarkError):
     pass
+
+
+class OperandNotPhrase(SarkOperandError):
+    pass
