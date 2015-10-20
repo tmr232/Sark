@@ -55,6 +55,13 @@ class Phrase(object):
         else:
             raise TypeError, "o_displ, o_phrase : Not implemented yet : %x" % specflag1
 
+        # HACK: This is a really ugly hack. For some reason, phrases of the form `[esp + ...]` (`sp`, `rsp` as well)
+        # set both the `index` and the `base` to `esp`. This is not significant, as `esp` cannot be used as an
+        # index, but it does cause issues with the parsing.
+        # This is only relevant to Intel architectures.
+        if (index == base_ == idautils.procregs.sp.reg) and (scale == 1):
+            index = None
+
         self.scale = scale
         self.index_id = index
         self.base_id = base_
