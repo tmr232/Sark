@@ -1,3 +1,4 @@
+import idc
 import networkx
 
 import idaapi
@@ -21,6 +22,10 @@ class CodeBlock(idaapi.BasicBlock):
         for line in self.lines:
             line.color = color
 
+        node_info = idaapi.node_info_t()
+        node_info.bg_color = color
+        idaapi.set_node_info2(self.startEA, self.id, node_info, idaapi.NIF_BG_COLOR)
+
     @property
     def color(self):
         return next(self.lines).color
@@ -38,13 +43,17 @@ class FlowChart(idaapi.FlowChart):
         return CodeBlock(index, self._q[index], self)
 
 
-def get_flowchart(ea):
+def get_flowchart(ea=None):
+    if ea is None:
+        ea = idaapi.get_screen_ea()
     func = idaapi.get_func(ea)
     flowchart_ = FlowChart(func)
     return flowchart_
 
 
-def get_codeblock(ea):
+def get_codeblock(ea=None):
+    if ea is None:
+        ea = idaapi.get_screen_ea()
     flowchart_ = get_flowchart(ea)
     for code_block in flowchart_:
         if code_block.startEA <= ea < code_block.endEA:
