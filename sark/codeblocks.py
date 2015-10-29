@@ -3,9 +3,19 @@ import networkx
 
 import idaapi
 from .code import lines
+from .core import get_func
 
 
 class CodeBlock(idaapi.BasicBlock):
+    def __init__(self, id_ea=None, bb=None, fc=None):
+        if bb is None and fc is None:
+            if id_ea is None:
+                id_ea = idaapi.get_screen_ea()
+            temp_codeblock = get_codeblock(id_ea)
+            self.__dict__.update(temp_codeblock.__dict__)
+        else:
+            super(CodeBlock, self).__init__(id=id_ea, bb=bb, fc=fc)
+
     @property
     def lines(self):
         return lines(self.startEA, self.endEA)
@@ -39,6 +49,13 @@ class CodeBlock(idaapi.BasicBlock):
 
 
 class FlowChart(idaapi.FlowChart):
+    def __init__(self, f=None, bounds=None, flags=0):
+        if f is None and bounds is None:
+            f = idaapi.get_screen_ea()
+        if f is not None:
+            f = get_func(f)
+        super(FlowChart, self).__init__(f=f, bounds=bounds, flags=flags)
+
     def _getitem(self, index):
         return CodeBlock(index, self._q[index], self)
 
