@@ -1,10 +1,21 @@
+import idc
 import networkx
 
 import idaapi
 from .code import lines
+from .core import get_func
 
 
 class CodeBlock(idaapi.BasicBlock):
+    def __init__(self, id_ea=None, bb=None, fc=None):
+        if bb is None and fc is None:
+            if id_ea is None:
+                id_ea = idaapi.get_screen_ea()
+            temp_codeblock = get_codeblock(id_ea)
+            self.__dict__.update(temp_codeblock.__dict__)
+        else:
+            super(CodeBlock, self).__init__(id=id_ea, bb=bb, fc=fc)
+
     @property
     def lines(self):
         return lines(self.startEA, self.endEA)
@@ -21,6 +32,10 @@ class CodeBlock(idaapi.BasicBlock):
         for line in self.lines:
             line.color = color
 
+        node_info = idaapi.node_info_t()
+        node_info.bg_color = color
+        idaapi.set_node_info2(self.startEA, self.id, node_info, idaapi.NIF_BG_COLOR)
+
     @property
     def color(self):
         return next(self.lines).color
@@ -34,17 +49,28 @@ class CodeBlock(idaapi.BasicBlock):
 
 
 class FlowChart(idaapi.FlowChart):
+    def __init__(self, f=None, bounds=None, flags=0):
+        if f is None and bounds is None:
+            f = idaapi.get_screen_ea()
+        if f is not None:
+            f = get_func(f)
+        super(FlowChart, self).__init__(f=f, bounds=bounds, flags=flags)
+
     def _getitem(self, index):
         return CodeBlock(index, self._q[index], self)
 
 
-def get_flowchart(ea):
+def get_flowchart(ea=None):
+    if ea is None:
+        ea = idaapi.get_screen_ea()
     func = idaapi.get_func(ea)
     flowchart_ = FlowChart(func)
     return flowchart_
 
 
-def get_codeblock(ea):
+def get_codeblock(ea=None):
+    if ea is None:
+        ea = idaapi.get_screen_ea()
     flowchart_ = get_flowchart(ea)
     for code_block in flowchart_:
         if code_block.startEA <= ea < code_block.endEA:

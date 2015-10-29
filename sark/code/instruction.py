@@ -25,6 +25,83 @@ OPND_READ_FLAGS = {
 }
 
 
+class Phrase(object):
+    def __init__(self, op_t):
+        self.op_t = op_t
+
+        self._initialize()
+
+    def _initialize(self):
+        if self.op_t.type not in (idaapi.o_displ, idaapi.o_phrase):
+            raise exceptions.OperandNotPhrase('Operand is not of type o_phrase or o_displ.')
+
+        specflag1 = self.op_t.specflag1
+        specflag2 = self.op_t.specflag2
+        scale = 1 << ((specflag2 & 0xC0) >> 6)
+        offset = self.op_t.addr
+
+        if specflag1 == 0:
+            index = None
+            base_ = self.op_t.reg
+        elif specflag1 == 1:
+            index = (specflag2 & 0x38) >> 3
+            base_ = (specflag2 & 0x07) >> 0
+
+            if self.op_t.reg == 0xC:
+                if base_ & 4:
+                    base_ += 8
+                if index & 4:
+                    index += 8
+        else:
+            raise TypeError, "o_displ, o_phrase : Not implemented yet : %x" % specflag1
+
+        # HACK: This is a really ugly hack. For some reason, phrases of the form `[esp + ...]` (`sp`, `rsp` as well)
+        # set both the `index` and the `base` to `esp`. This is not significant, as `esp` cannot be used as an
+        # index, but it does cause issues with the parsing.
+        # This is only relevant to Intel architectures.
+        if (index == base_ == idautils.procregs.sp.reg) and (scale == 1):
+            index = None
+
+        self.scale = scale
+        self.index_id = index
+        self.base_id = base_
+        self.offset = offset
+
+    @property
+    def base(self):
+        if self.base_id is None:
+            return None
+        return base.get_register_name(self.base_id)
+
+    @property
+    def index(self):
+        if self.index_id is None:
+            return None
+        return base.get_register_name(self.index_id)
+
+    def __repr__(self):
+        phrase = []
+        if self.base_id is not None:
+            phrase.append(self.base)
+        if self.index_id is not None:
+            if phrase:
+                phrase.append('+')
+            phrase.append('{index}*{scale}'.format(index=self.index, scale=self.scale))
+        if self.offset:
+            offset = self.offset
+            sign = '+'
+            if core.is_signed(offset):
+                offset = offset - (1 << (8 * core.get_native_size()))
+                sign = '-'
+            value = '{:X}'.format(abs(offset))
+            phrase.append('{sign}{prefix}{value}{suffix}'.format(sign=sign if phrase or offset < 0 else '',
+                                                                 prefix='0' if value[0].isalpha() else '',
+                                                                 value=value,
+                                                                 suffix='h' if abs(offset) > 9 else ''))
+
+        return '[{}]'.format(''.join(phrase))
+
+
 class OperandType(object):
     TYPES = {
         idaapi.o_void: "No_Operand",
@@ -99,6 +176,10 @@ class OperandType(object):
     def has_reg(self):
         return self._type in (idaapi.o_reg, idaapi.o_displ, idaapi.o_phrase)
 
+    @property
+    def has_phrase(self):
+        return self._type in (idaapi.o_phrase, idaapi.o_displ)
+
 
 class Operand(object):
     def __init__(self, operand, ea, write=False, read=False):
@@ -107,6 +188,10 @@ class Operand(object):
         self._read = read
         self._type = OperandType(operand.type)
         self._ea = ea
+        try:
+            self._phrase = Phrase(operand)
+        except exceptions.OperandNotPhrase:
+            self._phrase = None
 
     @property
     def n(self):
@@ -151,7 +236,7 @@ class Operand(object):
         return self._operand.addr
 
     def has_reg(self, reg_name):
-        return base.is_reg_in_operand(self._operand, reg_name)
+        return any(reg == reg_name for reg in self.regs)
 
     @property
     def size(self):
@@ -187,6 +272,15 @@ class Operand(object):
             raise exceptions.SarkOperandWithoutReg("Operand does not have a register.")
 
     @property
+    def regs(self):
+        if self.type.has_phrase:
+            return set(reg for reg in (self.base, self.index) if reg)
+        elif self.type.is_reg:
+            return {base.get_register_name(self.reg_id, self.size)}
+        else:
+            raise exceptions.SarkOperandWithoutReg("Operand does not have a register.")
+
+    @property
     def text(self):
         return idc.GetOpnd(self._ea, self.n)
 
@@ -195,6 +289,30 @@ class Operand(object):
 
     def __repr__(self):
         return "<Operand(n={}, text={!r})>".format(self.n, str(self))
+
+    @property
+    def base(self):
+        if self._phrase:
+            return self._phrase.base
+        return self.reg
+
+    @property
+    def scale(self):
+        if self._phrase:
+            return self._phrase.scale
+        return None
+
+    @property
+    def index(self):
+        if self._phrase:
+            return self._phrase.index
+        return None
+
+    @property
+    def offset(self):
+        if self._phrase:
+            return self._phrase.offset
+        return self.addr
 
 
 class Instruction(object):
@@ -217,7 +335,6 @@ class Instruction(object):
                                     write=self.is_operand_written_to(index),
                                     read=self.is_operand_read_from(index)))
         return operands
-
 
     @property
     def operands(self):
@@ -249,7 +366,12 @@ class Instruction(object):
     @property
     def regs(self):
         """Names of all registers used by the instruction."""
-        return set(operand.reg for operand in self.operands if operand.type.has_reg)
+        regs = set()
+        for operand in self.operands:
+            if not operand.type.has_reg:
+                continue
+            regs.update(operand.regs)
+        return regs
 
     @property
     def is_call(self):

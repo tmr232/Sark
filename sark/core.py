@@ -173,3 +173,9 @@ def is_function(ea):
         return True
     except exceptions.SarkNoFunction:
         return False
+
+
+def is_signed(number, size=None):
+    if not size:
+        size = get_native_size()
+    return number & (1 << ((8 * size) - 1))

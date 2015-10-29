@@ -324,6 +324,7 @@ class NXGraph(idaapi.GraphViewer):
         return handler.on_hint(value, attrs)
 
 # Make sure API is supported to enable use of other functionality in older versions.
+# See http://www.hexblog.com/?p=886
 if idaapi.IDA_SDK_VERSION >= 670:
     class ActionHandler(idaapi.action_handler_t):
         """A wrapper around `idaapi.action_handler_t`.

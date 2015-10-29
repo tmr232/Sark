@@ -65,6 +65,10 @@ class AutoEnum(idaapi.plugin_t):
 
         self._last_enum = enum_name
 
+        # Can't ask with negative numbers.
+        if common_value >> ((8 * sark.core.get_native_size()) - 1):
+            common_value = 0
+
         const_value = idc.AskLong(common_value, "Const Value")
         if const_value is None:
             return
