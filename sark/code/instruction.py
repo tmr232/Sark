@@ -278,7 +278,7 @@ class Operand(object):
         elif self.type.is_reg:
             return {base.get_register_name(self.reg_id, self.size)}
         else:
-            raise exceptions.SarkOperandWithoutReg("Operand does not have a register.")
+            return set()
 
     @property
     def text(self):
