@@ -7,7 +7,7 @@ to as a flowchart.
 
 .. code:: python
 
-    >>> block = sark.get_codeblock(idc.here())
+    >>> block = sark.CodeBlock()
     >>> print list(block.next)
     [<CodeBlock(startEA=0x00417567, endEA=0x00417570)>,
      <CodeBlock(startEA=0x0041759E, endEA=0x004175D4)>]
@@ -40,9 +40,9 @@ blocks in a function graph.
 Getting Codeblocks
 ~~~~~~~~~~~~~~~~~~
 
-Codeblocks are created using the ``sark.get_codeblock(ea)`` function.
-Flowcharts can be retrieved using the ``sark.get_flowchart(ea)``
-function accordingly.
+Codeblocks are created using the ``sark.CodeBlock(ea)`` class.
+Flowcharts can be retrieved using the ``sark.FlowChart(ea)``
+class accordingly.
 
 Advanced Usage
 ~~~~~~~~~~~~~~

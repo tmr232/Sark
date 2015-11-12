@@ -52,7 +52,7 @@ code.
 +=============+=========================================+
 | n           | operand index in instruction            |
 +-------------+-----------------------------------------+
-| type        | numeric type a la IDA SDK               |
+| type        | numeric type a-la IDA SDK               |
 +-------------+-----------------------------------------+
 | size        | data size of the operand                |
 +-------------+-----------------------------------------+
@@ -64,11 +64,17 @@ code.
 +-------------+-----------------------------------------+
 | text        | the operand text, as displayed in IDA   |
 +-------------+-----------------------------------------+
+| base        | the ``base`` register in an             |
+|             | address-phrase of the form              |
+|             | ``[base + index * scale + offset]``     |
++-------------+-----------------------------------------+
+| index       | the ``index`` register in a phrase      |
++-------------+-----------------------------------------+
+| scale       | the ``scale`` in a phrase               |
++-------------+-----------------------------------------+
+| offset      | the ``offset`` in a phrase              |
++-------------+-----------------------------------------+
 
-Note that the ``.reg`` member (and derived functionality) fails (quite
-miserably) on ``x86`` and ``x86_64`` operands using more than one
-register, such as ``[eax + ebx + 10]``. It is possible to decode them
-correctly, but Sark does not support that yet.
 
 Getting Instructions
 ~~~~~~~~~~~~~~~~~~~~

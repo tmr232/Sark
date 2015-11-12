@@ -45,7 +45,7 @@ single object. Some useful members are:
 +-------------+----------------------------------------------------------------+
 | lines       | all the lines in the function (a generator)                    |
 +-------------+----------------------------------------------------------------+
-| xrefs\_\*   | xrefs to and from the function                                 |
+| xrefs\_\*   | xrefs to and from the function [#xrefs_to]_                    |
 +-------------+----------------------------------------------------------------+
 
 All similarly named members between ``sark.Line`` and ``sark.Function``
@@ -60,3 +60,7 @@ There are 2 ways to get functions:
    as ``sark.Line``;
 2. Using ``sark.functions`` to iterate over functions. It is the same as
    ``sark.lines``, but does not accept a ``reverse`` argument.
+
+
+.. [#xrefs_to] Xrefs from a function include **only** references with a target outside the
+    function. So recursion will be ignored.
