@@ -14,8 +14,8 @@ The Setup
 For this tutorial, we will be using the following software:
 
 #. `IDA Pro 6.8`_
-#. `Visual Studio Community 2013`_
-#. `Python Tools for Visual Studio 2.1`_, documentation can be found `here <https://github.com/Microsoft/PTVS/wiki>`_.
+#. `Visual Studio Community`_
+#. `Python Tools for Visual Studio`_, documentation can be found `here <https://github.com/Microsoft/PTVS/wiki>`_.
 #. Python's ``ptvsd`` module. Install using ``pip install ptvsd``.
 #. The following plugin:
 
@@ -121,5 +121,5 @@ If you find any issues with the tutorial, please submit them `here <https://gith
 
 
 .. _`IDA Pro 6.8`: https://www.hex-rays.com/products/ida/index.shtml
-.. _`Visual Studio Community 2013`: https://www.visualstudio.com/en-us/products/visual-studio-community-vs.aspx
-.. _`Python Tools for Visual Studio 2.1`: https://pytools.codeplex.com/releases
+.. _`Visual Studio Community`: https://www.visualstudio.com/en-us/products/visual-studio-community-vs.aspx
+.. _`Python Tools for Visual Studio`: https://pytools.codeplex.com/releases
