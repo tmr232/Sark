@@ -22,6 +22,7 @@ When contributing, try and follow these guidelines:
   or plain ugly code. All contributions are welcome.
 - When submitting a fix to a bug, describe the bug being fixed. Include both
   the bug and the desired results. Creating an issue for the bug is good practice.
+- When reporting bugs, make sure you mention your OS and IDA version.
 
 If you can't adhere to the guidelines, **submit your pull requests anyway**.
 Maybe someone else can improve on it.
