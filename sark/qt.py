@@ -12,7 +12,13 @@ old_path = sys.path[:]
 try:
     ida_python_path = os.path.dirname(idaapi.__file__)
     sys.path.insert(0, ida_python_path)
-    from PySide import QtGui, QtCore
+    if idaapi.IDA_SDK_VERSION >= 690:
+        from PyQt5 import QtGui, QtCore, QtWidgets
+        import sip
+        _has_qt5 = True
+    else:
+        from PySide import QtGui, QtCore
+        _has_qt5 = False
 finally:
     sys.path = old_path
 
@@ -28,7 +34,10 @@ def capture_widget(widget, path=None):
         If a path is provided, the image will be saved to it.
         If not, the PNG buffer will be returned.
     """
-    pixmap = QtGui.QPixmap.grabWidget(widget)
+    if _has_qt5:
+        pixmap = widget.grab()
+    else:
+        pixmap = QtGui.QPixmap.grabWidget(widget)
 
     if path:
         pixmap.save(path)
@@ -44,8 +53,14 @@ def capture_widget(widget, path=None):
 def form_to_widget(tform):
     class Ctx(object):
         QtGui = QtGui
+        if _has_qt5:
+            QtWidgets = QtWidgets
+            sip = sip
 
-    return idaapi.PluginForm.FormToPySideWidget(tform, ctx=Ctx())
+    if _has_qt5:
+        return idaapi.PluginForm.FormToPyQtWidget(tform, ctx=Ctx())
+    else:
+        return idaapi.PluginForm.FormToPySideWidget(tform, ctx=Ctx())
 
 def get_widget(title):
     """Get the Qt widget of the IDA window with the given title."""
@@ -107,7 +122,10 @@ class MenuManager(object):
         super(MenuManager, self).__init__()
 
         self._window = get_window()
-        self._menu = self._window.findChild(QtGui.QMenuBar)
+        if _has_qt5:
+            self._menu = self._window.findChild(QtWidgets.QMenuBar)
+        else:
+            self._menu = self._window.findChild(QtGui.QMenuBar)
 
         self._menus = {}
 
