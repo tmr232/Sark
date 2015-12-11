@@ -1,11 +1,16 @@
 import os
-import idaapi
 import itertools
+import idaapi
+import idc
 
 PLUGINS_LIST = "plugins.list"
 
 USER_PLUGIN_LIST_PATH = os.path.join(idaapi.get_user_idadir(), PLUGINS_LIST)
 SYS_PLUGIN_LIST_PATH = os.path.join(idaapi.idadir(idaapi.CFG_SUBDIR), PLUGINS_LIST)
+if idc.GetIdbPath():
+    PROJECT_PLUGIN_LIST_PATH = os.path.join(os.path.dirname(idc.GetIdbPath()), PLUGINS_LIST)
+else:
+    PROJECT_PLUGIN_LIST_PATH = None
 
 
 def message(*messages):
@@ -25,6 +30,8 @@ def iter_without_duplicates(*iterables):
 
 
 def iter_paths(filepath):
+    if not filepath:
+        return
     try:
         with open(filepath) as f:
             for line in f:
@@ -41,7 +48,8 @@ def iter_paths(filepath):
 
 def iter_plugin_paths():
     return iter_without_duplicates(iter_paths(SYS_PLUGIN_LIST_PATH),
-                                   iter_paths(USER_PLUGIN_LIST_PATH))
+                                   iter_paths(USER_PLUGIN_LIST_PATH),
+                                   iter_paths(PROJECT_PLUGIN_LIST_PATH))
 
 
 class PluginLoader(idaapi.plugin_t):
@@ -53,9 +61,13 @@ class PluginLoader(idaapi.plugin_t):
 
     def init(self):
         # Show usage message.
-        message("Loading plugins from system-wide and user-specific lists:",
-                "  System-wide List: {}".format(SYS_PLUGIN_LIST_PATH),
-                "  User-specific List: {}".format(USER_PLUGIN_LIST_PATH))
+        usage_message = ["Loading plugins from system-wide and user-specific lists:",
+                         "  System-wide List:      {}".format(SYS_PLUGIN_LIST_PATH),
+                         "  User-specific List:    {}".format(USER_PLUGIN_LIST_PATH)]
+        if PROJECT_PLUGIN_LIST_PATH:
+            usage_message.append("  Project-specific List: {}".format(PROJECT_PLUGIN_LIST_PATH))
+
+        message(*usage_message)
 
         # Make sure the files exist. If not - create them.
         if not os.path.isfile(SYS_PLUGIN_LIST_PATH):
