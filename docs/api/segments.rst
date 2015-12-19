@@ -2,7 +2,7 @@ Segments
 ========
 
 Though not as popular as functions and lines, IDA segments include both. In Sark, ``Segment``
-objects allow access to underlying ``Function``s and ``Line``s.
+objects allow access to underlying ``Function`` and ``Line`` objects.
 
 .. code:: python
 
