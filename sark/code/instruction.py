@@ -35,6 +35,10 @@ class Phrase(object):
         if self.op_t.type not in (idaapi.o_displ, idaapi.o_phrase):
             raise exceptions.OperandNotPhrase('Operand is not of type o_phrase or o_displ.')
 
+        proc_name = idaapi.get_inf_structure().procName
+        if proc_name != 'metapc':
+            raise exceptions.PhraseProcessorNotSupported('Phrase analysis not supported for processor {}'.format(proc_name))
+
         specflag1 = self.op_t.specflag1
         specflag2 = self.op_t.specflag2
         scale = 1 << ((specflag2 & 0xC0) >> 6)
@@ -53,7 +57,7 @@ class Phrase(object):
                 if index & 4:
                     index += 8
         else:
-            raise TypeError, "o_displ, o_phrase : Not implemented yet : %x" % specflag1
+            raise exceptions.PhraseNotSupported('o_displ, o_phrase : Not implemented yet : %x' % specflag1)
 
         # HACK: This is a really ugly hack. For some reason, phrases of the form `[esp + ...]` (`sp`, `rsp` as well)
         # set both the `index` and the `base` to `esp`. This is not significant, as `esp` cannot be used as an
@@ -113,6 +117,7 @@ class OperandType(object):
         idaapi.o_far: "Immediate_Far_Address",
         idaapi.o_near: "Immediate_Near_Address",
         idaapi.o_idpspec0: "Processor_specific_type",
+        # There can be more processor specific types!
     }
 
     def __init__(self, type_):
@@ -131,7 +136,8 @@ class OperandType(object):
     @property
     def name(self):
         """Name of the xref type."""
-        return self.TYPES[self._type]
+        return self.TYPES.get(self._type, self.TYPES[idaapi.o_idpspec0])
+
 
     def __repr__(self):
         return self.name
@@ -190,7 +196,7 @@ class Operand(object):
         self._ea = ea
         try:
             self._phrase = Phrase(operand)
-        except exceptions.OperandNotPhrase:
+        except exceptions.PhraseError:
             self._phrase = None
 
     @property
