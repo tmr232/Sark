@@ -295,6 +295,6 @@ def lines(start=None, end=None, reverse=False, selection=False):
 
     else:  # if reverse:
         item = idaapi.get_item_head(end - 1)
-        while item > start:
+        while item >= start:
             yield Line(item)
             item = idaapi.get_item_head(item - 1)
