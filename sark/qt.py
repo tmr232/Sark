@@ -15,12 +15,29 @@ try:
     if idaapi.IDA_SDK_VERSION >= 690:
         from PyQt5 import QtGui, QtCore, QtWidgets
         import sip
-        _has_qt5 = True
+        use_qt5 = True
     else:
         from PySide import QtGui, QtCore
-        _has_qt5 = False
+        QtWidgets = QtGui
+        use_qt5 = False
 finally:
     sys.path = old_path
+
+
+def connect_method_to_signal(sender, signal, callback):
+    """Connect a signal.
+
+    Use this function only in cases where code should work with both Qt5 and Qt4, as it is an ugly hack.
+
+    Args:
+        sender: The Qt object emitting the signal
+        signal: A string, containing the signal signature
+        callback: The function to be called upon receiving the signal
+    """
+    if use_qt5:
+        return getattr(sender, signal.split('(', 1)[0]).connect(callback)
+    else:
+        return sender.connect(QtCore.SIGNAL(signal), callback)
 
 
 def capture_widget(widget, path=None):
@@ -34,7 +51,7 @@ def capture_widget(widget, path=None):
         If a path is provided, the image will be saved to it.
         If not, the PNG buffer will be returned.
     """
-    if _has_qt5:
+    if use_qt5:
         pixmap = widget.grab()
     else:
         pixmap = QtGui.QPixmap.grabWidget(widget)
@@ -53,11 +70,11 @@ def capture_widget(widget, path=None):
 def form_to_widget(tform):
     class Ctx(object):
         QtGui = QtGui
-        if _has_qt5:
+        if use_qt5:
             QtWidgets = QtWidgets
             sip = sip
 
-    if _has_qt5:
+    if use_qt5:
         return idaapi.PluginForm.FormToPyQtWidget(tform, ctx=Ctx())
     else:
         return idaapi.PluginForm.FormToPySideWidget(tform, ctx=Ctx())
@@ -122,7 +139,7 @@ class MenuManager(object):
         super(MenuManager, self).__init__()
 
         self._window = get_window()
-        if _has_qt5:
+        if use_qt5:
             self._menu = self._window.findChild(QtWidgets.QMenuBar)
         else:
             self._menu = self._window.findChild(QtGui.QMenuBar)
