@@ -48,11 +48,11 @@ def struct_member_error(err, sid, name, offset, size):
     struct_name = idc.GetStrucName(sid)
     return exception(('AddStructMember(struct="{}", member="{}", offset={}, size={}) '
                       'failed: {}').format(
-        struct_name,
-        name,
-        offset,
-        size,
-        msg
+            struct_name,
+            name,
+            offset,
+            size,
+            msg
     ))
 
 
@@ -119,11 +119,10 @@ def infer_struct_offsets(start, end, reg_name):
     offsets = set()
     operands = []
     for line in lines(start, end):
-        insn = line.insn
-        if not insn.has_reg(reg_name):
-            continue
+        for operand in line.insn.operands:
+            if not operand.has_reg(reg_name):
+                continue
 
-        for operand in insn.operands:
             if not operand.type.has_phrase:
                 continue
 
@@ -133,7 +132,7 @@ def infer_struct_offsets(start, end, reg_name):
             offset = operand.offset
             if offset < 0:
                 raise exceptions.InvalidStructOffset(
-                    "Invalid structure offset 0x{:08X}, probably negative number.".format(offset))
+                        "Invalid structure offset 0x{:08X}, probably negative number.".format(offset))
             size = operand.size
             offsets.add(StructOffset(offset, size))
             operands.append(OperandRef(line.ea, operand.n))
