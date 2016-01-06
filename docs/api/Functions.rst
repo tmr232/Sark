@@ -61,6 +61,7 @@ There are 2 ways to get functions:
 2. Using ``sark.functions`` to iterate over functions. It is the same as
    ``sark.lines``, but does not accept a ``reverse`` argument.
 
+.. rubric:: Footnotes
 
 .. [#xrefs_to] Xrefs from a function include **only** references with a target outside the
     function. So recursion will be ignored.
