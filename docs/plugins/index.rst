@@ -7,3 +7,4 @@ Plugins
     meaningful
     quick_copy
     autostruct
+    xrefsgraph
