@@ -21,6 +21,13 @@ Once you press ``OK``, the plugin will generate an interactive xrefs graph:
 A double-click on any block will take you to the relevant address. Also, names in the blocks will be
 updated as you rename functions.
 
+Known Issues
+------------
+
+Node Groups
+    While creation of node groups *is* possible via IDA's GUI, it is not presently supported in the plugin.
+    Creation of node groups may cause unpredictable errors.
+
 .. rubric:: Footnotes
 
 .. [#pre67] In IDA 6.6 or earlier, use ``View/Graph/Xrefs from source`` or ``View/Graph/Xrefs to source``, as context
