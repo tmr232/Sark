@@ -132,7 +132,10 @@ class AddressNodeHandler(BasicNodeHandler):
     """
 
     def on_get_text(self, value, attrs):
-        return idc.Name(value) or "0x{:08X}".format(value)
+        name = idc.Name(value)
+        demangle = getattr(idaapi, 'demangle_name2', idaapi.demangle_name)
+        name = demangle(name, 0) or name
+        return name or "0x{:08X}".format(value)
 
     def on_double_click(self, value, attrs):
         idaapi.jumpto(value)
