@@ -58,6 +58,34 @@ class FlowChart(idaapi.FlowChart):
 
     def _getitem(self, index):
         return CodeBlock(index, self._q[index], self)
+        
+    def __dfs_find_final_blocks(self, basic_block, visited_blocks):
+        """
+        Recursively find final blocks in a graph
+
+        Keyword arguments:
+        basic_block -- A basic CodeBlock to find its successors
+        visited_blocks -- CodeBlocks that have been seen to skip
+        """
+        # We have visited this block. Add to visited blocks
+        visited_blocks.append(basic_block.startEA) 
+        
+        # If it is the last block and it has no successors:
+        if sum(1 for i in basic_block.next) == 0:
+            return [basic_block], visited_blocks
+        
+        # Iterate over all unvisited blocks
+        end_blocks = []
+        for successor_block in basic_block.next:
+            if successor_block.startEA not in visited_blocks:
+                end_block, visited_blocks = self.__dfs_find_final_blocks(successor_block, visited_blocks)
+                end_blocks += end_block
+            
+        return end_blocks, visited_blocks
+        
+    def get_final_blocks(self):
+        """Use __dfs_find_final_blocks to return final blocks in a graph ודןמע DFS"""
+        return self.__dfs_find_final_blocks(self[0], [])
 
 
 def get_flowchart(ea=None):
