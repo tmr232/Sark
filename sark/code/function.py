@@ -19,6 +19,9 @@ class Comments(object):
     def __init__(self, function):
         self._function = function
 
+    def __nonzero__(self):
+        return any((self.regular, self.repeat, ))
+
     @property
     def regular(self):
         """Function Comment"""
