@@ -2,3 +2,4 @@ clipboard
 networkx
 awesomelib
 wrapt
+idacute

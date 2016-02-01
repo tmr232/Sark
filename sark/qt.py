@@ -1,43 +1,14 @@
 import os
 import sys
 
+from cute import QtCore, QtWidgets, QtGui, use_qt5, connect, disconnect, form_to_widget
+
 import idaapi
 
 from . import exceptions
 
-# This nasty piece of code is here to force the loading of IDA's PySide.
-# Without it, Python attempts to load PySide from the site-packages directory,
-# and failing, as it does not play nicely with IDA.
-old_path = sys.path[:]
-try:
-    ida_python_path = os.path.dirname(idaapi.__file__)
-    sys.path.insert(0, ida_python_path)
-    if idaapi.IDA_SDK_VERSION >= 690:
-        from PyQt5 import QtGui, QtCore, QtWidgets
-        import sip
-        use_qt5 = True
-    else:
-        from PySide import QtGui, QtCore
-        QtWidgets = QtGui
-        use_qt5 = False
-finally:
-    sys.path = old_path
-
-
-def connect_method_to_signal(sender, signal, callback):
-    """Connect a signal.
-
-    Use this function only in cases where code should work with both Qt5 and Qt4, as it is an ugly hack.
-
-    Args:
-        sender: The Qt object emitting the signal
-        signal: A string, containing the signal signature
-        callback: The function to be called upon receiving the signal
-    """
-    if use_qt5:
-        return getattr(sender, signal.split('(', 1)[0]).connect(callback)
-    else:
-        return sender.connect(QtCore.SIGNAL(signal), callback)
+# This is an alias left for backwards compatibility. Use `connect` instead.
+connect_method_to_signal = connect
 
 
 def capture_widget(widget, path=None):
@@ -67,17 +38,6 @@ def capture_widget(widget, path=None):
 
         return image_buffer.data().data()
 
-def form_to_widget(tform):
-    class Ctx(object):
-        QtGui = QtGui
-        if use_qt5:
-            QtWidgets = QtWidgets
-            sip = sip
-
-    if use_qt5:
-        return idaapi.PluginForm.FormToPyQtWidget(tform, ctx=Ctx())
-    else:
-        return idaapi.PluginForm.FormToPySideWidget(tform, ctx=Ctx())
 
 def get_widget(title):
     """Get the Qt widget of the IDA window with the given title."""
@@ -174,4 +134,3 @@ class MenuManager(object):
         for menu in self._menus.itervalues():
             self._menu.removeAction(menu.menuAction())
         self._menus = {}
-
