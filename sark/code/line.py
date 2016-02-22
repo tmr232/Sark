@@ -224,7 +224,7 @@ class Line(object):
     @property
     def name(self):
         """Name of the line (the label shown in IDA)."""
-        return idc.Name(self.ea)
+        return idc.GetTrueName(self.ea)
 
     @name.setter
     def name(self, value):
