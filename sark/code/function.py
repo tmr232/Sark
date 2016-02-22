@@ -183,7 +183,7 @@ class Function(object):
     @property
     def name(self):
         """Function's Name"""
-        return idc.Name(self.startEA)
+        return idc.GetTrueName(self.startEA)
 
     @property
     def demangled(self):
