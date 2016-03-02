@@ -1,4 +1,4 @@
-from itertools import imap
+from itertools import imap, ifilter
 import idaapi
 import idautils
 import idc
@@ -179,6 +179,14 @@ class Function(object):
     def crefs_to(self):
         """Source addresses of code xrefs to this function."""
         return idautils.CodeRefsTo(self.startEA, 1)
+
+    @property
+    def calls(self):
+        """
+        Calls to other functions.
+        Returns: Xref objects
+        """
+        return ifilter(lambda x: x.type.is_call, self.xrefs_from)
 
     @property
     def name(self):
