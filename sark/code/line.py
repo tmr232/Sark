@@ -185,6 +185,11 @@ class Line(object):
         return imap(Xref, idautils.XrefsFrom(self.ea))
 
     @property
+    def has_xrefs_from(self):
+        """Are there Xrefs from this line."""
+        return len(list(self.xrefs_from)) != 0
+
+    @property
     def drefs_from(self):
         """Destination addresses of data references from this line."""
         return idautils.DataRefsFrom(self.ea)
@@ -202,6 +207,11 @@ class Line(object):
             Xrefs as `sark.code.xref.Xref` objects.
         """
         return imap(Xref, idautils.XrefsTo(self.ea))
+
+    @property
+    def has_xrefs_to(self):
+        """Are there Xrefs to this line."""
+        return len(list(self.xrefs_to)) != 0
 
     @property
     def drefs_to(self):
