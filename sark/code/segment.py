@@ -165,7 +165,7 @@ class Segment(object):
 
     @property
     def name(self):
-        return idaapi.get_segm_name(self.segment_t)
+        return idaapi.get_true_segm_name(self.segment_t)
 
     @name.setter
     def name(self, name):
