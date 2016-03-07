@@ -184,6 +184,11 @@ class Function(object):
         return idautils.CodeRefsTo(self.startEA, 1)
 
     @property
+    def calls_from(self):
+        """Calls from this function to another functions. Returns Xref objects."""
+        return (xref for xref in self.xrefs_from if xref.type.is_call)
+
+    @property
     def name(self):
         """Function's Name"""
         return idc.GetTrueName(self.startEA)
