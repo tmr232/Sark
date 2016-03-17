@@ -30,7 +30,7 @@ def Dwords(start=None, end=None):
 def Qwords(start=None, end=None):
     start, end = fix_addresses(start, end)
 
-    return itertools.imap(idc.Qword, range(start, end, 4))
+    return itertools.imap(idc.Qword, range(start, end, 8))
 
 
 def bytes_until(byte=0, start=None, end=None):
