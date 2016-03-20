@@ -3,8 +3,8 @@ import idautils
 import idc
 
 from . import base
-from .. import exceptions
 from .. import core
+from .. import exceptions
 
 OPND_WRITE_FLAGS = {
     0: idaapi.CF_CHG1,
@@ -323,6 +323,27 @@ class Operand(object):
         return self.addr
 
 
+class IndexingMode(object):
+    def __init__(self, pre=False, post=False):
+        self.pre = pre
+        self.post = post
+
+    @property
+    def is_pre(self):
+        return self.pre
+
+    @property
+    def is_post(self):
+        return self.post
+
+    @property
+    def is_none(self):
+        return not (self.pre or self.post)
+
+    def __nonzero__(self):
+        return self.pre or self.post
+
+
 class Instruction(object):
     def __init__(self, ea):
         self._ea = ea
@@ -400,3 +421,11 @@ class Instruction(object):
     @property
     def insn_t(self):
         return self._insn
+
+    @property
+    def indexing_mode(self):
+        if idaapi.get_inf_structure().procName != 'ARM':
+            return IndexingMode()
+
+        return IndexingMode(pre=bool(self.insn_t.auxpref & 0x20),
+                            post=bool(self.insn_t.auxpref & 0x80))
