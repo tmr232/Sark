@@ -5,7 +5,7 @@ import idaapi
 import itertools
 import struct
 from awesome.iterator import irange as range
-from .core import fix_addresses
+from .core import fix_addresses, get_native_size
 from . import exceptions
 
 
@@ -32,6 +32,16 @@ def Qwords(start=None, end=None):
 
     return itertools.imap(idc.Qword, range(start, end, 8))
 
+def NativeWords(start, end):
+    native_size = get_native_size()
+
+    if native_size == 2:
+        return Words(start, end)
+    elif native_size == 4:
+        return Dwords(start, end)
+    elif native_size == 8:
+        return Qwords(start, end)
+
 
 def bytes_until(byte=0, start=None, end=None):
     return iter(Bytes(start, end).next, byte)
@@ -43,6 +53,12 @@ def words_until(word=0, start=None, end=None):
 
 def dwords_until(dword=0, start=None, end=None):
     return iter(Dwords(start, end).next, dword)
+
+def qwords_until(qword=0, start=None, end=None):
+    return iter(Qwords(start, end).next, qword)
+
+def native_words_until(native_word=0, start=None, end=None):
+    return iter(NativeWords(start, end).next, native_word)
 
 
 def Chars(start=None, end=None):
