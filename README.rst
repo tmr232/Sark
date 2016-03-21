@@ -32,36 +32,23 @@ Dependencies
 2. `clipboard <https://pypi.python.org/pypi/clipboard/0.0.4>`_
 3. `AwesomeLib <https://github.com/tmr232/awesomelib>`_
 4. `wrapt <https://pypi.python.org/pypi/wrapt>`_
-
+5. `idacute <https://github.com/tmr232/cute>`_
 
 Installation
 ------------
 
 .. code:: bash
 
-    pip install -e git+https://github.com/tmr232/Sark.git#egg=Sark
+    pip install -U git+https://github.com/tmr232/Sark.git#egg=Sark
 
 Or see `here <http://sark.readthedocs.org/en/latest/Installation.html>`_.
 
-Plugins and Codecs
-------------------
+Plugins
+-------
 
-The :code:`proxy.py` files in the codecs and the plugins directories enable rapid development
-and deployment by enabling you to use them directly from the Sark repository, without needing
-to copy them again and again.
+Plugin documentation can be found `here <http://sark.readthedocs.org/en/latest/plugins/index.html>`_.
 
-Both proxy files use the location of the Sark module itself to find the their corresponding
-directories. If your directory structure differs from::
-
-    Sark
-    +---plugins
-    +---sark
-        +---encodings
-
-To get the plugin proxies to work, set :code:`sarkPlugins` to the location of the plugins directory.
-
-However, I highly recommend adhering to the aforementioned directory structure as it enables
-quick updates (:code:`git pull`.)
+Installation instructions can be found `here <http://sark.readthedocs.org/en/latest/plugins/installation.html>`_.
 
 
 Other Useful Plugins
