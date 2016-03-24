@@ -101,3 +101,39 @@ def format_name(name):
         return "".join(char if char in NAME_VALID_CHARS else "_" for char in name)
     except:
         return ""
+
+def demangle(name, disable_mask=0):
+    try:
+        demangled_name = idaapi.demangle_name2(name, disable_mask)
+    except AttributeError:
+        # Backwards compatibility with IDA 6.6
+        demangled_name = idaapi.demangle_name(name, disable_mask)
+    if demangled_name:
+        return demangled_name
+    return name
+
+
+def get_offset_name(ea):
+    # Try and get the function name
+    try:
+        func = get_func(ea)
+        name = idc.GetTrueName(func.startEA)
+        name = demangle(name, 0x60) # MNG_NOTYPE | MNG_NORETTYPE
+        if name:
+            offset = ea - func.startEA
+            if offset:
+                return '{}+{:X}'.format(name, offset)
+            return name
+    except exceptions.SarkNoFunction:
+        pass
+
+    # If that failed, use the segment name instead.
+    segment = idaapi.getseg(ea)
+    name = idaapi.get_true_segm_name(segment)
+    offset_format = '{{:0{}X}}'.format(get_native_size() * 2)
+    ea_text = offset_format.format(ea)
+    if name:
+        return '{}:{}'.format(name, ea_text)
+
+    # Nothing found, simply return the address
+    return ea_text
