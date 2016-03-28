@@ -51,7 +51,7 @@ class Comments(object):
         if not comment:
             idc.DelExtLnA(self._ea, 0)
             return
-        
+
         index = 0
 
         for index, line in enumerate(comment.splitlines()):
@@ -71,7 +71,7 @@ class Comments(object):
         if not comment:
             idc.DelExtLnB(self._ea, 0)
             return
-        
+
         index = 0
 
         for index, line in enumerate(comment.splitlines()):
@@ -109,7 +109,6 @@ class Line(object):
         Usually, this is not the desired outcome. This object resolves this issue.
         """
         pass
-
 
     def __init__(self, ea=UseCurrentAddress, name=None):
         if name is not None and ea != self.UseCurrentAddress:
@@ -186,6 +185,10 @@ class Line(object):
         :return: Xrefs as `sark.code.xref.Xref` objects.
         """
         return imap(Xref, idautils.XrefsFrom(self.ea))
+
+    @property
+    def calls_from(self):
+        return (xref for xref in self.xrefs_from if xref.type.is_call)
 
     @property
     def drefs_from(self):

@@ -20,7 +20,7 @@ class Comments(object):
         self._function = function
 
     def __nonzero__(self):
-        return any((self.regular, self.repeat, ))
+        return any((self.regular, self.repeat,))
 
     @property
     def regular(self):
@@ -39,7 +39,6 @@ class Comments(object):
     @repeat.setter
     def repeat(self, comment):
         idaapi.set_func_cmt(self._function._func, comment, True)
-
 
     def __repr__(self):
         return ("Comments("
@@ -150,6 +149,10 @@ class Function(object):
                     continue
 
                 yield xref
+
+    @property
+    def calls_from(self):
+        return (xref for xref in self.xrefs_from if xref.type.is_call)
 
     @property
     def drefs_from(self):
