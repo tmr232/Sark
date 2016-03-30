@@ -6,7 +6,7 @@ from ..core import fix_addresses
 from .xref import Xref
 from .instruction import Instruction
 from ..ui import updates_ui
-from .base import get_selection
+from .base import get_selection, get_offset_name
 
 
 class Comments(object):
@@ -273,6 +273,10 @@ class Line(object):
     def has_name(self):
         """Does the current line have a non-trivial (non-dummy) name?"""
         return idaapi.has_name(self.flags)
+
+    @property
+    def offset_name(self):
+        return get_offset_name(self.ea)
 
 
 def lines(start=None, end=None, reverse=False, selection=False):

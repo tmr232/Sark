@@ -2,7 +2,7 @@ from itertools import imap
 import idaapi
 import idautils
 import idc
-from .base import get_func
+from .base import get_func, demangle
 from ..core import set_name, get_ea, fix_addresses, is_same_function
 from .line import Line
 from .xref import Xref
@@ -194,14 +194,7 @@ class Function(object):
     @property
     def demangled(self):
         """Return the demangled name of the function. If none exists, return `.name`"""
-        try:
-            name = idaapi.demangle_name2(self.name, 0)
-        except AttributeError:
-            # Backwards compatibility with IDA 6.6
-            name = idaapi.demangle_name(self.name, 0)
-        if name:
-            return name
-        return self.name
+        return demangle(self.name)
 
     @name.setter
     def name(self, name):
