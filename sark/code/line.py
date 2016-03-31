@@ -234,6 +234,11 @@ class Line(object):
         idc.MakeName(self.ea, value)
 
     @property
+    def demangled(self):
+        """Return the demangled name of the line. If none exists, return `.name`"""
+        return demangle(self.name)
+
+    @property
     def insn(self):
         """Instruction"""
         return Instruction(self.ea)
