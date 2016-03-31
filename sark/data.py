@@ -132,3 +132,8 @@ def get_string(ea):
         raise exceptions.SarkNoString("No string at 0x{:08X}".format(ea))
 
     return string
+
+
+def make_string(ea, len=0):
+    return idaapi.make_ascii_string(ea, len, GetLongPrm(INF_STRTYPE))
+
