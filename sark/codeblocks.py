@@ -32,13 +32,26 @@ class CodeBlock(idaapi.BasicBlock):
         for line in self.lines:
             line.color = color
 
-        node_info = idaapi.node_info_t()
-        node_info.bg_color = color
-        idaapi.set_node_info2(self.startEA, self.id, node_info, idaapi.NIF_BG_COLOR)
+        if color is None:
+            idaapi.clr_node_info2(self._fc._q.bounds.startEA, self.id, idaapi.NIF_BG_COLOR)
+
+        else:
+            node_info = idaapi.node_info_t()
+            node_info.bg_color = color
+            idaapi.set_node_info2(self._fc._q.bounds.startEA, self.id, node_info, idaapi.NIF_BG_COLOR)
 
     @property
     def color(self):
-        return next(self.lines).color
+        node_info = idaapi.node_info_t()
+        success = idaapi.get_node_info2(node_info, self._fc._q.bounds.startEA, self.id)
+        
+        if not success:
+            return None
+            
+        if not node_info.valid_bg_color():
+            return None
+            
+        return node_info.bg_color
 
     @color.setter
     def color(self, color):
