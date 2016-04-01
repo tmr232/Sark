@@ -6,7 +6,7 @@ from ..core import fix_addresses
 from .xref import Xref
 from .instruction import Instruction
 from ..ui import updates_ui
-from .base import get_selection, get_offset_name
+from .base import get_selection, get_offset_name, demangle
 
 
 class Comments(object):
@@ -232,6 +232,11 @@ class Line(object):
     @name.setter
     def name(self, value):
         idc.MakeName(self.ea, value)
+
+    @property
+    def demangled(self):
+        """Return the demangled name of the line. If none exists, return `.name`"""
+        return demangle(self.name)
 
     @property
     def insn(self):
