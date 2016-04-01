@@ -6,7 +6,7 @@ from ..core import fix_addresses
 from .xref import Xref
 from .instruction import Instruction
 from ..ui import updates_ui
-from .base import get_selection, get_offset_name
+from .base import get_selection, get_offset_name, demangle
 
 
 class Comments(object):
