@@ -100,10 +100,10 @@ class HighlightCalls(idaapi.plugin_t):
         self.lines = set()
         self.settings = IDASettings('HighlightCalls')
         try:
-            self.color = self.settings['color']
+            self.set_color(self.settings['color'])
         except KeyError:
             self.settings.user['color'] = HIGHLIGHT_COLOR
-            self.color = HIGHLIGHT_COLOR
+            self.set_color(HIGHLIGHT_COLOR)
         self.ui_hooks = UiHooks(self.lines)
 
         self.toggle_action_desc = idaapi.action_desc_t('HighlightCalls:Toggle',
