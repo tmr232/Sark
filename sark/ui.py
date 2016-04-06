@@ -5,6 +5,23 @@ import itertools
 import wrapt
 from .qt import MenuManager
 import traceback
+from cute import QtGui, QtWidgets
+
+
+def ask_color(initial=None):
+    if initial is not None:
+        color = QtGui.QColor(initial & 0xFF, (initial >> 8) & 0xFF, (initial >> 16) & 0xFF)
+        qcolor_dialog = QtWidgets.QColorDialog(color)
+
+    else:
+        qcolor_dialog = QtWidgets.QColorDialog()
+
+    qcolor = qcolor_dialog.getColor()
+
+    if not qcolor.isValid:
+        return None
+
+    return (qcolor.blue() << 16) | (qcolor.green() << 8) | (qcolor.red() << 0)
 
 
 class Update(object):
