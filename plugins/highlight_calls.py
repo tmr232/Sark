@@ -1,5 +1,3 @@
-import abc
-
 from awesome.context import ignored
 import idaapi
 import sark
@@ -8,7 +6,6 @@ from ida_settings import IDASettings
 HIGHLIGHT_COLOR = 0x303060
 
 
-# @sark.ui.updates_ui
 def highlight_calls_in_function(ea):
     highlighted_lines = set()
     for line in sark.Function(ea).lines:
@@ -123,8 +120,8 @@ class HighlightCalls(idaapi.plugin_t):
                                                    -1)
         idaapi.register_action(self.color_selector)
 
-        idaapi.attach_action_to_menu('View/', self.toggle_action_desc.name, 0)
-        idaapi.attach_action_to_menu('View/', self.color_selector.name, 0)
+        idaapi.attach_action_to_menu('View/', self.toggle_action_desc.name, idaapi.SETMENU_APP)
+        idaapi.attach_action_to_menu('View/', self.color_selector.name, idaapi.SETMENU_APP)
 
         return idaapi.PLUGIN_KEEP
 
