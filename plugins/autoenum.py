@@ -39,8 +39,56 @@ def const_name(enum, value):
     return "{}_{:X}h".format(enum.name.upper(), value)
 
 
+def rename_immediate():
+    value = idc.AskLong(get_common_value(), "Const Value")
+    if value is None:
+        return
+
+    name = idc.AskStr("", "Constant Name")
+    if name is None:
+        return
+
+    try:
+        enum = sark.Enum('GlobalConstants')
+    except sark.exceptions.EnumNotFound:
+        enum = sark.add_enum('GlobalConstants')
+
+    enum.members.add(name, value)
+    apply_enum_by_name(enum, name)
+
+
+class RenameImmediateHandler(idaapi.action_handler_t):
+    def activate(self, ctx):
+        try:
+            rename_immediate()
+        except:
+            import traceback
+            traceback.print_exc()
+
+        return 1
+
+    def update(self, ctx):
+        if ctx.form_type == idaapi.BWN_DISASM:
+            return idaapi.AST_DISABLE_FOR_FORM
+
+
+class AutoEnumHandler(idaapi.action_handler_t):
+    def activate(self, ctx):
+        try:
+            rename_immediate()
+        except:
+            import traceback
+            traceback.print_exc()
+
+        return 1
+
+    def update(self, ctx):
+        if ctx.form_type == idaapi.BWN_DISASM:
+            return idaapi.AST_DISABLE_FOR_FORM
+
+
 class AutoEnum(idaapi.plugin_t):
-    flags = 0
+    flags = idaapi.PLUGIN_PROC
     comment = "Automatic Enum Generation"
     help = "Automatic Enum Generation"
     wanted_name = "AutoEnum"
@@ -48,12 +96,33 @@ class AutoEnum(idaapi.plugin_t):
 
     def init(self):
         self._last_enum = ""
+
+        self.rename_action_desc = idaapi.action_desc_t('AutoEnum:RenameImmediate',
+                                                       'Rename immediate value',
+                                                       RenameImmediateHandler(),
+                                                       'Ctrl+Shift+M',
+                                                       'Rename immediate value',
+                                                       -1)
+        idaapi.register_action(self.rename_action_desc)
+
+        self.autoenum_action_desc = idaapi.action_desc_t('AutoEnum:RenameImmediate',
+                                                         'Automatically create enum',
+                                                         RenameImmediateHandler(),
+                                                         'Shift+M',
+                                                         'Automatically create enum',
+                                                         -1)
+        idaapi.register_action(self.autoenum_action_desc)
+
         return idaapi.PLUGIN_KEEP
 
     def term(self):
-        pass
+        idaapi.unregister_action(self.autoenum_action_desc.name)
+        idaapi.unregister_action(self.rename_action_desc.name)
 
     def run(self, arg):
+        pass
+
+    def autoenum(self):
         common_value = get_common_value()
 
         enum_name = idc.AskStr(self._last_enum, "Enum Name")
@@ -91,7 +160,6 @@ class AutoEnum(idaapi.plugin_t):
             else:  # yes_no_cancel == idaapi.ASKBTN_NO:
                 modify = False
 
-
         member_name = const_name(enum, const_value)
 
         if modify:
@@ -109,7 +177,6 @@ class AutoEnum(idaapi.plugin_t):
                     break
                 else:
                     return
-
 
         # Apply the enum
         apply_enum_by_name(enum, member_name)
