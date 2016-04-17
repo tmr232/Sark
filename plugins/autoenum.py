@@ -49,7 +49,7 @@ def rename_immediate():
     highlighted = idaapi.get_highlighted_identifier()
     try:
         desired = int(highlighted, 0)
-    except ValueError:
+    except (ValueError, TypeError):
         desired = None
     value = idc.AskLong(get_common_value(desired), "Const Value")
     if value is None:
