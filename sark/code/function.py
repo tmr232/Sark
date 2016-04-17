@@ -84,6 +84,9 @@ class Function(object):
             raise ValueError("`None` is not a valid address. To use the current screen ea, "
                              "use `Function(ea=Function.UseCurrentAddress)` or supply no `ea`.")
 
+        elif isinstance(ea, Line):
+            ea = ea.ea
+
         self._func = get_func(ea)
         self._comments = Comments(self)
 
