@@ -283,6 +283,15 @@ class Line(object):
     def offset_name(self):
         return get_offset_name(self.ea)
 
+    def __eq__(self, other):
+        if not isinstance(other, Line):
+            return False
+
+        return self.ea == other.ea
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
 
 def lines(start=None, end=None, reverse=False, selection=False):
     """Iterate lines in range.
