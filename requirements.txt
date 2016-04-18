@@ -3,3 +3,4 @@ networkx
 awesomelib
 wrapt
 idacute
+ida-settings
