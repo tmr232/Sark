@@ -2,8 +2,8 @@ import idc
 import networkx
 
 import idaapi
-from .code import lines
-from .core import get_func
+from .code import lines, functions
+from .core import get_func, fix_addresses
 
 
 class CodeBlock(idaapi.BasicBlock):
@@ -44,13 +44,13 @@ class CodeBlock(idaapi.BasicBlock):
     def color(self):
         node_info = idaapi.node_info_t()
         success = idaapi.get_node_info2(node_info, self._fc._q.bounds.startEA, self.id)
-        
+
         if not success:
             return None
-            
+
         if not node_info.valid_bg_color():
             return None
-            
+
         return node_info.bg_color
 
     @color.setter
@@ -110,3 +110,11 @@ def get_nx_graph(ea):
             nx_graph.add_edge(block.startEA, succ.startEA)
 
     return nx_graph
+
+
+def codeblocks(start=None, end=None):
+    """Get all `CodeBlock`s in a given range."""
+    start, end = fix_addresses(start, end)
+
+    for code_block in FlowChart(bounds=(start, end)):
+        yield code_block
