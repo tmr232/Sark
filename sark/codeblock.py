@@ -1,4 +1,3 @@
-import idc
 import networkx
 
 import idaapi
@@ -112,9 +111,22 @@ def get_nx_graph(ea):
     return nx_graph
 
 
-def codeblocks(start=None, end=None):
-    """Get all `CodeBlock`s in a given range."""
-    start, end = fix_addresses(start, end)
+def codeblocks(start=None, end=None, full=True):
+    """Get all `CodeBlock`s in a given range.
 
-    for code_block in FlowChart(bounds=(start, end)):
-        yield code_block
+    Args:
+        start - start address of the range. If `None` uses IDB start.
+        end - end address of the range. If `None` uses IDB end.
+        full - `True` is required to change node info (e.g. color). `False` causes faster iteration.
+    """
+    if full:
+        for function in functions(start, end):
+            fc = FlowChart(f=function.func_t)
+            for block in fc:
+                yield block
+
+    else:
+        start, end = fix_addresses(start, end)
+
+        for code_block in FlowChart(bounds=(start, end)):
+            yield code_block
