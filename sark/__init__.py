@@ -29,7 +29,7 @@ if is_in_ida():
                    code,
                    exceptions,
                    structure,
-                   codeblocks,
+                   codeblock,
                    data,
                    debug,
                    enum,
@@ -41,14 +41,14 @@ if is_in_ida():
     reload(exceptions)
     reload(graph)
     reload(structure)
-    reload(codeblocks)
+    reload(codeblock)
     reload(data)
     reload(debug)
     reload(enum)
     reload(ui)
 
     from .code import *
-    from .codeblocks import CodeBlock, get_nx_graph, get_block_start, FlowChart
+    from .codeblock import CodeBlock, get_nx_graph, get_block_start, FlowChart, codeblocks
     from .data import read_ascii_string, get_string
     from .core import set_name, is_function
     from .enum import Enum, enums, add_enum, remove_enum
