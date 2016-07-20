@@ -44,6 +44,15 @@ Codeblocks are created using the ``sark.CodeBlock(ea)`` class.
 Flowcharts can be retrieved using the ``sark.FlowChart(ea)``
 class accordingly.
 
+In some cases, you may want to go over more than one function. In those
+cases, you can use the ``sark.codeblocks(start=None, end=None, full=True)`` function.
+The ``full`` parameter controls the way the blocks are generated. With ``full=True``,
+``FlowChart`` objects are generated per function, yielding fully capable ``CodeBlock``
+objects. With ``full=False``, a single ``FlowChart`` is generated for the entire
+address range. This results in faster iteration, but since the blocks are not associated
+to their containing functions, it is not possible to get or set block colors (line color
+will change, though.)
+
 Advanced Usage
 ~~~~~~~~~~~~~~
 
