@@ -283,6 +283,10 @@ class Line(object):
     def offset_name(self):
         return get_offset_name(self.ea)
 
+    @property
+    def bytes(self):
+        return idaapi.get_many_bytes(self.ea, self.size)
+
     def __eq__(self, other):
         if not isinstance(other, Line):
             return False
