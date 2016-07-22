@@ -115,6 +115,15 @@ def undefine(start, end):
     idc.MakeUnknown(start, end - start, idc.DOUNK_SIMPLE)
 
 
+def is_string(ea):
+    string_type = idc.GetStringType(idaapi.get_item_head(ea))
+
+    if string_type is None:
+        return False
+
+    return True
+
+
 def get_string(ea):
     """Read the string at the given ea.
 

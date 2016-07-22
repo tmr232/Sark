@@ -7,6 +7,7 @@ from .xref import Xref
 from .instruction import Instruction
 from ..ui import updates_ui
 from .base import get_selection, get_offset_name, demangle
+from .. import data
 
 
 class Comments(object):
@@ -152,6 +153,11 @@ class Line(object):
     def is_tail(self):
         """Is the line a tail."""
         return idaapi.isTail(self.flags)
+
+    @property
+    def is_string(self):
+        """Is the line a string."""
+        return data.is_string(self.ea)
 
     @property
     def comments(self):
