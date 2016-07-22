@@ -32,6 +32,8 @@ functions of IDAPython. Some examples include:
 +---------------+----------------------------------+
 | xrefs\_from   | cross references from the line   |
 +---------------+----------------------------------+
+| bytes         | the actual bytes in the line     |
++---------------+----------------------------------+
 
 For the rest, I suggest reading the highly documented code, or using the
 interactive shell to experiment with the ``sark.Line`` object.
