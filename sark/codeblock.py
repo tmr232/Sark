@@ -61,7 +61,7 @@ class CodeBlock(idaapi.BasicBlock):
 
 
 class FlowChart(idaapi.FlowChart):
-    def __init__(self, f=None, bounds=None, flags=0):
+    def __init__(self, f=None, bounds=None, flags=idaapi.FC_PREDS):
         if f is None and bounds is None:
             f = idaapi.get_screen_ea()
         if f is not None:
