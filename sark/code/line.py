@@ -145,6 +145,11 @@ class Line(object):
         return idaapi.isData(self.flags)
 
     @property
+    def is_string(self):
+        """Is the line data of type ASCII string."""
+        return idaapi.isASCII(self.flags)
+
+    @property
     def is_unknown(self):
         """Is the line unknown."""
         return idaapi.isUnknown(self.flags)
