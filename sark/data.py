@@ -2,6 +2,8 @@ from collections import namedtuple
 import idc
 import idaapi
 
+import os
+import shutil
 import itertools
 import struct
 from awesome.iterator import irange as range
@@ -32,6 +34,7 @@ def Qwords(start=None, end=None):
 
     return itertools.imap(idc.Qword, range(start, end, 8))
 
+
 def NativeWords(start, end):
     native_size = get_native_size()
 
@@ -54,8 +57,10 @@ def words_until(word=0, start=None, end=None):
 def dwords_until(dword=0, start=None, end=None):
     return iter(Dwords(start, end).next, dword)
 
+
 def qwords_until(qword=0, start=None, end=None):
     return iter(Qwords(start, end).next, qword)
+
 
 def native_words_until(native_word=0, start=None, end=None):
     return iter(NativeWords(start, end).next, native_word)
@@ -109,6 +114,30 @@ def get_patched_bytes(start=None, end=None):
     idaapi.visit_patched_bytes(start, end, collector)
 
     return patched_bytes
+
+
+def apply_patches(patched_path=None):
+    to_patch = idaapi.get_input_file_path()
+
+    if patched_path:
+        shutil.copyfile(to_patch, patched_path)
+        to_patch = patched_path
+
+    patches = get_patched_bytes()
+
+    with open(to_patch, "r+b") as output:
+
+        for patch in patches.itervalues():
+
+            output.seek(patch.fpos)
+            curr_byte = ord(output.read(1))
+            if curr_byte != patch.original:
+                raise exceptions.SarkExpectedPatchedByte("Expected {:02X} in {} but found {:0x2X} while patching {}".
+                                                         format(patch.original, patch.fpos, curr_byte, to_patch))
+
+            output.seek(-1, os.SEEK_CUR)
+            bin_patch = bytearray((patch.patched,))
+            output.write(bin_patch)
 
 
 def undefine(start, end):

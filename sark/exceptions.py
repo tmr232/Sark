@@ -202,14 +202,22 @@ class SarkNoString(SarkError):
     pass
 
 
+class SarkExpectedPatchedByte(SarkError):
+    pass
+
+
 class PhraseError(SarkOperandError):
     pass
+
 
 class OperandNotPhrase(PhraseError):
     pass
 
+
 class PhraseNotSupported(PhraseError):
     pass
 
+
 class PhraseProcessorNotSupported(PhraseNotSupported):
     pass
+
