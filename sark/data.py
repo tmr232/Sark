@@ -2,7 +2,6 @@ from collections import namedtuple
 import idc
 import idaapi
 
-import os
 import shutil
 import itertools
 import struct
@@ -130,12 +129,6 @@ def apply_patches(patched_path=None):
         for patch in patches.itervalues():
 
             output.seek(patch.fpos)
-            curr_byte = ord(output.read(1))
-            if curr_byte != patch.original:
-                raise exceptions.SarkExpectedPatchedByte("Expected {:02X} in {} but found {:0x2X} while patching {}".
-                                                         format(patch.original, patch.fpos, curr_byte, to_patch))
-
-            output.seek(-1, os.SEEK_CUR)
             bin_patch = bytearray((patch.patched,))
             output.write(bin_patch)
 
