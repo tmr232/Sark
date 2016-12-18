@@ -45,8 +45,7 @@ def get_ea(func_ea):
 
 
 def add_func(func_ea,func_end=idaapi.BADADDR):
-     return idaapi.add_func(func_ea, func_end)
-
+    return idc.MakeFunction(func_ea,func_end)
 
 def is_string_printable(string_):
     """Check if a string is printable"""
