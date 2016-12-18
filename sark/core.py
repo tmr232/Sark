@@ -44,6 +44,10 @@ def get_ea(func_ea):
     return func_ea
 
 
+def add_func(func_ea,func_end=idaapi.BADADDR):
+     return idaapi.add_func(func_ea, func_end)
+
+
 def is_string_printable(string_):
     """Check if a string is printable"""
     return set(string_) - set(string.printable)
@@ -179,3 +183,5 @@ def is_signed(number, size=None):
     if not size:
         size = get_native_size()
     return number & (1 << ((8 * size) - 1))
+
+

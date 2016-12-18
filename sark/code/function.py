@@ -3,7 +3,7 @@ import idaapi
 import idautils
 import idc
 from .base import get_func, demangle
-from ..core import set_name, get_ea, fix_addresses, is_same_function
+from ..core import set_name, get_ea, fix_addresses, is_same_function,add_func
 from .line import Line
 from .xref import Xref
 from ..ui import updates_ui
@@ -86,9 +86,20 @@ class Function(object):
 
         elif isinstance(ea, Line):
             ea = ea.ea
-
         self._func = get_func(ea)
         self._comments = Comments(self)
+
+    @staticmethod
+    def create(ea=UseCurrentAddress, name=None):
+        try:
+            Function(ea,name)
+            raise exceptions.SarkFunctionExists("function already exists")
+        except exceptions.SarkNoFunction:
+            status = add_func(ea)
+            if not status:
+                raise exceptions.SarkAddFunctionFailed("Failed to add function")
+            return Function(ea,name)
+
 
     @property
     def comments(self):
