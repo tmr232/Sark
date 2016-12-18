@@ -5,22 +5,6 @@ from .function import functions
 from .line import lines
 from .. import exceptions
 
-class MOVE_SEGM_FLAGS(object):
-    '''
-    MSF_SILENT  =   0x0001
-    don't display a "please wait" box on the screen
-    MSF_NOFIX   0x0002
-    don't call the loader to fix relocations
-    MSF_LDKEEP   0x0004
-    keep the loader in the memory (optimization)
-    MSF_FIXONCE   0x0008
-    call loader only once with the special calling method. More...
-    '''
-    MSF_SILENT = 0x0001
-    MSF_NOFIX = 0x0002
-    MSF_LDKEEP = 0x0004
-    MSF_FIXONCE = 0x0008
-
 class Comments(object):
     def __init__(self, segment):
         super(Comments, self).__init__()
@@ -261,9 +245,6 @@ class Segment(object):
                                         self.size,
                                         str(self.permissions),
                                         self.bitness)
-
-    def move(self, new_addr, flag=MOVE_SEGM_FLAGS.MSF_SILENT):
-        idaapi.move_segm(self.segment_t, new_addr, flag)
 
 
 def segments():
