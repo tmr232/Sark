@@ -262,9 +262,8 @@ class Segment(object):
                                         str(self.permissions),
                                         self.bitness)
 
-    def move(self, new_addr):
-        idaapi.move_segm(self.segment_t,new_addr,MOVE_SEGM_FLAGS.MSF_SILENT)
-
+    def move(self, new_addr, flag=MOVE_SEGM_FLAGS.MSF_SILENT):
+        idaapi.move_segm(self.segment_t, new_addr, flag)
 
 
 def segments():
