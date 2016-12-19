@@ -13,6 +13,12 @@ class SarkNoSelection(SarkError):
 class SarkNoFunction(SarkError):
     pass
 
+class SarkAddFunctionFailed(SarkError):
+    pass
+
+
+class SarkFunctionExists(SarkError):
+    pass
 
 class SarkStructError(SarkError):
     pass

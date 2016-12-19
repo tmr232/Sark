@@ -5,7 +5,6 @@ from .function import functions
 from .line import lines
 from .. import exceptions
 
-
 class Comments(object):
     def __init__(self, segment):
         super(Comments, self).__init__()
@@ -164,6 +163,10 @@ class Segment(object):
         return self._segment.endEA
 
     @property
+    def type(self):
+        return idaapi.segtype(self.ea)
+
+    @property
     def name(self):
         return idaapi.get_true_segm_name(self.segment_t)
 
@@ -244,6 +247,11 @@ class Segment(object):
                                         self.bitness)
 
 
-def segments():
+def segments(seg_type=None):
+    ''' :param seg_type: type of segment e.g. SEG_CODE
+        :return: segment based on type. if type is None, returns all segments
+    '''
     for index in xrange(idaapi.get_segm_qty()):
-        yield Segment(index=index)
+        seg = Segment(index=index)
+        if (type is None) or (seg.type == seg_type):
+            yield Segment(index=index)

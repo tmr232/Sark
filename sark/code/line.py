@@ -180,9 +180,19 @@ class Line(object):
     def disasm(self):
         """Line Disassembly"""
         return idc.GetDisasm(self.ea)
+    @property
+    def type(self):
+        """return the type of the Line """
+        properties = {self.is_code:"code",
+                      self.is_data:"data",
+                      self.is_string:"string",
+                      self.is_tail:"tail",
+                      self.is_unknown:"unknown"}
+        for k, v in properties.items():
+            if k: return v
 
     def __repr__(self):
-        return "[{:08X}]    {}".format(self.ea, self.disasm)
+        return "[{:08X}]    {} {}".format(self.ea, self.disasm, self.type)
 
     @property
     def xrefs_from(self):
