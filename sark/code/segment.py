@@ -247,11 +247,11 @@ class Segment(object):
                                         self.bitness)
 
 
-def segments(type=None):
-    ''' :param type: type of segment e.g. SEG_CODE
+def segments(seg_type=None):
+    ''' :param seg_type: type of segment e.g. SEG_CODE
         :return: segment based on type. if type is None, returns all segments
     '''
     for index in xrange(idaapi.get_segm_qty()):
         seg = Segment(index=index)
-        if (type is None) or (seg.type == type):
+        if (type is None) or (seg.type == seg_type):
             yield Segment(index=index)
