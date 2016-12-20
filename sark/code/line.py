@@ -35,7 +35,7 @@ class Comments(object):
         lines = (cmnt_func(self._ea, index) for index in count())
         final_comment = []
         consecutive_none_count = 0
-        while consecutive_none_count != self.NONE_THRESHOLD:
+        while consecutive_none_count < self.NONE_THRESHOLD:
             cmt_lines = list(iter(lines.next, None))
             if not cmt_lines:
                 consecutive_none_count += 1
