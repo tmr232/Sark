@@ -23,6 +23,15 @@ class Comments(object):
         return any((self.regular, self.repeat, self.anterior, self.posterior,))
 
     def _get_external_comment(self,cmnt_func):
+        """
+        The way to get an anterior or posterior comment  through IDA API is
+        only line by line. The only way to tell when the comment ends is an empty line.
+        if there is an empty line anywhere in an anterior or posterior comment
+        it's treated as None. This function keeps getting lines until there are NONE_THRESHOLD consecutive Nones.
+        That way we can get  comments with some empty lines , without them being cut off.
+        :param cmnt_func: idc.LineA or idc.LineB
+        :return: the full comment text as string
+        """
         lines = (cmnt_func(self._ea, index) for index in count())
         final_comment = []
         consecutive_none_count = 0
