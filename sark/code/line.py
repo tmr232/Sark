@@ -15,12 +15,25 @@ class Comments(object):
 
     Provides easy access to all types of comments for an IDA line.
     """
-    NONE_THRESHOLD = 2
+    NONE_THRESHOLD = 3
     def __init__(self, ea):
         self._ea = ea
 
     def __nonzero__(self):
         return any((self.regular, self.repeat, self.anterior, self.posterior,))
+
+    def _get_external_comment(self,cmnt_func):
+        lines = (cmnt_func(self._ea, index) for index in count())
+        final_comment = []
+        consecutive_none_count = 0
+        while consecutive_none_count != self.NONE_THRESHOLD:
+            cmt_lines = list(iter(lines.next, None))
+            if not cmt_lines:
+                consecutive_none_count += 1
+            else:
+                final_comment.extend(cmt_lines)
+                consecutive_none_count = 1
+        return "\n".join(final_comment)
 
     @property
     def regular(self):
@@ -43,17 +56,8 @@ class Comments(object):
     @property
     def anterior(self):
         """Anterior Comment"""
-        lines = (idc.LineA(self._ea, index) for index in count())
-        final_comment=[]
-        consecutive_none_count =0
-        while consecutive_none_count != self.NONE_THRESHOLD:
-            cmt_lines = list(iter(lines.next, None))
-            if not cmt_lines:
-                consecutive_none_count += 1
-            else:
-                final_comment.extend(cmt_lines)
-                consecutive_none_count = 1
-        return "\n".join(final_comment)
+        return self._get_external_comment(idc.LineA)
+
 
 
     @anterior.setter
@@ -73,8 +77,7 @@ class Comments(object):
     @property
     def posterior(self):
         """Posterior Comment"""
-        lines = (idc.LineB(self._ea, index) for index in count())
-        return "\n".join(iter(lines.next, None))
+        return self._get_external_comment(idc.LineB)
 
     @posterior.setter
     @updates_ui
