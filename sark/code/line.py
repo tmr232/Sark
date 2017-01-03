@@ -42,10 +42,11 @@ class Comments(object):
             cmt_lines = list(iter(lines.next, None))
             if not cmt_lines:
                 consecutive_none_count += 1
-                final_comment.append("")
             else:
                 final_comment.extend(cmt_lines)
                 consecutive_none_count = 1
+            # whenever we reach None , add a new line
+            final_comment.append("")
         return ("\n".join(final_comment)).rstrip('\n')
 
     @property
