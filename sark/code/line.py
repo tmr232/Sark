@@ -2,6 +2,7 @@ from itertools import imap, count
 import idaapi
 import idautils
 import idc
+import idapython_workaround
 from ..core import fix_addresses
 from .xref import Xref
 from .instruction import Instruction
@@ -16,8 +17,10 @@ class Comments(object):
     Provides easy access to all types of comments for an IDA line.
     """
     NONE_THRESHOLD = 3
+
     def __init__(self, ea):
         self._ea = ea
+        idapython_workaround.add_doExtra()
 
     def __nonzero__(self):
         return any((self.regular, self.repeat, self.anterior, self.posterior,))
