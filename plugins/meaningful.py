@@ -56,7 +56,7 @@ def show_meaningful_in_function(function):
             # Trim the string for easier display
             string = string[:100]
 
-            idaapi.msg("str     0x{:08X}    0x{:08X}    {}\n".format(xref.frm, xref.to, repr(string)))
+            idaapi.msg("data    0x{:08X}    {}    {}\n".format(xref.frm, sark.core.get_name_or_address(xref.to), repr(string)))
 
     idaapi.msg("\n\n")
 
