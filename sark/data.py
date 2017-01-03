@@ -115,22 +115,20 @@ def get_patched_bytes(start=None, end=None):
     return patched_bytes
 
 
-def apply_patches(patched_path=None):
+def apply_patches(output_path=None):
     to_patch = idaapi.get_input_file_path()
 
-    if patched_path:
-        shutil.copyfile(to_patch, patched_path)
-        to_patch = patched_path
+    if output_path:
+        shutil.copyfile(to_patch, output_path)
+        to_patch = output_path
 
     patches = get_patched_bytes()
 
     with open(to_patch, "r+b") as output:
-
         for patch in patches.itervalues():
-
             output.seek(patch.fpos)
-            bin_patch = bytearray((patch.patched,))
-            output.write(bin_patch)
+            patched_byte = chr(patch.patched)
+            output.write(patched_byte)
 
 
 def undefine(start, end):
