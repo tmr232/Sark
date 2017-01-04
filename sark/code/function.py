@@ -90,15 +90,15 @@ class Function(object):
         self._comments = Comments(self)
 
     @staticmethod
-    def create(ea=UseCurrentAddress, name=None):
+    def create(ea=UseCurrentAddress):
         try:
-            Function(ea,name)
+            Function(ea)
             raise exceptions.SarkFunctionExists("function already exists")
         except exceptions.SarkNoFunction:
             status = add_func(ea)
             if not status:
                 raise exceptions.SarkAddFunctionFailed("Failed to add function")
-            return Function(ea,name)
+            return Function(ea)
 
 
     @property
