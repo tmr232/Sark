@@ -99,6 +99,9 @@ class Function(object):
 
     @staticmethod
     def create(ea=UseCurrentAddress):
+        if ea == Function.UseCurrentAddress:
+            ea = idc.here()
+
         if Function.is_function(ea):
             raise exceptions.SarkFunctionExists("function already exists")
         else:
