@@ -248,9 +248,17 @@ class Segment(object):
 
 
 def segments(seg_type=None):
-    ''' :param seg_type: type of segment e.g. SEG_CODE
-        :return: segment based on type. if type is None, returns all segments
-    '''
+    """Iterate segments based on type .
+
+        Args:
+            seg_type: type of segment e.g. SEG_CODE
+
+
+        Returns:
+            iterator of `Segment` objects. if seg_type is None , returns all segments
+            otherwise returns only the relevant ones
+    """
+
     for index in xrange(idaapi.get_segm_qty()):
         seg = Segment(index=index)
         if (seg_type is None) or (seg.type == seg_type):
