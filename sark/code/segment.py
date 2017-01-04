@@ -248,11 +248,10 @@ class Segment(object):
 
 
 def segments(seg_type=None):
-    """Iterate segments based on type .
+    """Iterate segments based on type
 
         Args:
             seg_type: type of segment e.g. SEG_CODE
-
 
         Returns:
             iterator of `Segment` objects. if seg_type is None , returns all segments
