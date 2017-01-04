@@ -1,0 +1,2 @@
+class SarkError(Exception):
+    pass
