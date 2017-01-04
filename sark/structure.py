@@ -41,7 +41,7 @@ def struct_member_error(err, sid, name, offset, size):
         size: Member size
 
     Returns:
-        A ``SarkErrorAddStructMemeberFailed`` derivative exception, with an
+        A ``SarkErrorAddStructMemberFailed`` derivative exception, with an
         informative message.
     """
     exception, msg = STRUCT_ERROR_MAP[err]
