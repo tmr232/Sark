@@ -105,8 +105,7 @@ class Function(object):
         if Function.is_function(ea):
             raise exceptions.SarkFunctionExists("function already exists")
         else:
-            status = add_func(ea)
-            if not status:
+            if not add_func(ea):
                 raise exceptions.SarkAddFunctionFailed("Failed to add function")
             return Function(ea)
 
