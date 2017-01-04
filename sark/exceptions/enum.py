@@ -1,28 +1,7 @@
 from base import *
 
+
 class SarkEnumError(SarkError):
-    pass
-
-class SarkErrorAddEnumMemeberFailed(SarkEnumError):
-    pass
-
-class SarkErrorEnumMemberName(SarkErrorAddEnumMemeberFailed):
-    pass
-
-
-class SarkErrorEnumMemberValue(SarkErrorAddEnumMemeberFailed):
-    pass
-
-
-class SarkErrorEnumMemberEnum(SarkErrorAddEnumMemeberFailed):
-    pass
-
-
-class SarkErrorEnumMemberMask(SarkErrorAddEnumMemeberFailed):
-    pass
-
-
-class SarkErrorEnumMemberIllv(SarkErrorAddEnumMemeberFailed):
     pass
 
 
@@ -45,6 +24,7 @@ class CantRenameEnumMember(SarkEnumError):
 class CantSetEnumMemberComment(SarkEnumError):
     pass
 
+
 class CantSetEnumComment(SarkEnumError):
     pass
 
@@ -61,3 +41,25 @@ class CantRenameEnum(SarkEnumError):
     pass
 
 
+class SarkErrorAddEnumMemberFailed(SarkEnumError):
+    pass
+
+
+class SarkErrorEnumMemberName(SarkErrorAddEnumMemberFailed):
+    pass
+
+
+class SarkErrorEnumMemberValue(SarkErrorAddEnumMemberFailed):
+    pass
+
+
+class SarkErrorEnumMemberEnum(SarkErrorAddEnumMemberFailed):
+    pass
+
+
+class SarkErrorEnumMemberMask(SarkErrorAddEnumMemberFailed):
+    pass
+
+
+class SarkErrorEnumMemberIllv(SarkErrorAddEnumMemberFailed):
+    pass
