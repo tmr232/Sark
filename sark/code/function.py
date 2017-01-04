@@ -90,11 +90,18 @@ class Function(object):
         self._comments = Comments(self)
 
     @staticmethod
-    def create(ea=UseCurrentAddress):
+    def is_function(ea=UseCurrentAddress):
         try:
             Function(ea)
-            raise exceptions.SarkFunctionExists("function already exists")
+            return True
         except exceptions.SarkNoFunction:
+            return False
+
+    @staticmethod
+    def create(ea=UseCurrentAddress):
+        if Function.is_function(ea):
+            raise exceptions.SarkFunctionExists("function already exists")
+        else:
             status = add_func(ea)
             if not status:
                 raise exceptions.SarkAddFunctionFailed("Failed to add function")
