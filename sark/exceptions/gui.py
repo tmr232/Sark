@@ -1,4 +1,4 @@
-from base_exceptions import *
+from base import *
 
 
 class SarkGuiError(SarkError):
