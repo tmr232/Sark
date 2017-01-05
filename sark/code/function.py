@@ -103,11 +103,12 @@ class Function(object):
             ea = idc.here()
 
         if Function.is_function(ea):
-            raise exceptions.SarkFunctionExists("function already exists")
-        else:
-            if not add_func(ea):
-                raise exceptions.SarkAddFunctionFailed("Failed to add function")
-            return Function(ea)
+            raise exceptions.SarkFunctionExists("Function already exists")
+
+        if not add_func(ea):
+            raise exceptions.SarkAddFunctionFailed("Failed to add function")
+
+        return Function(ea)
 
 
     @property
