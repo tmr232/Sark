@@ -138,7 +138,7 @@ def undefine(start, end):
 def is_string(ea):
     string_type = idc.GetStringType(idaapi.get_item_head(ea))
 
-    if string_type is None:
+    if string_type in (None, -1):
         return False
 
     return True
