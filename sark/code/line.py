@@ -192,7 +192,7 @@ class Line(object):
             if k: return v
 
     def __repr__(self):
-        return "[{:08X}]    {} {}".format(self.ea, self.disasm, self.type)
+        return "[{:08X}]    {} {}".format(self.ea, self.disasm)
 
     @property
     def xrefs_from(self):
