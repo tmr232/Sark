@@ -36,6 +36,7 @@ class Comments(object):
 
          Args:
             cmnt_func: idc.LineA or idc.LineB
+
         Returns:
              The full comment text as string
         """
