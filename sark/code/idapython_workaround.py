@@ -2,7 +2,7 @@ import ida_bytes
 def doExtra(ea):
     """
     the IDA python that was released with IDA 6.95 is missing some functions
-    sepcifically when calling ExtLinB or ExtLinA it throws an exception because it can't find
+    specifically when calling ExtLinB or ExtLinA it throws an exception because it can't find
     the  doExtra function. I took this function from IDA python's  updated github
     https://github.com/idapython
     building idapython  was a huge pain ,so added it here until they distribute an updated binary
