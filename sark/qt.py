@@ -129,6 +129,18 @@ class MenuManager(object):
         self._menu.removeAction(self._menus[name].menuAction())
         del self._menus[name]
 
+    def get_menu(self, name):
+        """Get a top-level menu by its name.
+
+        Only gets menus created by the same menu manager.
+        """
+        if name not in self._menus:
+            raise exceptions.MenuNotFound(
+                "Menu {!r} was not found. It might be deleted, or belong to another menu manager.".format(name))
+
+        menu = self._menus[name]
+        return menu
+
     def clear(self):
         """Clear all menus created by this manager."""
         for menu in self._menus.itervalues():
