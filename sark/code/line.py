@@ -40,11 +40,19 @@ class Comments(object):
     def repeat(self, comment):
         idc.MakeRptCmt(self._ea, comment)
 
+    def _iter_extra_comments(self, start):
+        end = idaapi.get_first_free_extra_cmtidx(self._ea, start)
+        for idx in xrange(start, end):
+            line = idaapi.get_extra_cmt(self._ea, idx)
+            yield line or ''
+
+    def _iter_anterior(self):
+        return self._iter_extra_comments(idaapi.E_PREV)
+
     @property
     def anterior(self):
         """Anterior Comment"""
-        lines = (idc.LineA(self._ea, index) for index in count())
-        return "\n".join(iter(lines.next, None))
+        return "\n".join(self._iter_anterior())
 
     @anterior.setter
     @updates_ui
@@ -60,11 +68,13 @@ class Comments(object):
 
         idc.DelExtLnA(self._ea, index + 1)
 
+    def _iter_posterior(self):
+        return self._iter_extra_comments(idaapi.E_NEXT)
+
     @property
     def posterior(self):
         """Posterior Comment"""
-        lines = (idc.LineB(self._ea, index) for index in count())
-        return "\n".join(iter(lines.next, None))
+        return "\n".join(self._iter_posterior())
 
     @posterior.setter
     @updates_ui
@@ -180,14 +190,15 @@ class Line(object):
     def disasm(self):
         """Line Disassembly"""
         return idc.GetDisasm(self.ea)
+
     @property
     def type(self):
         """return the type of the Line """
-        properties = {self.is_code:"code",
-                      self.is_data:"data",
-                      self.is_string:"string",
-                      self.is_tail:"tail",
-                      self.is_unknown:"unknown"}
+        properties = {self.is_code: "code",
+                      self.is_data: "data",
+                      self.is_string: "string",
+                      self.is_tail: "tail",
+                      self.is_unknown: "unknown"}
         for k, v in properties.items():
             if k: return v
 
