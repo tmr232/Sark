@@ -222,10 +222,27 @@ class Line(object):
         """Destination addresses of data references from this line."""
         return idautils.DataRefsFrom(self.ea)
 
+    def add_dref_from(self, to_line):
+        """Add data reference from this line to to_line."""
+        return idaapi.add_dref(self.ea, to_line.ea, idaapi.dr_I | idaapi.XREF_USER)
+
+    def remove_dref_from(self, to_line):
+        """Remove data reference from this line to to_line."""
+        idaapi.del_dref(self.ea, to_line.ea)  # del_cref has meaningless return value
+
     @property
     def crefs_from(self):
         """Destination addresses of code references from this line."""
         return idautils.CodeRefsFrom(self.ea, 1)
+
+    def add_cref_from(self, to_line):
+        """Add code reference from this line to to_line."""
+        return idaapi.add_cref(self.ea, to_line.ea, idaapi.dr_I | idaapi.XREF_USER)
+
+    def remove_cref_from(self, to_line):
+        """Remove code reference from this line to to_line."""
+        AVOID_DEL_DST = 0  # avoid deletion of destination if no more crefs to
+        idaapi.del_cref(self.ea, to_line.ea, AVOID_DEL_DST)  # del_cref has meaningless return value
 
     @property
     def xrefs_to(self):
@@ -241,10 +258,27 @@ class Line(object):
         """Source addresses of data references from this line."""
         return idautils.DataRefsTo(self.ea)
 
+    def add_dref_to(self, from_line):
+        """Add data reference to this line from from_line."""
+        return idaapi.add_dref(from_line.ea, self.ea, idaapi.dr_I | idaapi.XREF_USER)
+
+    def remove_dref_to(self, from_line):
+        """Remove data reference to this line from from_line."""
+        idaapi.del_dref(from_line.ea, self.ea)  # del_dref has meaningless return value
+
     @property
     def crefs_to(self):
-        """Source addresses of data references to this line."""
+        """Source addresses of code references to this line."""
         return idautils.CodeRefsTo(self.ea, 1)
+
+    def add_cref_to(self, from_line):
+        """Add code reference to this line from from_line."""
+        return idaapi.add_cref(from_line.ea, self.ea, idaapi.dr_I | idaapi.XREF_USER)
+
+    def remove_cref_to(self, from_line):
+        """Remove code reference to this line from from_line."""
+        AVOID_DEL_DST = 0  # avoid deletion of destination if no more crefs to
+        idaapi.del_cref(from_line.ea, self.ea, AVOID_DEL_DST)  # del_cref has meaningless return value
 
     @property
     def size(self):
