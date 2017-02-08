@@ -149,7 +149,7 @@ class AddressNodeHandler(BasicNodeHandler):
     """
 
     def on_get_text(self, value, attrs):
-        name = idc.GetTrueName(value)
+        name = idaapi.get_ea_name(value)
         demangle = getattr(idaapi, 'demangle_name2', idaapi.demangle_name)
         name = demangle(name, 0) or name
         return name or "0x{:08X}".format(value)

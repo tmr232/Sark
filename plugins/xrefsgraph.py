@@ -21,7 +21,7 @@ def _get_best_name(ea):
     try:
         return sark.Function(ea).demangled
     except exceptions.SarkNoFunction:
-        name = idc.GetTrueName(ea)
+        name = idaapi.get_ea_name(ea)
         if name:
             return name
         return '0x{:X}'.format(ea)

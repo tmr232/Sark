@@ -117,7 +117,7 @@ def get_offset_name(ea):
     # Try and get the function name
     try:
         func = get_func(ea)
-        name = idc.GetTrueName(func.startEA)
+        name = idaapi.get_ea_name(func.startEA)
         name = demangle(name, 0x60) # MNG_NOTYPE | MNG_NORETTYPE
         if name:
             offset = ea - func.startEA

@@ -213,7 +213,7 @@ class Function(object):
     @property
     def name(self):
         """Function's Name"""
-        return idc.GetTrueName(self.startEA)
+        return idaapi.get_ea_name(self.startEA)
 
     @property
     def demangled(self):
