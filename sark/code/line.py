@@ -137,7 +137,7 @@ class Line(object):
                              "use `Line(ea=Line.UseCurrentAddress)` or supply no `ea`.")
 
         self._ea = idaapi.get_item_head(ea)
-        self._comments = Comments(ea)
+        self._comments = Comments(self._ea)
 
     @property
     def flags(self):
