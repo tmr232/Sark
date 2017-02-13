@@ -8,8 +8,6 @@ General
 
 IDA Plugins & IDAPython Scripting Library.
 
-The library is in early development, so APIs are expected to change.
-
 For documentation, see `sark.rtfd.org <http://sark.rtfd.org/>`_.
 
 
