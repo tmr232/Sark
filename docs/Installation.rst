@@ -4,7 +4,13 @@ Installation
 For Sark Users
 ~~~~~~~~~~~~~~
 
-To install Sark, simply run the following command:
+Sark is now available on PyPI
+
+.. code:: bash
+
+    pip install sark
+
+But if you want to get the bleeding edge version, use:
 
 .. code:: bash
 
@@ -23,28 +29,14 @@ again.
 For Sark Developers
 ~~~~~~~~~~~~~~~~~~~
 
-If you want to help in the development of sark, follow this.
+If you want to help in the development of Sark, follow this.
 
 Clone the Sark repository to get the latest version
 
 .. code:: bash
 
     git clone https://github.com/tmr232/Sark.git && cd Sark
-
-Install all requirements
-
-.. code:: bash
-
-    pip install -r requirements.txt
-
-Create a ``.pth`` file to enable importing sark
-
-.. code:: bash
-
-    for /f %i in ('python -m site --user-site') do (
-        mkdir %i
-        echo %cd% > %i\sark.pth
-    )
+    pip install -e .
 
 
 Updates
