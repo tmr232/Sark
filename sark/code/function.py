@@ -285,6 +285,16 @@ class Function(object):
     def func_t(self):
         return self._func
 
+    @property
+    def type(self):
+        return idc.GetType(self.startEA)
+
+    @type.setter
+    def type(self, c_signature):
+        success = idc.SetType(self.startEA, c_signature)
+        if not success:
+            raise exceptions.SetTypeFailed(self.startEA, c_signature)
+
 
 def iter_function_lines(func_ea):
     """Iterate the lines of a function.

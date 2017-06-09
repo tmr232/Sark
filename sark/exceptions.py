@@ -13,12 +13,14 @@ class SarkNoSelection(SarkError):
 class SarkNoFunction(SarkError):
     pass
 
+
 class SarkAddFunctionFailed(SarkError):
     pass
 
 
 class SarkFunctionExists(SarkError):
     pass
+
 
 class SarkStructError(SarkError):
     pass
@@ -227,3 +229,8 @@ class PhraseNotSupported(PhraseError):
 class PhraseProcessorNotSupported(PhraseNotSupported):
     pass
 
+
+class SetTypeFailed(SarkError):
+    def __init__(self, ea, c_signature):
+        message = 'idc.SetType(ea={ea:08X}, "{c_signature}") failed'.format(ea=ea, c_signature=c_signature)
+        super(SetTypeFailed, self).__init__(message)
