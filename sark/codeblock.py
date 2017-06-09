@@ -59,6 +59,9 @@ class CodeBlock(idaapi.BasicBlock):
     def __repr__(self):
         return "<CodeBlock(startEA=0x{:08X}, endEA=0x{:08X})>".format(self.startEA, self.endEA)
 
+    def __eq__(self, other):
+        return self.startEA == other.startEA
+
 
 class FlowChart(idaapi.FlowChart):
     def __init__(self, f=None, bounds=None, flags=idaapi.FC_PREDS):
