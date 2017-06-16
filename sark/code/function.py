@@ -295,6 +295,16 @@ class Function(object):
         if not success:
             raise exceptions.SetTypeFailed(self.startEA, c_signature)
 
+    @property
+    def tinfo(self):
+        return idc.GetTinfo(self.startEA)
+
+    @tinfo.setter
+    def tinfo(self, tinfo):
+        success = idc.ApplyType(self.startEA, tinfo)
+        if not success:
+            raise exceptions.SetTypeFailed(self.startEA, tinfo)
+
 
 def iter_function_lines(func_ea):
     """Iterate the lines of a function.
