@@ -286,17 +286,19 @@ class Function(object):
         return self._func
 
     @property
-    def type(self):
+    def signature(self):
+        '''The C signature of the function.'''
         return idc.GetType(self.startEA)
 
-    @type.setter
-    def type(self, c_signature):
+    @signature.setter
+    def signature(self, c_signature):
         success = idc.SetType(self.startEA, c_signature)
         if not success:
             raise exceptions.SetTypeFailed(self.startEA, c_signature)
 
     @property
     def tinfo(self):
+        '''The tinfo of the function type'''
         return idc.GetTinfo(self.startEA)
 
     @tinfo.setter
