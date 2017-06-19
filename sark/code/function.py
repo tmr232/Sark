@@ -285,6 +285,28 @@ class Function(object):
     def func_t(self):
         return self._func
 
+    @property
+    def signature(self):
+        '''The C signature of the function.'''
+        return idc.GetType(self.startEA)
+
+    @signature.setter
+    def signature(self, c_signature):
+        success = idc.SetType(self.startEA, c_signature)
+        if not success:
+            raise exceptions.SetTypeFailed(self.startEA, c_signature)
+
+    @property
+    def tinfo(self):
+        '''The tinfo of the function type'''
+        return idc.GetTinfo(self.startEA)
+
+    @tinfo.setter
+    def tinfo(self, tinfo):
+        success = idc.ApplyType(self.startEA, tinfo)
+        if not success:
+            raise exceptions.SetTypeFailed(self.startEA, tinfo)
+
 
 def iter_function_lines(func_ea):
     """Iterate the lines of a function.
