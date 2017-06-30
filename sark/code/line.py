@@ -3,7 +3,7 @@ import idaapi
 import idautils
 import idc
 from ..core import fix_addresses
-from .xref import Xref
+from .xref import Xref, XrefTypes
 from .instruction import Instruction
 from ..ui import updates_ui
 from .base import get_selection, get_offset_name, demangle
@@ -211,7 +211,10 @@ class Line(object):
 
         :return: Xrefs as `sark.code.xref.Xref` objects.
         """
-        return imap(Xref, idautils.XrefsFrom(self.ea))
+        def ida_xref_to_sark_xref(xref):
+            return Xref(xref.frm, xref.to, XrefTypes.XrefType(xref.type), xref.user)
+
+        return imap(ida_xref_to_sark_xref, idautils.XrefsFrom(self.ea))
 
     @property
     def calls_from(self):
@@ -234,7 +237,10 @@ class Line(object):
         Returns:
             Xrefs as `sark.code.xref.Xref` objects.
         """
-        return imap(Xref, idautils.XrefsTo(self.ea))
+        def ida_xref_to_sark_xref(xref):
+            return Xref(xref.frm, xref.to, XrefTypes.XrefType(xref.type), xref.user)
+
+        return imap(ida_xref_to_sark_xref, idautils.XrefsTo(self.ea))
 
     @property
     def drefs_to(self):
