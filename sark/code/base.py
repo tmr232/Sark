@@ -19,7 +19,6 @@ DTYP_TO_SIZE = {
     idaapi.dt_qword: 8,
     idaapi.dt_byte16: 16,
     idaapi.dt_fword: 6,
-    idaapi.dt_3byte: 3,
     idaapi.dt_byte32: 32,
     idaapi.dt_byte64: 64,
 }
