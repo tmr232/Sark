@@ -8,7 +8,7 @@ General
 
 IDA Plugins & IDAPython Scripting Library.
 
-For documentation, see `sark.rtfd.org <http://sark.rtfd.org/>`_.
+For documentation, see `sark.rtfd.io <http://sark.rtfd.io/>`_.
 
 
 Dependencies
