@@ -9,6 +9,36 @@ from .xref import Xref
 from ..ui import updates_ui
 from .. import exceptions
 
+# https://www.hex-rays.com/products/ida/support/sdkdoc/group___f_u_n_c__.html
+FUNC_FLAGS = {
+    # Function doesn't return.
+    'FUNC_NORET': idaapi.FUNC_NORET,  # 0x00000001
+    # Far function.
+    'FUNC_FAR': idaapi.FUNC_FAR,  # 0x00000002
+    # Library function.
+    'FUNC_LIB': idaapi.FUNC_LIB,  # 0x00000004
+    # Static function.
+    'FUNC_STATICDEF': idaapi.FUNC_STATICDEF,  # 0x00000008
+    # Function uses frame pointer (BP)
+    'FUNC_FRAME': idaapi.FUNC_FRAME,  # 0x00000010
+    # User has specified far-ness of the function.
+    'FUNC_USERFAR': idaapi.FUNC_USERFAR,  # 0x00000020
+    # A hidden function chunk.
+    'FUNC_HIDDEN':  idaapi.FUNC_HIDDEN,  # 0x00000040
+    # Thunk (jump) function.
+    'FUNC_THUNK': idaapi.FUNC_THUNK,  # 0x00000080
+    # BP points to the bottom of the stack frame.
+    'FUNC_BOTTOMBP': idaapi.FUNC_BOTTOMBP,  # 0x00000100
+    # Function 'non-return' analysis must be performed.
+    'FUNC_NORET_PENDING': idaapi.FUNC_NORET_PENDING,  # 0x00200
+    # SP-analysis has been performed
+    'FUNC_SP_READY': idaapi.FUNC_SP_READY,  # 0x00000400
+    # 'argsize' field has been validated.
+    'FUNC_PURGED_OK': idaapi.FUNC_PURGED_OK,  # 0x00004000
+    # This is a function tail.
+    'FUNC_TAIL': idaapi.FUNC_TAIL,  # 0x00008000
+}
+
 
 class Comments(object):
     """IDA Function Comments
