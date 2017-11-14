@@ -186,6 +186,71 @@ class Function(object):
         return self._func.flags
 
     @property
+    def is_noret(self):
+        """ Function doesn't return """
+        return bool(self._func.flags & FUNC_FLAGS['FUNC_NORET'])
+
+    @property
+    def is_far(self):
+        """ Is a far function. """
+        return bool(self._func.flags & FUNC_FLAGS['FUNC_FAR'])
+
+    @property
+    def is_library(self):
+        """ Is a library function. """
+        return bool(self._func.flags & FUNC_FLAGS['FUNC_LIB'])
+
+    @property
+    def is_static(self):
+        """ Is a static function. """
+        return bool(self._func.flags & FUNC_FLAGS['FUNC_STATICDEF'])
+
+    @property
+    def is_frame(self):
+        """ Function uses frame pointer (BP) """
+        return bool(self._func.flags & FUNC_FLAGS['FUNC_FRAME'])
+
+    @property
+    def is_user_far(self):
+        """ User has specified far-ness of the function. """
+        return bool(self._func.flags & FUNC_FLAGS['FUNC_USERFAR'])
+
+    @property
+    def is_hidden(self):
+        """ A hidden function chunk. """
+        return bool(self._func.flags & FUNC_FLAGS['FUNC_HIDDEN'])
+
+    @property
+    def is_thunk(self):
+        """ Thunk (jump) function. """
+        return bool(self._func.flags & FUNC_FLAGS['FUNC_THUNK'])
+
+    @property
+    def is_bottom_bp(self):
+        """ BP points to the bottom of the stack frame. """
+        return bool(self._func.flags & FUNC_FLAGS['FUNC_BOTTOMBP'])
+
+    @property
+    def is_noret_pending(self):
+        """ Function 'non-return' analysis must be performed. """
+        return bool(self._func.flags & FUNC_FLAGS['FUNC_NORET_PENDING'])
+
+    @property
+    def is_sp_ready(self):
+        """ SP-analysis has been performed. """
+        return bool(self._func.flags & FUNC_FLAGS['FUNC_SP_READY'])
+
+    @property
+    def is_purged_ok(self):
+        """ 'argsize' field has been validated. """
+        return bool(self._func.flags & FUNC_FLAGS['FUNC_PURGED_OK'])
+
+    @property
+    def is_tail(self):
+        """ This is a function tail. """
+        return bool(self._func.flags & FUNC_FLAGS['FUNC_TAIL'])
+
+    @property
     def xrefs_from(self):
         """Xrefs from the function.
 
