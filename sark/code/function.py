@@ -80,6 +80,81 @@ class Comments(object):
             repeat=repr(self.repeat))
 
 
+class FunctionFlags(long):
+    """ Convenience wrapper around the function flags provided by IDA.
+
+    Provides functions for checking for the presence of a particular flag.
+
+    IDA SDK documentation for the flags is found at:
+    https://www.hex-rays.com/products/ida/support/sdkdoc/group___f_u_n_c__.html
+    """
+
+    @property
+    def is_noret(self):
+        """ Function doesn't return """
+        return bool(self & FUNC_FLAGS['FUNC_NORET'])
+
+    @property
+    def is_far(self):
+        """ Is a far function. """
+        return bool(self & FUNC_FLAGS['FUNC_FAR'])
+
+    @property
+    def is_library(self):
+        """ Is a library function. """
+        return bool(self & FUNC_FLAGS['FUNC_LIB'])
+
+    @property
+    def is_static(self):
+        """ Is a static function. """
+        return bool(self & FUNC_FLAGS['FUNC_STATICDEF'])
+
+    @property
+    def is_frame(self):
+        """ Function uses frame pointer (BP) """
+        return bool(self & FUNC_FLAGS['FUNC_FRAME'])
+
+    @property
+    def is_user_far(self):
+        """ User has specified far-ness of the function. """
+        return bool(self & FUNC_FLAGS['FUNC_USERFAR'])
+
+    @property
+    def is_hidden(self):
+        """ A hidden function chunk. """
+        return bool(self & FUNC_FLAGS['FUNC_HIDDEN'])
+
+    @property
+    def is_thunk(self):
+        """ Thunk (jump) function. """
+        return bool(self & FUNC_FLAGS['FUNC_THUNK'])
+
+    @property
+    def is_bottom_bp(self):
+        """ BP points to the bottom of the stack frame. """
+        return bool(self & FUNC_FLAGS['FUNC_BOTTOMBP'])
+
+    @property
+    def is_noret_pending(self):
+        """ Function 'non-return' analysis must be performed. """
+        return bool(self & FUNC_FLAGS['FUNC_NORET_PENDING'])
+
+    @property
+    def is_sp_ready(self):
+        """ SP-analysis has been performed. """
+        return bool(self & FUNC_FLAGS['FUNC_SP_READY'])
+
+    @property
+    def is_purged_ok(self):
+        """ 'argsize' field has been validated. """
+        return bool(self & FUNC_FLAGS['FUNC_PURGED_OK'])
+
+    @property
+    def is_tail(self):
+        """ This is a function tail. """
+        return bool(self & FUNC_FLAGS['FUNC_TAIL'])
+
+
 class Function(object):
     """IDA Function
 
@@ -183,72 +258,7 @@ class Function(object):
 
         See `idaapi.FUNC_*` constants.
         """
-        return self._func.flags
-
-    @property
-    def is_noret(self):
-        """ Function doesn't return """
-        return bool(self._func.flags & FUNC_FLAGS['FUNC_NORET'])
-
-    @property
-    def is_far(self):
-        """ Is a far function. """
-        return bool(self._func.flags & FUNC_FLAGS['FUNC_FAR'])
-
-    @property
-    def is_library(self):
-        """ Is a library function. """
-        return bool(self._func.flags & FUNC_FLAGS['FUNC_LIB'])
-
-    @property
-    def is_static(self):
-        """ Is a static function. """
-        return bool(self._func.flags & FUNC_FLAGS['FUNC_STATICDEF'])
-
-    @property
-    def is_frame(self):
-        """ Function uses frame pointer (BP) """
-        return bool(self._func.flags & FUNC_FLAGS['FUNC_FRAME'])
-
-    @property
-    def is_user_far(self):
-        """ User has specified far-ness of the function. """
-        return bool(self._func.flags & FUNC_FLAGS['FUNC_USERFAR'])
-
-    @property
-    def is_hidden(self):
-        """ A hidden function chunk. """
-        return bool(self._func.flags & FUNC_FLAGS['FUNC_HIDDEN'])
-
-    @property
-    def is_thunk(self):
-        """ Thunk (jump) function. """
-        return bool(self._func.flags & FUNC_FLAGS['FUNC_THUNK'])
-
-    @property
-    def is_bottom_bp(self):
-        """ BP points to the bottom of the stack frame. """
-        return bool(self._func.flags & FUNC_FLAGS['FUNC_BOTTOMBP'])
-
-    @property
-    def is_noret_pending(self):
-        """ Function 'non-return' analysis must be performed. """
-        return bool(self._func.flags & FUNC_FLAGS['FUNC_NORET_PENDING'])
-
-    @property
-    def is_sp_ready(self):
-        """ SP-analysis has been performed. """
-        return bool(self._func.flags & FUNC_FLAGS['FUNC_SP_READY'])
-
-    @property
-    def is_purged_ok(self):
-        """ 'argsize' field has been validated. """
-        return bool(self._func.flags & FUNC_FLAGS['FUNC_PURGED_OK'])
-
-    @property
-    def is_tail(self):
-        """ This is a function tail. """
-        return bool(self._func.flags & FUNC_FLAGS['FUNC_TAIL'])
+        return FunctionFlags(self._func.flags)
 
     @property
     def xrefs_from(self):
