@@ -9,36 +9,6 @@ from .xref import Xref
 from ..ui import updates_ui
 from .. import exceptions
 
-# https://www.hex-rays.com/products/ida/support/sdkdoc/group___f_u_n_c__.html
-FUNC_FLAGS = {
-    # Function doesn't return.
-    'FUNC_NORET': idaapi.FUNC_NORET,  # 0x00000001
-    # Far function.
-    'FUNC_FAR': idaapi.FUNC_FAR,  # 0x00000002
-    # Library function.
-    'FUNC_LIB': idaapi.FUNC_LIB,  # 0x00000004
-    # Static function.
-    'FUNC_STATICDEF': idaapi.FUNC_STATICDEF,  # 0x00000008
-    # Function uses frame pointer (BP)
-    'FUNC_FRAME': idaapi.FUNC_FRAME,  # 0x00000010
-    # User has specified far-ness of the function.
-    'FUNC_USERFAR': idaapi.FUNC_USERFAR,  # 0x00000020
-    # A hidden function chunk.
-    'FUNC_HIDDEN':  idaapi.FUNC_HIDDEN,  # 0x00000040
-    # Thunk (jump) function.
-    'FUNC_THUNK': idaapi.FUNC_THUNK,  # 0x00000080
-    # BP points to the bottom of the stack frame.
-    'FUNC_BOTTOMBP': idaapi.FUNC_BOTTOMBP,  # 0x00000100
-    # Function 'non-return' analysis must be performed.
-    'FUNC_NORET_PENDING': idaapi.FUNC_NORET_PENDING,  # 0x00200
-    # SP-analysis has been performed
-    'FUNC_SP_READY': idaapi.FUNC_SP_READY,  # 0x00000400
-    # 'argsize' field has been validated.
-    'FUNC_PURGED_OK': idaapi.FUNC_PURGED_OK,  # 0x00004000
-    # This is a function tail.
-    'FUNC_TAIL': idaapi.FUNC_TAIL,  # 0x00008000
-}
-
 
 class Comments(object):
     """IDA Function Comments
@@ -80,82 +50,82 @@ class Comments(object):
             repeat=repr(self.repeat))
 
 
-class FunctionFlags(long):
-    """ Convenience wrapper around the function flags provided by IDA.
-
-    Provides functions for checking for the presence of a particular flag.
+class FunctionFlagsMixin(object):
+    """ Mixin to add convenience checks for the function flags provided by IDA.
 
     IDA SDK documentation for the flags is found at:
     https://www.hex-rays.com/products/ida/support/sdkdoc/group___f_u_n_c__.html
     """
 
+    flags = None
+
     @property
     def is_noret(self):
         """ Function doesn't return """
-        return bool(self & FUNC_FLAGS['FUNC_NORET'])
+        return bool(self.flags & idaapi.FUNC_NORET)  # 0x00000001
 
     @property
     def is_far(self):
         """ Is a far function. """
-        return bool(self & FUNC_FLAGS['FUNC_FAR'])
+        return bool(self.flags & idaapi.FUNC_FAR)  # 0x00000002
 
     @property
     def is_library(self):
         """ Is a library function. """
-        return bool(self & FUNC_FLAGS['FUNC_LIB'])
+        return bool(self.flags & idaapi.FUNC_LIB)  # 0x00000004
 
     @property
     def is_static(self):
         """ Is a static function. """
-        return bool(self & FUNC_FLAGS['FUNC_STATICDEF'])
+        return bool(self.flags & idaapi.FUNC_STATICDEF)  # 0x00000008
 
     @property
     def is_frame(self):
         """ Function uses frame pointer (BP) """
-        return bool(self & FUNC_FLAGS['FUNC_FRAME'])
+        return bool(self.flags & idaapi.FUNC_FRAME)  # 0x00000010
 
     @property
     def is_user_far(self):
         """ User has specified far-ness of the function. """
-        return bool(self & FUNC_FLAGS['FUNC_USERFAR'])
+        return bool(self.flags & idaapi.FUNC_USERFAR)  # 0x00000020
 
     @property
     def is_hidden(self):
         """ A hidden function chunk. """
-        return bool(self & FUNC_FLAGS['FUNC_HIDDEN'])
+        return bool(self.flags & idaapi.FUNC_HIDDEN)  # 0x00000040
 
     @property
     def is_thunk(self):
         """ Thunk (jump) function. """
-        return bool(self & FUNC_FLAGS['FUNC_THUNK'])
+        return bool(self.flags & idaapi.FUNC_THUNK)  # 0x00000080
 
     @property
     def is_bottom_bp(self):
         """ BP points to the bottom of the stack frame. """
-        return bool(self & FUNC_FLAGS['FUNC_BOTTOMBP'])
+        return bool(self.flags & idaapi.FUNC_BOTTOMBP)  # 0x00000100
 
     @property
     def is_noret_pending(self):
         """ Function 'non-return' analysis must be performed. """
-        return bool(self & FUNC_FLAGS['FUNC_NORET_PENDING'])
+        return bool(self.flags & idaapi.FUNC_NORET_PENDING)  # 0x00200
 
     @property
     def is_sp_ready(self):
         """ SP-analysis has been performed. """
-        return bool(self & FUNC_FLAGS['FUNC_SP_READY'])
+        return bool(self.flags & idaapi.FUNC_SP_READY)  # 0x00000400
 
     @property
     def is_purged_ok(self):
         """ 'argsize' field has been validated. """
-        return bool(self & FUNC_FLAGS['FUNC_PURGED_OK'])
+        return bool(self.flags & idaapi.FUNC_PURGED_OK)  # 0x00004000
 
     @property
     def is_tail(self):
         """ This is a function tail. """
-        return bool(self & FUNC_FLAGS['FUNC_TAIL'])
+        return bool(self.flags & idaapi.FUNC_TAIL)  # 0x00008000
 
 
-class Function(object):
+class Function(FunctionFlagsMixin):
     """IDA Function
 
     Provides easy access to function related APIs in IDA.
@@ -258,7 +228,7 @@ class Function(object):
 
         See `idaapi.FUNC_*` constants.
         """
-        return FunctionFlags(self._func.flags)
+        return self._func.flags
 
     @property
     def xrefs_from(self):
