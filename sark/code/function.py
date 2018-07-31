@@ -160,16 +160,17 @@ class Function(object):
         """Xrefs from the function.
 
         This includes the xrefs from every line in the function, as `Xref` objects.
-        Xrefs are filtered to exclude xrefs that are internal to the function. This
-        means that every xrefs to the function's code will NOT be returned.
-        To get those extra xrefs, you need to iterate the function's lines yourself.
+        Xrefs are filtered to exclude code references that are internal to the function. This
+        means that every xrefs to the function's code will NOT be returned (yet, references
+        to the function's data will be returnd). To get those extra xrefs, you need to iterate
+        the function's lines yourself.
         """
         for line in self.lines:
             for xref in line.xrefs_from:
                 if xref.type.is_flow:
                     continue
 
-                if xref.to in self:
+                if xref.to in self and xref.iscode:
                     continue
 
                 yield xref
