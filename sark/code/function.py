@@ -50,7 +50,82 @@ class Comments(object):
             repeat=repr(self.repeat))
 
 
-class Function(object):
+class FunctionFlagsMixin(object):
+    """ Mixin to add convenience checks for the function flags provided by IDA.
+
+    IDA SDK documentation for the flags is found at:
+    https://www.hex-rays.com/products/ida/support/sdkdoc/group___f_u_n_c__.html
+    """
+
+    flags = None
+
+    @property
+    def is_noret(self):
+        """ Function doesn't return """
+        return bool(self.flags & idaapi.FUNC_NORET)  # 0x00000001
+
+    @property
+    def is_far(self):
+        """ Is a far function. """
+        return bool(self.flags & idaapi.FUNC_FAR)  # 0x00000002
+
+    @property
+    def is_library(self):
+        """ Is a library function. """
+        return bool(self.flags & idaapi.FUNC_LIB)  # 0x00000004
+
+    @property
+    def is_static(self):
+        """ Is a static function. """
+        return bool(self.flags & idaapi.FUNC_STATICDEF)  # 0x00000008
+
+    @property
+    def is_frame(self):
+        """ Function uses frame pointer (BP) """
+        return bool(self.flags & idaapi.FUNC_FRAME)  # 0x00000010
+
+    @property
+    def is_user_far(self):
+        """ User has specified far-ness of the function. """
+        return bool(self.flags & idaapi.FUNC_USERFAR)  # 0x00000020
+
+    @property
+    def is_hidden(self):
+        """ A hidden function chunk. """
+        return bool(self.flags & idaapi.FUNC_HIDDEN)  # 0x00000040
+
+    @property
+    def is_thunk(self):
+        """ Thunk (jump) function. """
+        return bool(self.flags & idaapi.FUNC_THUNK)  # 0x00000080
+
+    @property
+    def is_bottom_bp(self):
+        """ BP points to the bottom of the stack frame. """
+        return bool(self.flags & idaapi.FUNC_BOTTOMBP)  # 0x00000100
+
+    @property
+    def is_noret_pending(self):
+        """ Function 'non-return' analysis must be performed. """
+        return bool(self.flags & idaapi.FUNC_NORET_PENDING)  # 0x00200
+
+    @property
+    def is_sp_ready(self):
+        """ SP-analysis has been performed. """
+        return bool(self.flags & idaapi.FUNC_SP_READY)  # 0x00000400
+
+    @property
+    def is_purged_ok(self):
+        """ 'argsize' field has been validated. """
+        return bool(self.flags & idaapi.FUNC_PURGED_OK)  # 0x00004000
+
+    @property
+    def is_tail(self):
+        """ This is a function tail. """
+        return bool(self.flags & idaapi.FUNC_TAIL)  # 0x00008000
+
+
+class Function(FunctionFlagsMixin):
     """IDA Function
 
     Provides easy access to function related APIs in IDA.
