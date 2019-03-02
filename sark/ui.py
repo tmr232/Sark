@@ -316,16 +316,15 @@ class NXGraph(idaapi.GraphViewer):
 
         # Compatibility between NetworkX 1.x and 2.x
         try:
-            node_ids = {node: self.AddNode(node) for node in self._graph.nodes()}
+            graph_nodes_iter = self._graph.nodes()
+            graph_edges_iter = self._graph.edges()
         except AttributeError:
-            node_ids = {node: self.AddNode(node) for node in self._graph.nodes_iter()}
+            graph_nodes_iter = self._graph.nodes_iter()
+            graph_edges_iter = self._graph.edges_iter()
 
-        try:
-            edges_iter = self._graph.edges()
-        except AttributeError:
-            edges_iter = self._graph.edges_iter()
+        node_ids = {node: self.AddNode(node) for node in graph_nodes_iter}
 
-        for frm, to in edges_iter:
+        for frm, to in graph_edges_iter:
             self.AddEdge(node_ids[frm], node_ids[to])
 
         self.update_node_info()
