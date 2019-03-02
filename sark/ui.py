@@ -314,9 +314,18 @@ class NXGraph(idaapi.GraphViewer):
     def OnRefresh(self):
         self.Clear()
 
-        node_ids = {node: self.AddNode(node) for node in self._graph.nodes_iter()}
+        # Compatibility between NetworkX 1.x and 2.x
+        try:
+            node_ids = {node: self.AddNode(node) for node in self._graph.nodes()}
+        except AttributeError:
+            node_ids = {node: self.AddNode(node) for node in self._graph.nodes_iter()}
 
-        for frm, to in self._graph.edges_iter():
+        try:
+            edges_iter = self._graph.edges()
+        except AttributeError:
+            edges_iter = self._graph.edges_iter()
+
+        for frm, to in edges_iter:
             self.AddEdge(node_ids[frm], node_ids[to])
 
         self.update_node_info()
