@@ -215,11 +215,18 @@ class LCAGraph(idaapi.GraphViewer):
             # This might take a while...
             self.rebuild_graph()
 
-        node_ids = {node: self.AddNode(node) for node in self._lca_graph.nodes_iter()}
+        try:
+            lca_graph_nodes_iter = self._lca_graph.nodes()
+            lca_graph_edges_iter = self._lca_graph.edges()
+        except AttributeError:
+            lca_graph_nodes_iter = self._lca_graph.nodes_iter()
+            lca_graph_edges_iter = self._lca_graph.edges_iter()
+
+        node_ids = {node: self.AddNode(node) for node in lca_graph_nodes_iter}
 
         self._node_ids = node_ids
 
-        for frm, to in self._lca_graph.edges_iter():
+        for frm, to in lca_graph_edges_iter:
             self.AddEdge(node_ids[frm], node_ids[to])
 
         self.color_nodes()
