@@ -78,8 +78,8 @@ class FlowChart(idaapi.FlowChart):
 def get_flowchart(ea=None):
     if ea is None:
         ea = idaapi.get_screen_ea()
-    func = idaapi.get_func(ea)
-    flowchart_ = FlowChart(func)
+    func_ea = idaapi.get_func(ea).startEA
+    flowchart_ = FlowChart(func_ea)
     return flowchart_
 
 
@@ -100,8 +100,8 @@ def get_block_start(ea):
 def get_nx_graph(ea):
     """Convert an IDA flowchart to a NetworkX graph."""
     nx_graph = networkx.DiGraph()
-    func = idaapi.get_func(ea)
-    flowchart = FlowChart(func)
+    func_ea = idaapi.get_func(ea).startEA
+    flowchart = FlowChart(func_ea)
     for block in flowchart:
         # Make sure all nodes are added (including edge-less nodes)
         nx_graph.add_node(block.startEA)
