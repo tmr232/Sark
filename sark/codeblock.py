@@ -64,11 +64,14 @@ class CodeBlock(idaapi.BasicBlock):
 
 
 class FlowChart(idaapi.FlowChart):
-    def __init__(self, f=None, bounds=None, flags=idaapi.FC_PREDS):
+    def __init__(self, f=None, bounds=None, flags=idaapi.FC_PREDS, ignore_external=False):
         if f is None and bounds is None:
             f = idaapi.get_screen_ea()
         if f is not None:
             f = get_func(f)
+        if ignore_external:
+            flags |= idaapi.FC_NOEXT
+
         super(FlowChart, self).__init__(f=f, bounds=bounds, flags=flags)
 
     def _getitem(self, index):
@@ -88,6 +91,8 @@ def get_codeblock(ea=None):
         ea = idaapi.get_screen_ea()
     flowchart_ = get_flowchart(ea)
     for code_block in flowchart_:
+        if code_block.startEA == ea: # External blocks can be zero-sized.
+            return code_block
         if code_block.startEA <= ea < code_block.endEA:
             return code_block
 
@@ -97,11 +102,11 @@ def get_block_start(ea):
     return get_codeblock(ea).startEA
 
 
-def get_nx_graph(ea):
+def get_nx_graph(ea, ignore_external=False):
     """Convert an IDA flowchart to a NetworkX graph."""
     nx_graph = networkx.DiGraph()
     func = idaapi.get_func(ea)
-    flowchart = FlowChart(func)
+    flowchart = FlowChart(func, ignore_external=ignore_external)
     for block in flowchart:
         # Make sure all nodes are added (including edge-less nodes)
         nx_graph.add_node(block.startEA)
