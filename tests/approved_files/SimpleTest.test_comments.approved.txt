@@ -1,0 +1,72 @@
+Comments(func=main, reqular='This is a function comment', repeat='This is a repeatable function comment')
+    regular = This is a function comment
+    repeat = This is a repeatable function comment
+Comments(ea=0x004004F0, reqular='This is a regular comment', repeat=None, anterior='This is an anterior comment', posterior='This is a posterior comment')
+    anterior = This is an anterior comment
+    posterior = This is a posterior comment
+    regular = This is a regular comment
+    repeat = None
+Comments(ea=0x004004F1, reqular=None, repeat='This is a repeatable comment', anterior='', posterior='')
+    anterior = 
+    posterior = 
+    regular = None
+    repeat = This is a repeatable comment
+Comments(ea=0x004004F4, reqular=None, repeat=None, anterior='', posterior='')
+    anterior = 
+    posterior = 
+    regular = None
+    repeat = None
+Comments(ea=0x004004F8, reqular=None, repeat=None, anterior='This is a long anterior comment.\nIt has multiple lines.\n\nThere are also gaps between them.\n\n\n\n\n\nIt is very long.', posterior='')
+    anterior = This is a long anterior comment.
+It has multiple lines.
+
+There are also gaps between them.
+
+
+
+
+
+It is very long.
+    posterior = 
+    regular = None
+    repeat = None
+Comments(ea=0x004004FF, reqular=None, repeat=None, anterior='', posterior='')
+    anterior = 
+    posterior = 
+    regular = None
+    repeat = None
+Comments(ea=0x00400509, reqular=None, repeat=None, anterior='', posterior='')
+    anterior = 
+    posterior = 
+    regular = None
+    repeat = None
+Comments(ea=0x0040050E, reqular=None, repeat=None, anterior='', posterior='')
+    anterior = 
+    posterior = 
+    regular = None
+    repeat = None
+Comments(ea=0x00400510, reqular=None, repeat=None, anterior='', posterior='')
+    anterior = 
+    posterior = 
+    regular = None
+    repeat = None
+Comments(ea=0x00400513, reqular=None, repeat=None, anterior='', posterior='')
+    anterior = 
+    posterior = 
+    regular = None
+    repeat = None
+Comments(ea=0x00400515, reqular=None, repeat=None, anterior='', posterior='')
+    anterior = 
+    posterior = 
+    regular = None
+    repeat = None
+Comments(ea=0x00400519, reqular=None, repeat=None, anterior='', posterior='')
+    anterior = 
+    posterior = 
+    regular = None
+    repeat = None
+Comments(ea=0x0040051A, reqular=None, repeat=None, anterior='', posterior='')
+    anterior = 
+    posterior = 
+    regular = None
+    repeat = None
