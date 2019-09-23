@@ -146,7 +146,7 @@ class Function(FunctionFlagsMixin):
                               "Not both. (ea={!r}, name={!r})").format(ea, name))
 
         elif name is not None:
-            ea = idc.LocByName(name)
+            ea = idc.get_name_ea_simple(name)
             if ea == idc.BADADDR:
                 raise exceptions.SarkNoFunction(
                     "The supplied name does not belong to an existing function. "

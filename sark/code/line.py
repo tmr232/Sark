@@ -25,7 +25,7 @@ class Comments(object):
     @property
     def regular(self):
         """Regular Comment"""
-        return idc.Comment(self._ea)
+        return idc.get_cmt(self._ea, 0)
 
     @regular.setter
     def regular(self, comment):
@@ -34,7 +34,7 @@ class Comments(object):
     @property
     def repeat(self):
         """Repeatable Comment"""
-        return idc.RptCmt(self._ea)
+        return idc.get_cmt(self._ea, 1)
 
     @repeat.setter
     def repeat(self, comment):
@@ -127,7 +127,7 @@ class Line(object):
                               "Not both. (ea={!r}, name={!r})").format(ea, name))
 
         elif name is not None:
-            ea = idc.LocByName(name)
+            ea = idc.get_name_ea_simple(name)
 
         elif ea == self.UseCurrentAddress:
             ea = idc.here()

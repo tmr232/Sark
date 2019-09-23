@@ -128,7 +128,7 @@ def get_offset_name(ea):
 
     # If that failed, use the segment name instead.
     segment = idaapi.getseg(ea)
-    name = idaapi.get_true_segm_name(segment)
+    name = idaapi.get_segm_name(segment)
     offset_format = '{{:0{}X}}'.format(get_native_size() * 2)
     ea_text = offset_format.format(ea)
     if name:
