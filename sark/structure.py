@@ -7,7 +7,7 @@ import idc
 from . import exceptions
 from .code import lines
 
-FF_TYPES = [idc.FF_BYTE, idc.FF_WORD, idc.FF_DWRD, idc.FF_QWRD, idc.FF_OWRD, ]
+FF_TYPES = [idc.FF_BYTE, idc.FF_WORD, idc.FF_DWORD, idc.FF_QWORD, idc.FF_OWORD, ]
 FF_SIZES = [1, 2, 4, 8, 16, ]
 
 SIZE_TO_TYPE = dict(zip(FF_SIZES, FF_TYPES))
