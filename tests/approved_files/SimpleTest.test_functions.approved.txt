@@ -3,7 +3,7 @@ Function(name=".init_proc", addr=0x004003C8)
     comments = Comments(func=.init_proc, reqular=None, repeat=None)
     demangled = .init_proc
     ea = 4195272
-    endEA = 4195295
+    end_ea = 4195295
     flags = 21504
     frame_size = 16
     has_name = True
@@ -22,14 +22,14 @@ Function(name=".init_proc", addr=0x004003C8)
     is_user_far = False
     name = .init_proc
     signature = None
-    startEA = 4195272
+    start_ea = 4195272
     tinfo = None
 Function(name="sub_4003E0", addr=0x004003E0)
     color = None
     comments = Comments(func=sub_4003E0, reqular=None, repeat=None)
     demangled = sub_4003E0
     ea = 4195296
-    endEA = 4195308
+    end_ea = 4195308
     flags = 5120
     frame_size = 8
     has_name = False
@@ -48,14 +48,14 @@ Function(name="sub_4003E0", addr=0x004003E0)
     is_user_far = False
     name = sub_4003E0
     signature = None
-    startEA = 4195296
+    start_ea = 4195296
     tinfo = None
 Function(name=".puts", addr=0x004003F0)
     color = None
     comments = Comments(func=.puts, reqular=None, repeat=None)
     demangled = .puts
     ea = 4195312
-    endEA = 4195318
+    end_ea = 4195318
     flags = 5312
     frame_size = 8
     has_name = True
@@ -74,14 +74,14 @@ Function(name=".puts", addr=0x004003F0)
     is_user_far = False
     name = .puts
     signature = int(const char *s)
-    startEA = 4195312
+    start_ea = 4195312
     tinfo = ('\x0c\x11\x07\x02\nr', '\x02s')
 Function(name="_start", addr=0x00400400)
     color = None
     comments = Comments(func=_start, reqular=None, repeat=None)
     demangled = _start
     ea = 4195328
-    endEA = 4195371
+    end_ea = 4195371
     flags = 7169
     frame_size = 8
     has_name = True
@@ -100,14 +100,14 @@ Function(name="_start", addr=0x00400400)
     is_user_far = False
     name = _start
     signature = None
-    startEA = 4195328
+    start_ea = 4195328
     tinfo = None
 Function(name="_dl_relocate_static_pie", addr=0x00400430)
     color = None
     comments = Comments(func=_dl_relocate_static_pie, reqular=None, repeat=None)
     demangled = _dl_relocate_static_pie
     ea = 4195376
-    endEA = 4195378
+    end_ea = 4195378
     flags = 21504
     frame_size = 8
     has_name = True
@@ -126,14 +126,14 @@ Function(name="_dl_relocate_static_pie", addr=0x00400430)
     is_user_far = False
     name = _dl_relocate_static_pie
     signature = None
-    startEA = 4195376
+    start_ea = 4195376
     tinfo = None
 Function(name="deregister_tm_clones", addr=0x00400440)
     color = None
     comments = Comments(func=deregister_tm_clones, reqular=None, repeat=None)
     demangled = deregister_tm_clones
     ea = 4195392
-    endEA = 4195434
+    end_ea = 4195434
     flags = 21520
     frame_size = 16
     has_name = True
@@ -152,14 +152,14 @@ Function(name="deregister_tm_clones", addr=0x00400440)
     is_user_far = False
     name = deregister_tm_clones
     signature = None
-    startEA = 4195392
+    start_ea = 4195392
     tinfo = None
 Function(name="register_tm_clones", addr=0x00400470)
     color = None
     comments = Comments(func=register_tm_clones, reqular=None, repeat=None)
     demangled = register_tm_clones
     ea = 4195440
-    endEA = 4195498
+    end_ea = 4195498
     flags = 21520
     frame_size = 16
     has_name = True
@@ -178,14 +178,14 @@ Function(name="register_tm_clones", addr=0x00400470)
     is_user_far = False
     name = register_tm_clones
     signature = None
-    startEA = 4195440
+    start_ea = 4195440
     tinfo = None
 Function(name="__do_global_dtors_aux", addr=0x004004B0)
     color = None
     comments = Comments(func=__do_global_dtors_aux, reqular=None, repeat=None)
     demangled = __do_global_dtors_aux
     ea = 4195504
-    endEA = 4195538
+    end_ea = 4195538
     flags = 21504
     frame_size = 8
     has_name = True
@@ -204,14 +204,14 @@ Function(name="__do_global_dtors_aux", addr=0x004004B0)
     is_user_far = False
     name = __do_global_dtors_aux
     signature = None
-    startEA = 4195504
+    start_ea = 4195504
     tinfo = None
 Function(name="frame_dummy", addr=0x004004E0)
     color = None
     comments = Comments(func=frame_dummy, reqular=None, repeat=None)
     demangled = frame_dummy
     ea = 4195552
-    endEA = 4195559
+    end_ea = 4195559
     flags = 21520
     frame_size = 16
     has_name = True
@@ -230,14 +230,14 @@ Function(name="frame_dummy", addr=0x004004E0)
     is_user_far = False
     name = frame_dummy
     signature = None
-    startEA = 4195552
+    start_ea = 4195552
     tinfo = None
 Function(name="main", addr=0x004004F0)
     color = None
     comments = Comments(func=main, reqular='This is a function comment', repeat='This is a repeatable function comment')
     demangled = main
     ea = 4195568
-    endEA = 4195611
+    end_ea = 4195611
     flags = 21520
     frame_size = 32
     has_name = True
@@ -256,14 +256,14 @@ Function(name="main", addr=0x004004F0)
     is_user_far = False
     name = main
     signature = int __cdecl(int argc, const char **argv, const char **envp)
-    startEA = 4195568
+    start_ea = 4195568
     tinfo = ('\x0c1\x07\x04\x07\n\nr\n\nr', '\x05argc\x05argv\x05envp')
 Function(name="__libc_csu_init", addr=0x00400520)
     color = None
     comments = Comments(func=__libc_csu_init, reqular=None, repeat=None)
     demangled = __libc_csu_init
     ea = 4195616
-    endEA = 4195717
+    end_ea = 4195717
     flags = 21504
     frame_size = 64
     has_name = True
@@ -282,14 +282,14 @@ Function(name="__libc_csu_init", addr=0x00400520)
     is_user_far = False
     name = __libc_csu_init
     signature = void(void)
-    startEA = 4195616
+    start_ea = 4195616
     tinfo = ('\x0c!\x01', '')
 Function(name="__libc_csu_fini", addr=0x00400590)
     color = None
     comments = Comments(func=__libc_csu_fini, reqular=None, repeat=None)
     demangled = __libc_csu_fini
     ea = 4195728
-    endEA = 4195730
+    end_ea = 4195730
     flags = 21504
     frame_size = 8
     has_name = True
@@ -308,14 +308,14 @@ Function(name="__libc_csu_fini", addr=0x00400590)
     is_user_far = False
     name = __libc_csu_fini
     signature = void(void)
-    startEA = 4195728
+    start_ea = 4195728
     tinfo = ('\x0c!\x01', '')
 Function(name=".term_proc", addr=0x00400594)
     color = None
     comments = Comments(func=.term_proc, reqular=None, repeat=None)
     demangled = .term_proc
     ea = 4195732
-    endEA = 4195741
+    end_ea = 4195741
     flags = 21504
     frame_size = 16
     has_name = True
@@ -334,14 +334,14 @@ Function(name=".term_proc", addr=0x00400594)
     is_user_far = False
     name = .term_proc
     signature = None
-    startEA = 4195732
+    start_ea = 4195732
     tinfo = None
 Function(name="puts", addr=0x00601040)
     color = None
     comments = Comments(func=puts, reqular=None, repeat=None)
     demangled = puts
     ea = 6295616
-    endEA = 6295624
+    end_ea = 6295624
     flags = 5120
     frame_size = 8
     has_name = True
@@ -360,14 +360,14 @@ Function(name="puts", addr=0x00601040)
     is_user_far = False
     name = puts
     signature = int(const char *s)
-    startEA = 6295616
+    start_ea = 6295616
     tinfo = ('\x0c\x11\x07\x02\nr', '\x02s')
 Function(name="__libc_start_main", addr=0x00601048)
     color = None
     comments = Comments(func=__libc_start_main, reqular=None, repeat=None)
     demangled = __libc_start_main
     ea = 6295624
-    endEA = 6295632
+    end_ea = 6295632
     flags = 5120
     frame_size = 8
     has_name = True
@@ -386,14 +386,14 @@ Function(name="__libc_start_main", addr=0x00601048)
     is_user_far = False
     name = __libc_start_main
     signature = int __cdecl(int (__cdecl *main)(int, char **, char **), int argc, char **ubp_av, void (*init)(void), void (*fini)(void), void (*rtld_fini)(void), void *stack_end)
-    startEA = 6295624
+    start_ea = 6295624
     tinfo = ('\x0c1\x07\x08\n\x0c1\x07\x04\x07\n\n2\n\n2\x07\n\n2\n\x0c!\x01\n\x0c!\x01\n\x0c!\x01\n\x01', '\x05main\x01\x01\x01\x05argc\x07ubp_av\x05init\x05fini\nrtld_fini\nstack_end')
 Function(name="__gmon_start__", addr=0x00601050)
     color = None
     comments = Comments(func=__gmon_start__, reqular=None, repeat=None)
     demangled = __gmon_start__
     ea = 6295632
-    endEA = 6295640
+    end_ea = 6295640
     flags = 5120
     frame_size = 8
     has_name = True
@@ -412,5 +412,5 @@ Function(name="__gmon_start__", addr=0x00601050)
     is_user_far = False
     name = __gmon_start__
     signature = None
-    startEA = 6295632
+    start_ea = 6295632
     tinfo = None
