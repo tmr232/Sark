@@ -34,7 +34,7 @@ def get_name(ea):
 
 
 def show_meaningful_in_function(function):
-    idaapi.msg("\n\nMeaningful References in {!r} : 0x{:08X}\n".format(function.demangled, function.startEA))
+    idaapi.msg("\n\nMeaningful References in {!r} : 0x{:08X}\n".format(function.demangled, function.start_ea))
     idaapi.msg("Type    Usage         Address       Object\n")
     idaapi.msg("------------------------------------------\n")
 

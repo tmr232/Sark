@@ -40,7 +40,7 @@ def get_ea(func_ea):
         The ea.
     """
     if isinstance(func_ea, idaapi.func_t):
-        return func_ea.startEA
+        return func_ea.start_ea
     return func_ea
 
 
@@ -139,7 +139,7 @@ def is_same_function(ea1, ea2):
     if any(func is None for func in (func1, func2)):
         return False
 
-    return func1.startEA == func2.startEA
+    return func1.start_ea == func2.start_ea
 
 
 def get_name_or_address(ea):

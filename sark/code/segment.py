@@ -153,14 +153,14 @@ class Segment(object):
         return SegmentPermissions(self.segment_t)
 
     @property
-    def startEA(self):
-        return self._segment.startEA
+    def start_ea(self):
+        return self._segment.start_ea
 
-    ea = startEA
+    ea = start_ea
 
     @property
-    def endEA(self):
-        return self._segment.endEA
+    def end_ea(self):
+        return self._segment.end_ea
 
     @property
     def type(self):
@@ -185,12 +185,12 @@ class Segment(object):
     @property
     def functions(self):
         """Iterate all functions in the segment."""
-        return functions(self.startEA, self.endEA)
+        return functions(self.start_ea, self.end_ea)
 
     @property
     def lines(self):
         """Iterate all lines in the segment."""
-        return lines(self.startEA, self.endEA)
+        return lines(self.start_ea, self.end_ea)
 
     @property
     def bitness(self):
@@ -233,7 +233,7 @@ class Segment(object):
 
     @property
     def size(self):
-        return self.endEA - self.startEA
+        return self.end_ea - self.start_ea
 
     def __repr__(self):
         return ("<Segment(ea=0x{:08X},"

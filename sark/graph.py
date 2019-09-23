@@ -40,7 +40,7 @@ def lowest_common_ancestors(G, targets):
 
 def _try_get_function_start(ea):
     with ignored(exceptions.SarkNoFunction):
-        return Function(ea).startEA
+        return Function(ea).start_ea
 
     return ea
 

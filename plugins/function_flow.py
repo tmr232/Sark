@@ -67,7 +67,7 @@ def mark_unreachable_nodes(ea, source_color=COLOR_SOURCE, other_color=COLOR_UNRE
     block_ea = get_block_start(ea)
     descendants = nx.descendants(graph, block_ea)
     for block in FlowChart(ea):
-        if block.startEA not in descendants:
+        if block.start_ea not in descendants:
             block.color = other_color
 
     CodeBlock(ea).color = source_color
@@ -140,7 +140,7 @@ if use_new_ui:
             idaapi.msg("\n" * 2)
 
             for block in iter_exit_nodes(ctx.cur_ea):
-                idaapi.msg("Exit at 0x{:08X}\n".format(block.startEA))
+                idaapi.msg("Exit at 0x{:08X}\n".format(block.start_ea))
 
 
     class Hooks(idaapi.UI_Hooks):
@@ -229,7 +229,7 @@ else:  # Old (< 6.7) ui code
         idaapi.msg("\n" * 2)
 
         for block in iter_exit_nodes(ea):
-            idaapi.msg("Exit at 0x{:08X}\n".format(block.startEA))
+            idaapi.msg("Exit at 0x{:08X}\n".format(block.start_ea))
 
 
     def mark_clear():

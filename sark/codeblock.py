@@ -17,7 +17,7 @@ class CodeBlock(idaapi.BasicBlock):
 
     @property
     def lines(self):
-        return lines(self.startEA, self.endEA)
+        return lines(self.start_ea, self.end_ea)
 
     @property
     def next(self):
@@ -32,17 +32,17 @@ class CodeBlock(idaapi.BasicBlock):
             line.color = color
 
         if color is None:
-            idaapi.clr_node_info2(self._fc._q.bounds.startEA, self.id, idaapi.NIF_BG_COLOR)
+            idaapi.clr_node_info2(self._fc._q.bounds.start_ea, self.id, idaapi.NIF_BG_COLOR)
 
         else:
             node_info = idaapi.node_info_t()
             node_info.bg_color = color
-            idaapi.set_node_info2(self._fc._q.bounds.startEA, self.id, node_info, idaapi.NIF_BG_COLOR)
+            idaapi.set_node_info2(self._fc._q.bounds.start_ea, self.id, node_info, idaapi.NIF_BG_COLOR)
 
     @property
     def color(self):
         node_info = idaapi.node_info_t()
-        success = idaapi.get_node_info2(node_info, self._fc._q.bounds.startEA, self.id)
+        success = idaapi.get_node_info2(node_info, self._fc._q.bounds.start_ea, self.id)
 
         if not success:
             return None
@@ -57,10 +57,10 @@ class CodeBlock(idaapi.BasicBlock):
         self.set_color(color)
 
     def __repr__(self):
-        return "<CodeBlock(startEA=0x{:08X}, endEA=0x{:08X})>".format(self.startEA, self.endEA)
+        return "<CodeBlock(start_ea=0x{:08X}, end_ea=0x{:08X})>".format(self.start_ea, self.end_ea)
 
     def __eq__(self, other):
-        return self.startEA == other.startEA
+        return self.start_ea == other.start_ea
 
 
 class FlowChart(idaapi.FlowChart):
@@ -91,15 +91,15 @@ def get_codeblock(ea=None):
         ea = idaapi.get_screen_ea()
     flowchart_ = get_flowchart(ea)
     for code_block in flowchart_:
-        if code_block.startEA == ea: # External blocks can be zero-sized.
+        if code_block.start_ea == ea: # External blocks can be zero-sized.
             return code_block
-        if code_block.startEA <= ea < code_block.endEA:
+        if code_block.start_ea <= ea < code_block.end_ea:
             return code_block
 
 
 def get_block_start(ea):
     """Get the start address of an IDA Graph block."""
-    return get_codeblock(ea).startEA
+    return get_codeblock(ea).start_ea
 
 
 def get_nx_graph(ea, ignore_external=False):
@@ -109,12 +109,12 @@ def get_nx_graph(ea, ignore_external=False):
     flowchart = FlowChart(func, ignore_external=ignore_external)
     for block in flowchart:
         # Make sure all nodes are added (including edge-less nodes)
-        nx_graph.add_node(block.startEA)
+        nx_graph.add_node(block.start_ea)
 
         for pred in block.preds():
-            nx_graph.add_edge(pred.startEA, block.startEA)
+            nx_graph.add_edge(pred.start_ea, block.start_ea)
         for succ in block.succs():
-            nx_graph.add_edge(block.startEA, succ.startEA)
+            nx_graph.add_edge(block.start_ea, succ.start_ea)
 
     return nx_graph
 

@@ -94,7 +94,7 @@ def add_function_handler(lca_viewer):
             if not func:
                 return
 
-            lca_viewer.add_target(func.startEA)
+            lca_viewer.add_target(func.start_ea)
             lca_viewer.rebuild_graph()
             lca_viewer.Refresh()
             lca_viewer.Show()

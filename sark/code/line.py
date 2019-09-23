@@ -179,10 +179,10 @@ class Line(object):
         """Line EA"""
         return self._ea
 
-    startEA = ea
+    start_ea = ea
 
     @property
-    def endEA(self):
+    def end_ea(self):
         """End address of line (first byte after the line)"""
         return self.ea + self.size
 
@@ -294,7 +294,7 @@ class Line(object):
     @property
     def next(self):
         """The next line."""
-        return Line(self.endEA)
+        return Line(self.end_ea)
 
     @property
     def prev(self):

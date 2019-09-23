@@ -193,12 +193,12 @@ class Function(FunctionFlagsMixin):
 
     def __eq__(self, other):
         try:
-            return self.startEA == other.startEA
+            return self.start_ea == other.start_ea
         except AttributeError:
             return False
 
     def __hash__(self):
-        return self.startEA
+        return self.start_ea
 
     @property
     def lines(self):
@@ -206,21 +206,21 @@ class Function(FunctionFlagsMixin):
         return iter_function_lines(self._func)
 
     @property
-    def startEA(self):
+    def start_ea(self):
         """Start Address"""
-        return self._func.startEA
+        return self._func.start_ea
 
-    # Alias for `startEA` for increased guessability and less typing.
-    ea = startEA
+    # Alias for `start_ea` for increased guessability and less typing.
+    ea = start_ea
 
     @property
-    def endEA(self):
+    def end_ea(self):
         """End Address
 
-        Note that taking all the lines between `startEA` and `endEA` does not guarantee
+        Note that taking all the lines between `start_ea` and `end_ea` does not guarantee
         that you get all the lines in the function. To get all the lines, use `.lines`.
         """
-        return self._func.endEA
+        return self._func.end_ea
 
     @property
     def flags(self):
@@ -274,22 +274,22 @@ class Function(FunctionFlagsMixin):
 
         This only includes references to that function's start address.
         """
-        return imap(Xref, idautils.XrefsTo(self.startEA))
+        return imap(Xref, idautils.XrefsTo(self.start_ea))
 
     @property
     def drefs_to(self):
         """Source addresses of data xrefs to this function."""
-        return idautils.DataRefsTo(self.startEA)
+        return idautils.DataRefsTo(self.start_ea)
 
     @property
     def crefs_to(self):
         """Source addresses of code xrefs to this function."""
-        return idautils.CodeRefsTo(self.startEA, 1)
+        return idautils.CodeRefsTo(self.start_ea, 1)
 
     @property
     def name(self):
         """Function's Name"""
-        return idaapi.get_ea_name(self.startEA)
+        return idaapi.get_ea_name(self.start_ea)
 
     @property
     def demangled(self):
@@ -316,10 +316,10 @@ class Function(FunctionFlagsMixin):
             name: Desired name.
             anyway: `True` to set anyway.
         """
-        set_name(self.startEA, name, anyway=anyway)
+        set_name(self.start_ea, name, anyway=anyway)
 
     def __repr__(self):
-        return 'Function(name="{}", addr=0x{:08X})'.format(self.name, self.startEA)
+        return 'Function(name="{}", addr=0x{:08X})'.format(self.name, self.start_ea)
 
     def __contains__(self, item):
         """Is an item contained (its EA is in) the function."""
@@ -355,7 +355,7 @@ class Function(FunctionFlagsMixin):
 
     @property
     def has_name(self):
-        return Line(self.startEA).has_name
+        return Line(self.start_ea).has_name
 
     @property
     def func_t(self):
@@ -364,24 +364,24 @@ class Function(FunctionFlagsMixin):
     @property
     def signature(self):
         '''The C signature of the function.'''
-        return idc.GetType(self.startEA)
+        return idc.GetType(self.start_ea)
 
     @signature.setter
     def signature(self, c_signature):
-        success = idc.SetType(self.startEA, c_signature)
+        success = idc.SetType(self.start_ea, c_signature)
         if not success:
-            raise exceptions.SetTypeFailed(self.startEA, c_signature)
+            raise exceptions.SetTypeFailed(self.start_ea, c_signature)
 
     @property
     def tinfo(self):
         '''The tinfo of the function type'''
-        return idc.GetTinfo(self.startEA)
+        return idc.GetTinfo(self.start_ea)
 
     @tinfo.setter
     def tinfo(self, tinfo):
-        success = idc.ApplyType(self.startEA, tinfo)
+        success = idc.ApplyType(self.start_ea, tinfo)
         if not success:
-            raise exceptions.SetTypeFailed(self.startEA, tinfo)
+            raise exceptions.SetTypeFailed(self.start_ea, tinfo)
 
 
 def iter_function_lines(func_ea):

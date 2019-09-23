@@ -5,7 +5,7 @@ import sark
 
 
 def show_function_strings(function):
-    idaapi.msg("\n\nString References in {}:0x{:08X}\n".format(function.name, function.startEA))
+    idaapi.msg("\n\nString References in {}:0x{:08X}\n".format(function.name, function.start_ea))
     idaapi.msg("From          To            String\n")
 
     for xref in function.xrefs_from:

@@ -12,7 +12,7 @@ MENU_PATH_GRAPHS = 'View/Graphs/'
 
 def _try_get_function_start(ea):
     with ignored(exceptions.SarkNoFunction):
-        return sark.Function(ea).startEA
+        return sark.Function(ea).start_ea
 
     return ea
 

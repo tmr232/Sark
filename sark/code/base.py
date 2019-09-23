@@ -69,7 +69,7 @@ def operand_get_displacement(operand):
 
 def is_same_function(ea1, ea2):
     try:
-        if get_func(ea1).startEA == get_func(ea2).startEA:
+        if get_func(ea1).start_ea == get_func(ea2).start_ea:
             return True
     except:
         pass
@@ -116,10 +116,10 @@ def get_offset_name(ea):
     # Try and get the function name
     try:
         func = get_func(ea)
-        name = idaapi.get_ea_name(func.startEA)
+        name = idaapi.get_ea_name(func.start_ea)
         name = demangle(name, 0x60) # MNG_NOTYPE | MNG_NORETTYPE
         if name:
-            offset = ea - func.startEA
+            offset = ea - func.start_ea
             if offset:
                 return '{}+{:X}'.format(name, offset)
             return name
