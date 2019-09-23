@@ -335,7 +335,7 @@ class Function(FunctionFlagsMixin):
     @property
     def color(self):
         """Function color in IDA View"""
-        color = idc.GetColor(self.ea, idc.CIC_FUNC)
+        color = idc.get_color(self.ea, idc.CIC_FUNC)
         if color == 0xFFFFFFFF:
             return None
 

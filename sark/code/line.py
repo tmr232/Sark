@@ -273,7 +273,7 @@ class Line(object):
     @property
     def color(self):
         """Line color in IDA View"""
-        color = idc.GetColor(self.ea, idc.CIC_ITEM)
+        color = idc.get_color(self.ea, idc.CIC_ITEM)
         if color == 0xFFFFFFFF:
             return None
 
