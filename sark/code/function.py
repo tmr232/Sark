@@ -364,7 +364,7 @@ class Function(FunctionFlagsMixin):
     @property
     def signature(self):
         '''The C signature of the function.'''
-        return idc.GetType(self.start_ea)
+        return idc.get_type(self.start_ea)
 
     @signature.setter
     def signature(self, c_signature):

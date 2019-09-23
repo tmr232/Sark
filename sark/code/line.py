@@ -142,7 +142,7 @@ class Line(object):
     @property
     def flags(self):
         """`FF_*` Flags. See `bytes.hpp`."""
-        return idaapi.getFlags(self.ea)
+        return idaapi.get_full_flags(self.ea)
 
     @property
     def is_code(self):
