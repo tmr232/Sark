@@ -42,7 +42,7 @@ class CodeBlock(idaapi.BasicBlock):
     @property
     def color(self):
         node_info = idaapi.node_info_t()
-        success = idaapi.get_node_info2(node_info, self._fc._q.bounds.start_ea, self.id)
+        success = idaapi.get_node_info(node_info, self._fc._q.bounds.start_ea, self.id)
 
         if not success:
             return None
