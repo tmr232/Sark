@@ -375,7 +375,7 @@ class Function(FunctionFlagsMixin):
     @property
     def tinfo(self):
         '''The tinfo of the function type'''
-        return idc.GetTinfo(self.start_ea)
+        return idc.get_tinfo(self.start_ea)
 
     @tinfo.setter
     def tinfo(self, tinfo):
