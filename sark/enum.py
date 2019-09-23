@@ -40,7 +40,7 @@ def _get_enum(name):
     return eid
 
 
-def add_enum(name=None, index=None, flags=idaapi.hexflag(), bitfield=False):
+def add_enum(name=None, index=None, flags=idaapi.hex_flag(), bitfield=False):
     """Create a new enum.
 
     Args:
