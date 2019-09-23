@@ -44,7 +44,7 @@ class Update(object):
         can_update = self.LOCK._is_owned()
 
         if can_update:
-            idc.Refresh()
+            idaapi.refresh_idaview_anyway()
 
         self.LOCK.release()
 

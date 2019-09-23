@@ -351,7 +351,7 @@ class Function(FunctionFlagsMixin):
         if color is None:
             color = 0xFFFFFFFF
 
-        idc.SetColor(self.ea, idc.CIC_FUNC, color)
+        idc.set_color(self.ea, idc.CIC_FUNC, color)
 
     @property
     def has_name(self):

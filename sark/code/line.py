@@ -289,7 +289,7 @@ class Line(object):
         if color is None:
             color = 0xFFFFFFFF
 
-        idc.SetColor(self.ea, idc.CIC_ITEM, color)
+        idc.set_color(self.ea, idc.CIC_ITEM, color)
 
     @property
     def next(self):
