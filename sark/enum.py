@@ -388,7 +388,7 @@ def _iter_serial_enum_member(eid, value, bitmask):
     cid, serial = idaapi.get_first_serial_enum_member(eid, value, bitmask)
     while cid != idaapi.BADNODE:
         yield cid, serial
-        cid, serial = idaapi.get_next_serial_enum_member(cid, serial)
+        cid, serial = idaapi.get_next_serial_enum_member(serial, cid)
 
 
 def _iter_enum_constant_ids(eid):
