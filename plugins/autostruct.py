@@ -32,14 +32,14 @@ class AutoStruct(idaapi.plugin_t):
             idaapi.warning('No structure offsets in selection. Operation cancelled.')
             return
 
-        struct_name = idc.AskStr(self._prev_struct_name, "Struct Name")
+        struct_name = idaapi.ask_str(self._prev_struct_name, 0, "Struct Name")
         if not struct_name:
             message("No structure name provided. Operation cancelled.")
             return
         self._prev_struct_name = struct_name
 
         common_reg = sark.structure.get_common_register(start, end)
-        reg_name = idc.AskStr(common_reg, "Register")
+        reg_name = idaapi.ask_str(common_reg, 0, "Register")
         if not reg_name:
             message("No offsets found. Operation cancelled.")
             return
@@ -58,7 +58,7 @@ class AutoStruct(idaapi.plugin_t):
         try:
             sark.structure.create_struct_from_offsets(struct_name, offsets)
         except sark.exceptions.SarkStructAlreadyExists:
-            yes_no_cancel = idc.AskYN(idaapi.ASKBTN_NO,
+            yes_no_cancel = idaapi.ask_yn(idaapi.ASKBTN_NO,
                                       "Struct already exists. Modify?\n"
                                       "Cancel to avoid applying the struct.")
             if yes_no_cancel == idaapi.ASKBTN_CANCEL:

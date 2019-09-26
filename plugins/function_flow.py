@@ -87,181 +87,104 @@ def mark_exit_nodes(ea, node_color=COLOR_EXIT):
         block.color = node_color
 
 
-if use_new_ui:
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Start of IDA >= 6.7 Code
+class MarkReachableNodesHandler(ActionHandler):
+    TEXT = "Reachable"
 
-    class MarkReachableNodesHandler(ActionHandler):
-        TEXT = "Reachable"
-
-        def _activate(self, ctx):
-            clear_func(ctx.cur_ea)
-            mark_reachable_nodes(ctx.cur_ea)
+    def _activate(self, ctx):
+        clear_func(ctx.cur_ea)
+        mark_reachable_nodes(ctx.cur_ea)
 
 
-    class MarkUnReachableNodesHandler(ActionHandler):
-        TEXT = "Unreachable"
+class MarkUnReachableNodesHandler(ActionHandler):
+    TEXT = "Unreachable"
 
-        def _activate(self, ctx):
-            clear_func(ctx.cur_ea)
-            mark_unreachable_nodes(ctx.cur_ea)
-
-
-    class MarkReachingNodesHandler(ActionHandler):
-        TEXT = "Reaching"
-
-        def _activate(self, ctx):
-            clear_func(ctx.cur_ea)
-            mark_reaching_nodes(ctx.cur_ea)
+    def _activate(self, ctx):
+        clear_func(ctx.cur_ea)
+        mark_unreachable_nodes(ctx.cur_ea)
 
 
-    class MarkNotReachingNodesHandler(ActionHandler):
-        TEXT = "Not Reaching"
+class MarkReachingNodesHandler(ActionHandler):
+    TEXT = "Reaching"
 
-        def _activate(self, ctx):
-            clear_func(ctx.cur_ea)
-            mark_not_reaching_nodes(ctx.cur_ea)
-
-
-    class MarkClearHandler(ActionHandler):
-        TEXT = "Clear"
-
-        def _activate(self, ctx):
-            clear_func(ctx.cur_ea)
+    def _activate(self, ctx):
+        clear_func(ctx.cur_ea)
+        mark_reaching_nodes(ctx.cur_ea)
 
 
-    class MarkExits(ActionHandler):
-        TEXT = "Exits"
+class MarkNotReachingNodesHandler(ActionHandler):
+    TEXT = "Not Reaching"
 
-        def _activate(self, ctx):
-            clear_func(ctx.cur_ea)
-            mark_exit_nodes(ctx.cur_ea)
-
-            idaapi.msg("\n" * 2)
-
-            for block in iter_exit_nodes(ctx.cur_ea):
-                idaapi.msg("Exit at 0x{:08X}\n".format(block.start_ea))
+    def _activate(self, ctx):
+        clear_func(ctx.cur_ea)
+        mark_not_reaching_nodes(ctx.cur_ea)
 
 
-    class Hooks(idaapi.UI_Hooks):
-        def populating_tform_popup(self, form, popup):
-            # You can attach here.
-            pass
+class MarkClearHandler(ActionHandler):
+    TEXT = "Clear"
 
-        def finish_populating_tform_popup(self, form, popup):
-            # Or here, after the popup is done being populated by its owner.
-
-            if idaapi.get_widget_type(form) == idaapi.BWN_DISASM:
-                idaapi.attach_action_to_popup(form, popup, MarkReachableNodesHandler.get_name(), "Mark/")
-                idaapi.attach_action_to_popup(form, popup, MarkUnReachableNodesHandler.get_name(), "Mark/")
-                idaapi.attach_action_to_popup(form, popup, MarkReachingNodesHandler.get_name(), "Mark/")
-                idaapi.attach_action_to_popup(form, popup, MarkNotReachingNodesHandler.get_name(), "Mark/")
-                idaapi.attach_action_to_popup(form, popup, MarkExits.get_name(), "Mark/")
-                idaapi.attach_action_to_popup(form, popup, MarkClearHandler.get_name(), "Mark/")
+    def _activate(self, ctx):
+        clear_func(ctx.cur_ea)
 
 
-    class FunctionFlow(idaapi.plugin_t):
-        flags = idaapi.PLUGIN_PROC
-        comment = "Show Flow in Functions"
-        help = "Show code flow inside functions"
-        wanted_name = "Function Flow"
-        wanted_hotkey = ""
+class MarkExits(ActionHandler):
+    TEXT = "Exits"
 
-        def init(self):
-            MarkReachableNodesHandler.register()
-            MarkUnReachableNodesHandler.register()
-            MarkReachingNodesHandler.register()
-            MarkNotReachingNodesHandler.register()
-            MarkExits.register()
-            MarkClearHandler.register()
-
-            self.hooks = Hooks()
-            self.hooks.hook()
-            return idaapi.PLUGIN_KEEP
-
-        def term(self):
-            MarkReachableNodesHandler.unregister()
-            MarkUnReachableNodesHandler.unregister()
-            MarkReachingNodesHandler.unregister()
-            MarkNotReachingNodesHandler.unregister()
-            MarkExits.unregister()
-            MarkClearHandler.unregister()
-
-        def run(self, arg):
-            pass
-
-        # End of IDA >= 6.7 Code
-        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-else:  # Old (< 6.7) ui code
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Start of IDA < 6.7 Code
-
-    def mark_reachable():
-        ea = idaapi.get_screen_ea()
-        clear_func(ea)
-        mark_reachable_nodes(ea)
-
-
-    def mark_unreachable():
-        ea = idaapi.get_screen_ea()
-        clear_func(ea)
-        mark_unreachable_nodes(ea)
-
-
-    def mark_reaching():
-        ea = idaapi.get_screen_ea()
-        clear_func(ea)
-        mark_reaching_nodes(ea)
-
-
-    def mark_not_reaching():
-        ea = idaapi.get_screen_ea()
-        clear_func(ea)
-        mark_not_reaching_nodes(ea)
-
-
-    def mark_exists():
-        ea = idaapi.get_screen_ea()
-        clear_func(ea)
-        mark_exit_nodes(ea)
+    def _activate(self, ctx):
+        clear_func(ctx.cur_ea)
+        mark_exit_nodes(ctx.cur_ea)
 
         idaapi.msg("\n" * 2)
 
-        for block in iter_exit_nodes(ea):
+        for block in iter_exit_nodes(ctx.cur_ea):
             idaapi.msg("Exit at 0x{:08X}\n".format(block.start_ea))
 
 
-    def mark_clear():
-        ea = idaapi.get_screen_ea()
-        clear_func(ea)
+class Hooks(idaapi.UI_Hooks):
+    def populating_tform_popup(self, form, popup):
+        # You can attach here.
+        pass
+
+    def finish_populating_tform_popup(self, form, popup):
+        # Or here, after the popup is done being populated by its owner.
+
+        if idaapi.get_widget_type(form) == idaapi.BWN_DISASM:
+            idaapi.attach_action_to_popup(form, popup, MarkReachableNodesHandler.get_name(), "Mark/")
+            idaapi.attach_action_to_popup(form, popup, MarkUnReachableNodesHandler.get_name(), "Mark/")
+            idaapi.attach_action_to_popup(form, popup, MarkReachingNodesHandler.get_name(), "Mark/")
+            idaapi.attach_action_to_popup(form, popup, MarkNotReachingNodesHandler.get_name(), "Mark/")
+            idaapi.attach_action_to_popup(form, popup, MarkExits.get_name(), "Mark/")
+            idaapi.attach_action_to_popup(form, popup, MarkClearHandler.get_name(), "Mark/")
 
 
-    class FunctionFlow(idaapi.plugin_t):
-        flags = idaapi.PLUGIN_PROC
-        comment = "Show Flow in Functions"
-        help = "Show code flow inside functions"
-        wanted_name = "Function Flow"
-        wanted_hotkey = ""
+class FunctionFlow(idaapi.plugin_t):
+    flags = idaapi.PLUGIN_PROC
+    comment = "Show Flow in Functions"
+    help = "Show code flow inside functions"
+    wanted_name = "Function Flow"
+    wanted_hotkey = ""
 
-        def init(self):
-            idaapi.add_menu_item("View/Mark/", "Reachable", None, 0, mark_reachable, tuple())
-            idaapi.add_menu_item("View/Mark/", "Un-Reachable", None, 0, mark_unreachable, tuple())
-            idaapi.add_menu_item("View/Mark/", "Reaching", None, 0, mark_reaching, tuple())
-            idaapi.add_menu_item("View/Mark/", "Not Reaching", None, 0, mark_not_reaching, tuple())
-            idaapi.add_menu_item("View/Mark/", "Exists", None, 0, mark_exists, tuple())
-            idaapi.add_menu_item("View/Mark/", "Clear", None, 0, mark_clear, tuple())
+    def init(self):
+        MarkReachableNodesHandler.register()
+        MarkUnReachableNodesHandler.register()
+        MarkReachingNodesHandler.register()
+        MarkNotReachingNodesHandler.register()
+        MarkExits.register()
+        MarkClearHandler.register()
 
-            return idaapi.PLUGIN_KEEP
+        self.hooks = Hooks()
+        self.hooks.hook()
+        return idaapi.PLUGIN_KEEP
 
-        def term(self):
-            pass
+    def term(self):
+        MarkReachableNodesHandler.unregister()
+        MarkUnReachableNodesHandler.unregister()
+        MarkReachingNodesHandler.unregister()
+        MarkNotReachingNodesHandler.unregister()
+        MarkExits.unregister()
+        MarkClearHandler.unregister()
 
-        def run(self, arg):
-            pass
-
-        # End of IDA < 6.7 Code
-        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    def run(self, arg):
+        pass
 
 
 def PLUGIN_ENTRY():

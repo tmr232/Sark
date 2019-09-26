@@ -11,11 +11,11 @@ def apply_enum_by_name(enum, member_name):
         for operand in line.insn.operands:
             if operand.type.is_imm:
                 if operand.imm == member_value:
-                    idc.OpEnumEx(line.ea, operand.n, enum.eid, enum.members[member_name].serial)
+                    idaapi.op_enum(line.ea, operand.n, enum.eid, enum.members[member_name].serial)
 
             elif operand.type.is_displ or operand.type.is_phrase:
                 if operand.addr == member_value:
-                    idc.OpEnumEx(line.ea, operand.n, enum.eid, enum.members[member_name].serial)
+                    idaapi.op_enum(line.ea, operand.n, enum.eid, enum.members[member_name].serial)
 
 
 def get_common_value(desired=None):
@@ -46,16 +46,16 @@ def const_name(enum, value):
 
 
 def rename_immediate():
-    highlighted = idaapi.get_highlighted_identifier()
+    highlighted = sark.get_highlighted_identifier()
     try:
         desired = int(highlighted, 0)
     except (ValueError, TypeError):
         desired = None
-    value = idc.AskLong(get_common_value(desired), "Const Value")
+    value = idaapi.ask_long(get_common_value(desired), "Const Value")
     if value is None:
         return
 
-    name = idc.AskStr("", "Constant Name")
+    name = idaapi.ask_str("", 0, "Constant Name")
     if name is None:
         return
 
@@ -138,7 +138,7 @@ class AutoEnum(idaapi.plugin_t):
     def autoenum(self):
         common_value = get_common_value()
 
-        enum_name = idc.AskStr(self._last_enum, "Enum Name")
+        enum_name = idaapi.ask_str(self._last_enum, 0, "Enum Name")
         if enum_name is None:
             return
 
@@ -151,7 +151,7 @@ class AutoEnum(idaapi.plugin_t):
         if common_value >> ((8 * sark.core.get_native_size()) - 1):
             common_value = 0
 
-        const_value = idc.AskLong(common_value, "Const Value")
+        const_value = idaapi.ask_long(common_value, "Const Value")
         if const_value is None:
             return
 
@@ -162,7 +162,7 @@ class AutoEnum(idaapi.plugin_t):
 
         except sark.exceptions.EnumAlreadyExists:
             enum = sark.Enum(enum_name)
-            yes_no_cancel = idc.AskYN(idaapi.ASKBTN_NO,
+            yes_no_cancel = idaapi.ask_yn(idaapi.ASKBTN_NO,
                                       "Enum already exists. Modify?\n")
             if yes_no_cancel == idaapi.ASKBTN_CANCEL:
                 return

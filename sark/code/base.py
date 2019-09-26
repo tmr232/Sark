@@ -95,6 +95,11 @@ def get_selection(always=True):
     return Selection(start, end)
 
 
+def get_highlighted_identifier():
+    thing = idaapi.get_highlight(idaapi.get_current_viewer())
+    if thing and thing[1]:
+        return thing[0]
+
 def format_name(name):
     try:
         return "".join(char if char in NAME_VALID_CHARS else "_" for char in name)

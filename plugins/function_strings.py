@@ -27,7 +27,7 @@ def show_current_function_strings():
 
 
 def show_highlighted_function_strings():
-    identifier = idaapi.get_highlighted_identifier()
+    identifier = sark.get_highlighted_identifier()
     if not identifier:
         return
 
