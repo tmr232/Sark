@@ -151,7 +151,7 @@ if use_new_ui:
         def finish_populating_tform_popup(self, form, popup):
             # Or here, after the popup is done being populated by its owner.
 
-            if idaapi.get_tform_type(form) == idaapi.BWN_DISASM:
+            if idaapi.get_widget_type(form) == idaapi.BWN_DISASM:
                 idaapi.attach_action_to_popup(form, popup, MarkReachableNodesHandler.get_name(), "Mark/")
                 idaapi.attach_action_to_popup(form, popup, MarkUnReachableNodesHandler.get_name(), "Mark/")
                 idaapi.attach_action_to_popup(form, popup, MarkReachingNodesHandler.get_name(), "Mark/")

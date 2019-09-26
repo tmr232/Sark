@@ -45,7 +45,7 @@ def get_ea(func_ea):
 
 
 def add_func(func_ea,func_end=idaapi.BADADDR):
-    return idc.MakeFunction(func_ea,func_end)
+    return idaapi.add_func(func_ea,func_end)
 
 def is_string_printable(string_):
     """Check if a string is printable"""
@@ -120,7 +120,7 @@ def set_name(address, name, anyway=False):
         return
 
     if anyway:
-        success = idaapi.do_name_anyway(address, name)
+        success = idaapi.force_name(address, name)
         if success:
             return
 
@@ -143,7 +143,7 @@ def is_same_function(ea1, ea2):
 
 
 def get_name_or_address(ea):
-    name = idc.Name(ea)
+    name = idaapi.get_ea_name(ea, idaapi.GN_VISIBLE)
     if name:
         name = repr(name)
     else:

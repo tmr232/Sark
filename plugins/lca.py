@@ -72,7 +72,7 @@ def add_address_handler(lca_viewer):
         HOTKEY = "Shift+Space"
 
         def _activate(self, ctx):
-            ea = idaapi.asklong(0, "Add LCA Target")
+            ea = idaapi.ask_long(0, "Add LCA Target")
             if ea is None:
                 return
 
@@ -316,7 +316,7 @@ def idaview_add_target_handler(lca_plugin):
 def idaview_hooks(idaview_handler):
     class Hooks(idaapi.UI_Hooks):
         def finish_populating_tform_popup(self, form, popup):
-            if idaapi.get_tform_type(form) == idaapi.BWN_DISASM:
+            if idaapi.get_widget_type(form) == idaapi.BWN_DISASM:
                 idaapi.attach_action_to_popup(form, popup, idaview_handler.get_name(), "")
 
     return Hooks

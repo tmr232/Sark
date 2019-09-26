@@ -41,7 +41,7 @@ def capture_widget(widget, path=None):
 
 def get_widget(title):
     """Get the Qt widget of the IDA window with the given title."""
-    tform = idaapi.find_tform(title)
+    tform = idaapi.find_widget(title)
     if not tform:
         raise exceptions.FormNotFound("No form titled {!r} found.".format(title))
 
@@ -55,11 +55,11 @@ def resize_widget(widget, width, height):
 
 def get_window():
     """Get IDA's top level window."""
-    tform = idaapi.get_current_tform()
+    tform = idaapi.get_current_widget()
 
     # Required sometimes when closing IDBs and not IDA.
     if not tform:
-        tform = idaapi.find_tform("Output window")
+        tform = idaapi.find_widget("Output window")
 
     widget = form_to_widget(tform)
     window = widget.window()

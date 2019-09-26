@@ -87,15 +87,15 @@ def dword_to_bytes(dword):
 
 def read_memory(start, end):
     size = end - start
-    return idaapi.get_many_bytes(start, size)
+    return idaapi.get_bytes(start, size)
 
 
 def write_memory(start, data, destructive=False):
     if destructive:
-        idaapi.put_many_bytes(start, data)
+        idaapi.put_bytes(start, data)
 
     else:
-        idaapi.patch_many_bytes(start, data)
+        idaapi.patch_bytes(start, data)
 
 
 PatchedByte = namedtuple("PatchedByte", "ea fpos original patched")
@@ -132,11 +132,11 @@ def apply_patches(output_path=None):
 
 
 def undefine(start, end):
-    idc.MakeUnknown(start, end - start, idc.DOUNK_SIMPLE)
+    idaapi.del_items(start, end - start, idc.DOUNK_SIMPLE)
 
 
 def is_string(ea):
-    string_type = idc.GetStringType(idaapi.get_item_head(ea))
+    string_type = idc.get_str_type(idaapi.get_item_head(ea))
 
     if string_type in (None, -1):
         return False
@@ -150,12 +150,12 @@ def get_string(ea):
     This function uses IDA's string APIs and does not implement any special logic.
     """
     # We get the item-head because the `GetStringType` function only works on the head of an item.
-    string_type = idc.GetStringType(idaapi.get_item_head(ea))
+    string_type = idc.get_str_type(idaapi.get_item_head(ea))
 
     if string_type is None:
         raise exceptions.SarkNoString("No string at 0x{:08X}".format(ea))
 
-    string = idc.GetString(ea, strtype=string_type)
+    string = idc.get_strlit_contents(ea, strtype=string_type)
 
     if not string:
         raise exceptions.SarkNoString("No string at 0x{:08X}".format(ea))

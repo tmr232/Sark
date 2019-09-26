@@ -5,7 +5,6 @@ import idaapi
 import networkx as nx
 from collections import deque
 from sark import exceptions
-import idc
 
 MENU_PATH_GRAPHS = 'View/Graphs/'
 
@@ -104,7 +103,7 @@ class ShowXrefsGraphTo(sark.ui.ActionHandler):
     TEXT = "Show xref graph to..."
 
     def _activate(self, ctx):
-        distance = idaapi.asklong(4, 'Distance To Source')
+        distance = idaapi.ask_long(4, 'Distance To Source')
         show_xref_graph(ctx.cur_ea, to=True, distance=distance)
 
 
@@ -112,7 +111,7 @@ class ShowXrefsGraphFrom(sark.ui.ActionHandler):
     TEXT = "Show xref graph from..."
 
     def _activate(self, ctx):
-        distance = idaapi.asklong(4, 'Distance From Source')
+        distance = idaapi.ask_long(4, 'Distance From Source')
         show_xref_graph(ctx.cur_ea, to=False, distance=distance)
 
 
@@ -120,7 +119,7 @@ class Hooks(idaapi.UI_Hooks):
     def finish_populating_tform_popup(self, form, popup):
         # Or here, after the popup is done being populated by its owner.
 
-        if idaapi.get_tform_type(form) == idaapi.BWN_DISASM:
+        if idaapi.get_widget_type(form) == idaapi.BWN_DISASM:
             idaapi.attach_action_to_popup(form, popup, ShowXrefsGraphFrom.get_name(), '')
             idaapi.attach_action_to_popup(form, popup, ShowXrefsGraphTo.get_name(), '')
 
