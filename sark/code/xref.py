@@ -1,125 +1,72 @@
 import idaapi
+import idautils
 import idc
 from ..core import get_name_or_address
 
 
-class XrefType(object):
-    """Xref Type Wrapper.
+class XrefCreationError(Exception):
+    pass
 
-    Provides easy to use parsing of xref types.
-    All the properties are flag checks on the type value.
+
+class XrefTypes(object):
+    """Xref Types"""
+
+    class XrefType(object):
+        """Wrapper for an xref value"""
+
+        def __init__(self, value):
+            self._value = value
+
+        @property
+        def value(self):
+            return self._value
+
+        def __str__(self):
+            return self.__repr__()
+
+        def __repr__(self):
+            return idautils.XrefTypeName(self.value)
+
+        @property
+        def is_code(self):
+            return (self._value & 0x10) == 0x10
+
+        @property
+        def is_data(self):
+            return not self.is_code
+
+    UnknownData = XrefType(idaapi.dr_U)
+    OffsetData = XrefType(idaapi.dr_O)
+    WriteData = XrefType(idaapi.dr_W)
+    ReadData = XrefType(idaapi.dr_R)
+    TextData = XrefType(idaapi.dr_T)
+    InfoData = XrefType(idaapi.dr_I)
+    FarCall = XrefType(idaapi.fl_CF)
+    NearCall = XrefType(idaapi.fl_CN)
+    FarJump = XrefType(idaapi.fl_JF)
+    NearJump = XrefType(idaapi.fl_JN)
+    UserSpecifiedCode = XrefType(idaapi.fl_USobsolete)  # obsolete
+    OrdinaryFlow = XrefType(idaapi.fl_F)
+
+
+def add_xref(frm, to, xref_type):
     """
-    TYPES = {
-        0x00: 'Data_Unknown',
-        0x01: 'Data_Offset',
-        0x02: 'Data_Write',
-        0x03: 'Data_Read',
-        0x04: 'Data_Text',
-        0x05: 'Data_Informational',
-        0x10: 'Code_Far_Call',
-        0x11: 'Code_Near_Call',
-        0x12: 'Code_Far_Jump',
-        0x13: 'Code_Near_Jump',
-        0x14: 'Code_User',
-        0x15: 'Ordinary_Flow'
-    }
+    Add an xref
+    :param frm: source address
+    :param to: target address
+    :param xref_type: see sark.xref.XrefTypes
+    :return: whether the xref was added successfully
+    """
 
-    def __init__(self, type_):
-        self._type = type_
+    if xref_type.is_code:
+        result = idaapi.add_cref(frm, to, xref_type.value | idaapi.XREF_USER)
+    else:
+        result = idaapi.add_dref(frm, to, xref_type.value | idaapi.XREF_USER)
 
-    @property
-    def type(self):
-        """Xref type, flags excluded."""
-        return self._type & idaapi.XREF_MASK
+    if not result:
+        raise XrefCreationError("Failed creating xref, {} from {} to {}".format(frm, to, xref_type))
 
-    @property
-    def flags(self):
-        """Xref flags, type excluded."""
-        return self._type ^ self.type
-
-    @property
-    def name(self):
-        """Name of the xref type."""
-        return self.TYPES[self._type]
-
-    def __repr__(self):
-        return self.name
-
-    @property
-    def is_code(self):
-        return self._type & 0x10
-
-    @property
-    def is_data(self):
-        return not self.is_code
-
-    @property
-    def is_unknown(self):
-        return self.type == idaapi.fl_U
-
-    @property
-    def is_offset(self):
-        return self.type == idaapi.dr_O
-
-    @property
-    def is_write(self):
-        return self.type == idaapi.dr_W
-
-    @property
-    def is_read(self):
-        return self.type == idaapi.dr_R
-
-    @property
-    def is_text(self):
-        return self.type == idaapi.dr_T
-
-    @property
-    def is_info(self):
-        return self.type == idaapi.dr_I
-
-    @property
-    def is_far_call(self):
-        return self.type == idaapi.fl_CF
-
-    @property
-    def is_near_call(self):
-        return self.type == idaapi.fl_CN
-
-    @property
-    def is_far_jump(self):
-        return self.type == idaapi.fl_JF
-
-    @property
-    def is_near_jump(self):
-        return self.type == idaapi.fl_JN
-
-    @property
-    def is_unknown(self):
-        return self.type == idaapi.fl_U
-
-    @property
-    def is_flow(self):
-        return self.type == idaapi.fl_F
-
-    @property
-    def is_user(self):
-        return self.flags & idaapi.XREF_USER
-
-    @property
-    def is_tail(self):
-        return self.flags & idaapi.XREF_TAIL
-
-    @property
-    def is_base(self):
-        return self.flags & idaapi.XREF_BASE
-
-    @property
-    def is_call(self):
-        return self.is_far_call or self.is_near_call
-
-    @property
-    def is_jump(self):
-        return self.is_far_jump or self.is_near_jump
+    return Xref(frm, to, xref_type, True)
 
 
 class Xref(object):
@@ -130,21 +77,48 @@ class Xref(object):
     attribute.
     """
 
-    def __init__(self, xref):
-        for attr in ['frm', 'to', 'iscode', 'user']:
-            setattr(self, attr, getattr(xref, attr))
-
-        self._type = XrefType(xref.type)
+    def __init__(self, frm, to, xref_type, is_user_xref):
+        self._frm = frm
+        self._to = to
+        self._type = xref_type
+        self._user = is_user_xref
 
     @property
     def type(self):
         return self._type
 
+    @property
+    def frm(self):
+        return self.frm
+
+    @property
+    def to(self):
+        return self._to
+
+    @property
+    def is_user_xref(self):
+        return self._user
+
+    def __str__(self):
+        return self.__repr__()
+
     def __repr__(self):
-        return "<Xref(frm={frm}, to={to}, iscode={iscode}, user={user}, type={type})>".format(
-            frm=get_name_or_address(self.frm),
-            to=get_name_or_address(self.to),
-            iscode=self.iscode,
-            user=self.user,
+        return "<Xref(frm={frm}, to={to}, type={type}, user_xref={user})>".format(
+            frm=get_name_or_address(self._frm),
+            to=get_name_or_address(self._to),
+            user=self._user,
             type=repr(self.type),
         )
+
+
+def remove_xref(frm, to, xref_type):
+    """
+    Removes an xref
+    :param frm: source address of xref
+    :param to: target address of xref
+    :param xref_type: type of xref between addresses
+    """
+    if xref_type.is_code:
+        idaapi.del_cref(frm, to, 0)
+    else:
+        idaapi.del_dref(frm, to)

@@ -11,5 +11,6 @@ The following people have contributed directly or indirectly to this project:
 - `darx0r <https://github.com/darx0r>`_
 - `ynvb <https://github.com/ynvb>`_
 - `OfficialMan <https://github.com/OfficialMan>`_
+- `oded-el <https://github.com/oded-el>`_
 
 Please add yourself here alphabetically when you submit your first pull request.
