@@ -38,7 +38,7 @@ class Switch(object):
         return reverse_map
 
     def _calc_cases(self):
-        si = idaapi.get_switch_info_ex(self._ea)
+        si = idaapi.get_switch_info(self._ea)
         results = idaapi.calc_switch_cases(self._ea, si)
         if not results:
             raise exceptions.SarkNotASwitch("Seems like 0x{:08X} is not a switch jump instruction.".format(self._ea))

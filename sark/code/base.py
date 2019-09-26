@@ -81,8 +81,8 @@ Selection = collections.namedtuple("Selection", "start end")
 
 
 def get_selection(always=True):
-    start = idc.SelStart()
-    end = idc.SelEnd()
+    start = idc.read_selection_start()
+    end = idc.read_selection_end()
 
     if idaapi.BADADDR in (start, end):
         if not always:
@@ -102,11 +102,7 @@ def format_name(name):
         return ""
 
 def demangle(name, disable_mask=0):
-    try:
-        demangled_name = idaapi.demangle_name2(name, disable_mask)
-    except AttributeError:
-        # Backwards compatibility with IDA 6.6
-        demangled_name = idaapi.demangle_name(name, disable_mask)
+    demangled_name = idaapi.demangle_name(name, disable_mask, idaapi.DQT_FULL)
     if demangled_name:
         return demangled_name
     return name

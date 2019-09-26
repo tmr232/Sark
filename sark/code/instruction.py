@@ -290,7 +290,7 @@ class Operand(object):
 
     @property
     def text(self):
-        return idc.GetOpnd(self._ea, self.n)
+        return idc.print_operand(self._ea, self.n)
 
     def __str__(self):
         return self.text

@@ -25,20 +25,20 @@ class Comments(object):
     @property
     def regular(self):
         """Regular Comment"""
-        return idc.get_cmt(self._ea, 0)
+        return idaapi.get_cmt(self._ea, 0)
 
     @regular.setter
     def regular(self, comment):
-        idc.MakeComm(self._ea, comment)
+        idaapi.set_cmt(self._ea, comment, 0)
 
     @property
     def repeat(self):
         """Repeatable Comment"""
-        return idc.get_cmt(self._ea, 1)
+        return idaapi.get_cmt(self._ea, 1)
 
     @repeat.setter
     def repeat(self, comment):
-        idc.MakeRptCmt(self._ea, comment)
+        idaapi.set_cmt(self._ea, comment, 1)
 
     def _iter_extra_comments(self, start):
         end = idaapi.get_first_free_extra_cmtidx(self._ea, start)
@@ -58,15 +58,15 @@ class Comments(object):
     @updates_ui
     def anterior(self, comment):
         if not comment:
-            idc.DelExtLnA(self._ea, 0)
+            idaapi.del_extra_cmt(self._ea, idaapi.E_PREV)
             return
 
         index = 0
 
         for index, line in enumerate(comment.splitlines()):
-            idc.ExtLinA(self._ea, index, line)
+            idaapi.update_extra_cmt(self._ea, idaapi.E_PREV + index, line)
 
-        idc.DelExtLnA(self._ea, index + 1)
+        idaapi.del_extra_cmt(self._ea, idaapi.E_PREV + (index + 1))
 
     def _iter_posterior(self):
         return self._iter_extra_comments(idaapi.E_NEXT)
@@ -80,15 +80,15 @@ class Comments(object):
     @updates_ui
     def posterior(self, comment):
         if not comment:
-            idc.DelExtLnB(self._ea, 0)
+            idaapi.del_extra_cmt(self._ea, idaapi.E_NEXT)
             return
 
         index = 0
 
         for index, line in enumerate(comment.splitlines()):
-            idc.ExtLinB(self._ea, index, line)
+            idaapi.update_extra_cmt(self._ea, idaapi.E_NEXT + index, line)
 
-        idc.DelExtLnB(self._ea, index + 1)
+        idaapi.del_extra_cmt(self._ea, idaapi.E_NEXT + (index + 1))
 
     def __repr__(self):
         return ("Comments("
@@ -147,22 +147,22 @@ class Line(object):
     @property
     def is_code(self):
         """Is the line code."""
-        return idaapi.isCode(self.flags)
+        return idaapi.is_code(self.flags)
 
     @property
     def is_data(self):
         """Is the line data."""
-        return idaapi.isData(self.flags)
+        return idaapi.is_data(self.flags)
 
     @property
     def is_unknown(self):
         """Is the line unknown."""
-        return idaapi.isUnknown(self.flags)
+        return idaapi.is_unknown(self.flags)
 
     @property
     def is_tail(self):
         """Is the line a tail."""
-        return idaapi.isTail(self.flags)
+        return idaapi.is_tail(self.flags)
 
     @property
     def is_string(self):
@@ -258,7 +258,7 @@ class Line(object):
 
     @name.setter
     def name(self, value):
-        idc.MakeName(self.ea, value)
+        idc.set_name(self.ea, value)
 
     @property
     def demangled(self):
@@ -312,7 +312,7 @@ class Line(object):
 
     @property
     def bytes(self):
-        return idaapi.get_many_bytes(self.ea, self.size)
+        return idaapi.get_bytes(self.ea, self.size)
 
     def __eq__(self, other):
         if not isinstance(other, Line):

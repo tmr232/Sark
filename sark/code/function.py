@@ -379,7 +379,7 @@ class Function(FunctionFlagsMixin):
 
     @tinfo.setter
     def tinfo(self, tinfo):
-        success = idc.ApplyType(self.start_ea, tinfo)
+        success = idc.apply_type(self.start_ea, tinfo)
         if not success:
             raise exceptions.SetTypeFailed(self.start_ea, tinfo)
 
