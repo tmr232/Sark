@@ -22,11 +22,7 @@ Dependencies
 Installation
 ------------
 
-.. code:: bash
-
-    pip install sark
-
-Or for latest version:
+For latest version:
 
 .. code:: bash
 
