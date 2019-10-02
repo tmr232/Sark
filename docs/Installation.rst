@@ -4,13 +4,7 @@ Installation
 For Sark Users
 ~~~~~~~~~~~~~~
 
-Sark is now available on PyPI
-
-.. code:: bash
-
-    pip install sark
-
-But if you want to get the bleeding edge version, use:
+To get the bleeding edge version, use:
 
 .. code:: bash
 
