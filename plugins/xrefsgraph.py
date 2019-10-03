@@ -116,7 +116,7 @@ class ShowXrefsGraphFrom(sark.ui.ActionHandler):
 
 
 class Hooks(idaapi.UI_Hooks):
-    def finish_populating_tform_popup(self, form, popup):
+    def finish_populating_widget_popup(self, form, popup):
         # Or here, after the popup is done being populated by its owner.
 
         if idaapi.get_widget_type(form) == idaapi.BWN_DISASM:

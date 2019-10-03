@@ -376,12 +376,12 @@ class ActionHandler(idaapi.action_handler_t):
         Return values for update (from the SDK):
             AST_ENABLE_ALWAYS     // enable action and do not call action_handler_t::update() anymore
             AST_ENABLE_FOR_IDB    // enable action for the current idb. Call action_handler_t::update() when a database is opened/closed
-            AST_ENABLE_FOR_FORM   // enable action for the current form. Call action_handler_t::update() when a form gets/loses focus
+            AST_ENABLE_FOR_WIDGET // enable action for the current widget. Call action_handler_t::update() when a form gets/loses focus
             AST_ENABLE            // enable action - call action_handler_t::update() when anything changes
 
             AST_DISABLE_ALWAYS    // disable action and do not call action_handler_t::action() anymore
             AST_DISABLE_FOR_IDB   // analog of ::AST_ENABLE_FOR_IDB
-            AST_DISABLE_FOR_FORM  // analog of ::AST_ENABLE_FOR_FORM
+            AST_DISABLE_FOR_WIDGET// analog of ::AST_ENABLE_FOR_WIDGET
             AST_DISABLE           // analog of ::AST_ENABLE
     """
     NAME = None

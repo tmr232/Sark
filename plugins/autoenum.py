@@ -80,8 +80,8 @@ class RenameImmediateHandler(idaapi.action_handler_t):
 
     def update(self, ctx):
         if ctx.form_type == idaapi.BWN_DISASM:
-            return idaapi.AST_ENABLE_FOR_FORM
-        return idaapi.AST_DISABLE_FOR_FORM
+            return idaapi.AST_ENABLE_FOR_WIDGET
+        return idaapi.AST_DISABLE_FOR_WIDGET
 
 
 class AutoEnumHandler(idaapi.action_handler_t):
@@ -96,8 +96,8 @@ class AutoEnumHandler(idaapi.action_handler_t):
 
     def update(self, ctx):
         if ctx.form_type == idaapi.BWN_DISASM:
-            return idaapi.AST_ENABLE_FOR_FORM
-        return idaapi.AST_DISABLE_FOR_FORM
+            return idaapi.AST_ENABLE_FOR_WIDGET
+        return idaapi.AST_DISABLE_FOR_WIDGET
 
 
 class AutoEnum(idaapi.plugin_t):

@@ -44,7 +44,7 @@ class ToggleHandler(idaapi.action_handler_t):
     def on_disable(self, ctx):
         raise NotImplementedError()
 
-    def activate(self, ctx=idaapi.action_activation_ctx_t()):
+    def activate(self, ctx):
         if self._state:
             self.on_disable(ctx)
         else:

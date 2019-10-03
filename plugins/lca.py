@@ -315,7 +315,7 @@ def idaview_add_target_handler(lca_plugin):
 
 def idaview_hooks(idaview_handler):
     class Hooks(idaapi.UI_Hooks):
-        def finish_populating_tform_popup(self, form, popup):
+        def finish_populating_widget_popup(self, form, popup):
             if idaapi.get_widget_type(form) == idaapi.BWN_DISASM:
                 idaapi.attach_action_to_popup(form, popup, idaview_handler.get_name(), "")
 
