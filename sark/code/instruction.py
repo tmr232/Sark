@@ -230,8 +230,8 @@ class Operand(object):
         return self._operand.flags
 
     @property
-    def dtyp(self):
-        return self._operand.dtyp
+    def dtype(self):
+        return self._operand.dtype
 
     @property
     def imm(self):
@@ -249,7 +249,7 @@ class Operand(object):
     @property
     def size(self):
         """Size of the operand."""
-        return base.dtyp_to_size(self._operand.dtyp)
+        return base.dtype_to_size(self._operand.dtype)
 
     @property
     def is_read(self):
@@ -356,7 +356,7 @@ class Instruction(object):
 
     def _make_operands(self):
         operands = []
-        for index, operand in enumerate(self._insn.Operands):
+        for index, operand in enumerate(self._insn.ops):
             if operand.type == idaapi.o_void:
                 break  # No more operands.
             operands.append(Operand(operand,
@@ -406,17 +406,17 @@ class Instruction(object):
     @property
     def is_call(self):
         """Is the instruction a call instruction."""
-        return idaapi.is_call_insn(self._ea)
+        return idaapi.is_call_insn(self._insn)
 
     @property
     def is_ret(self):
         """Is the instruction a return instruction."""
-        return idaapi.is_ret_insn(self._ea)
+        return idaapi.is_ret_insn(self._insn)
 
     @property
     def is_indirect_jump(self):
         """Is the instruction an indirect jump instruction."""
-        return idaapi.is_indirect_jump_insn(self._ea)
+        return idaapi.is_indirect_jump_insn(self._insn)
 
     @property
     def insn_t(self):

@@ -10,7 +10,7 @@ from .. import exceptions
 
 NAME_VALID_CHARS = string.ascii_letters + string.digits + "?_:"
 
-DTYP_TO_SIZE = {
+DTYPE_TO_SIZE = {
     idaapi.dt_byte: 1,
     idaapi.dt_word: 2,
     idaapi.dt_dword: 4,
@@ -24,8 +24,8 @@ DTYP_TO_SIZE = {
 }
 
 
-def dtyp_to_size(dtyp):
-    return DTYP_TO_SIZE[dtyp]
+def dtype_to_size(dtyp):
+    return DTYPE_TO_SIZE[dtyp]
 
 
 def is_ea_call(ea):

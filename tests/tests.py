@@ -30,6 +30,10 @@ class SimpleTest(unittest.TestCase):
         data = run_dumper('codeblock_dumper.py', 'simple.out.i64')
         verify(data, self.reporter)
 
+    def test_instructions(self):
+        data = run_dumper('instruction_dumper.py', 'simple.out.i64')
+        verify(data, self.reporter)
+
     def test_modify_block_color(self):
         data = run_dumper('block_color_modifier.py', 'simple.out.i64')
         verify(data, self.reporter)

@@ -1,0 +1,2002 @@
+**********************************************************************
+[004004F0]    push    rbp; This is a regular comment
+<sark.code.instruction.Instruction object at 0x0000027C32B2C588>
+    feature = 65792
+    is_call = False
+    is_indirect_jump = False
+    is_ret = False
+    mnem = push
+    operands = [<Operand(n=0, text='rbp')>]
+    regs = set(['rbp'])
+
+----------------------------------------------------------------------
+rbp
+    addr = 0
+    base = rbp
+    displacement = 0
+    dtype = 7
+    flags = 8
+    has_displacement = False
+    imm = 0
+    index = None
+    is_read = True
+    is_write = False
+    n = 0
+    offset = 0
+    reg = rbp
+    reg_id = 5
+    regs = set(['rbp'])
+    scale = None
+    size = 8
+    text = rbp
+    type = General_Register
+    value = 0
+**********************************************************************
+[004004F1]    mov     rbp, rsp; This is a repeatable comment
+<sark.code.instruction.Instruction object at 0x0000027C32B2C518>
+    feature = 66052
+    is_call = False
+    is_indirect_jump = False
+    is_ret = False
+    mnem = mov
+    operands = [<Operand(n=0, text='rbp')>, <Operand(n=1, text='rsp')>]
+    regs = set(['rsp', 'rbp'])
+
+----------------------------------------------------------------------
+rbp
+    addr = 0
+    base = rbp
+    displacement = 0
+    dtype = 7
+    flags = 8
+    has_displacement = False
+    imm = 0
+    index = None
+    is_read = False
+    is_write = True
+    n = 0
+    offset = 0
+    reg = rbp
+    reg_id = 5
+    regs = set(['rbp'])
+    scale = None
+    size = 8
+    text = rbp
+    type = General_Register
+    value = 0
+----------------------------------------------------------------------
+rsp
+    addr = 0
+    base = rsp
+    displacement = 0
+    dtype = 7
+    flags = 8
+    has_displacement = False
+    imm = 0
+    index = None
+    is_read = True
+    is_write = False
+    n = 1
+    offset = 0
+    reg = rsp
+    reg_id = 4
+    regs = set(['rsp'])
+    scale = None
+    size = 8
+    text = rsp
+    type = General_Register
+    value = 0
+**********************************************************************
+[004004F4]    sub     rsp, 10h
+<sark.code.instruction.Instruction object at 0x0000027C32B2C710>
+    feature = 66308
+    is_call = False
+    is_indirect_jump = False
+    is_ret = False
+    mnem = sub
+    operands = [<Operand(n=0, text='rsp')>, <Operand(n=1, text='10h')>]
+    regs = set(['rsp'])
+
+----------------------------------------------------------------------
+rsp
+    addr = 0
+    base = rsp
+    displacement = 0
+    dtype = 7
+    flags = 8
+    has_displacement = False
+    imm = 0
+    index = None
+    is_read = True
+    is_write = True
+    n = 0
+    offset = 0
+    reg = rsp
+    reg_id = 4
+    regs = set(['rsp'])
+    scale = None
+    size = 8
+    text = rsp
+    type = General_Register
+    value = 0
+----------------------------------------------------------------------
+10h
+    addr = 0
+    base = # Exception: SarkOperandWithoutReg('Operand does not have a register.',)
+    displacement = 0
+    dtype = 7
+    flags = 8
+    has_displacement = False
+    imm = 16
+    index = None
+    is_read = True
+    is_write = False
+    n = 1
+    offset = 0
+    reg = # Exception: SarkOperandWithoutReg('Operand does not have a register.',)
+    reg_id = 0
+    regs = set([])
+    scale = None
+    size = 8
+    text = 10h
+    type = Immediate_Value
+    value = 16
+**********************************************************************
+[004004F8]    mov     [rbp+var_4], 0
+<sark.code.instruction.Instruction object at 0x0000027C32B2C588>
+    feature = 66052
+    is_call = False
+    is_indirect_jump = False
+    is_ret = False
+    mnem = mov
+    operands = [<Operand(n=0, text='[rbp+var_4]')>, <Operand(n=1, text='0')>]
+    regs = set(['rbp'])
+
+----------------------------------------------------------------------
+[rbp+var_4]
+    addr = 18446744073709551612
+    base = rbp
+    displacement = 18446744073709551612
+    dtype = 2
+    flags = 8
+    has_displacement = True
+    imm = 0
+    index = None
+    is_read = False
+    is_write = True
+    n = 0
+    offset = 18446744073709551612
+    reg = rbp
+    reg_id = 5
+    regs = set(['rbp'])
+    scale = 1
+    size = 4
+    text = [rbp+var_4]
+    type = Memory_Displacement
+    value = 0
+----------------------------------------------------------------------
+0
+    addr = 0
+    base = # Exception: SarkOperandWithoutReg('Operand does not have a register.',)
+    displacement = 0
+    dtype = 2
+    flags = 8
+    has_displacement = False
+    imm = 0
+    index = None
+    is_read = True
+    is_write = False
+    n = 1
+    offset = 0
+    reg = # Exception: SarkOperandWithoutReg('Operand does not have a register.',)
+    reg_id = 0
+    regs = set([])
+    scale = None
+    size = 4
+    text = 0
+    type = Immediate_Value
+    value = 0
+**********************************************************************
+[004004FF]    mov     rdi, offset s; "Hello, World!"
+<sark.code.instruction.Instruction object at 0x0000027C32B2C518>
+    feature = 66052
+    is_call = False
+    is_indirect_jump = False
+    is_ret = False
+    mnem = mov
+    operands = [<Operand(n=0, text='rdi')>, <Operand(n=1, text='offset s')>]
+    regs = set(['rdi'])
+
+----------------------------------------------------------------------
+rdi
+    addr = 0
+    base = rdi
+    displacement = 0
+    dtype = 7
+    flags = 8
+    has_displacement = False
+    imm = 0
+    index = None
+    is_read = False
+    is_write = True
+    n = 0
+    offset = 0
+    reg = rdi
+    reg_id = 7
+    regs = set(['rdi'])
+    scale = None
+    size = 8
+    text = rdi
+    type = General_Register
+    value = 0
+----------------------------------------------------------------------
+offset s
+    addr = 0
+    base = # Exception: SarkOperandWithoutReg('Operand does not have a register.',)
+    displacement = 0
+    dtype = 7
+    flags = 8
+    has_displacement = False
+    imm = 4195748
+    index = None
+    is_read = True
+    is_write = False
+    n = 1
+    offset = 0
+    reg = # Exception: SarkOperandWithoutReg('Operand does not have a register.',)
+    reg_id = 0
+    regs = set([])
+    scale = None
+    size = 8
+    text = offset s
+    type = Immediate_Value
+    value = 4195748
+**********************************************************************
+[00400509]    call    _puts
+<sark.code.instruction.Instruction object at 0x0000027C32B2C710>
+    feature = 65794
+    is_call = True
+    is_indirect_jump = False
+    is_ret = False
+    mnem = call
+    operands = [<Operand(n=0, text='_puts')>]
+    regs = set([])
+
+----------------------------------------------------------------------
+_puts
+    addr = 4195312
+    base = # Exception: SarkOperandWithoutReg('Operand does not have a register.',)
+    displacement = 4195312
+    dtype = 2
+    flags = 8
+    has_displacement = False
+    imm = 0
+    index = None
+    is_read = True
+    is_write = False
+    n = 0
+    offset = 4195312
+    reg = # Exception: SarkOperandWithoutReg('Operand does not have a register.',)
+    reg_id = 0
+    regs = set([])
+    scale = None
+    size = 4
+    text = _puts
+    type = Immediate_Near_Address
+    value = 0
+**********************************************************************
+[0040050E]    xor     ecx, ecx
+<sark.code.instruction.Instruction object at 0x0000027C32B2C588>
+    feature = 66308
+    is_call = False
+    is_indirect_jump = False
+    is_ret = False
+    mnem = xor
+    operands = [<Operand(n=0, text='ecx')>, <Operand(n=1, text='ecx')>]
+    regs = set(['ecx'])
+
+----------------------------------------------------------------------
+ecx
+    addr = 0
+    base = ecx
+    displacement = 0
+    dtype = 2
+    flags = 8
+    has_displacement = False
+    imm = 0
+    index = None
+    is_read = True
+    is_write = True
+    n = 0
+    offset = 0
+    reg = ecx
+    reg_id = 1
+    regs = set(['ecx'])
+    scale = None
+    size = 4
+    text = ecx
+    type = General_Register
+    value = 0
+----------------------------------------------------------------------
+ecx
+    addr = 0
+    base = ecx
+    displacement = 0
+    dtype = 2
+    flags = 8
+    has_displacement = False
+    imm = 0
+    index = None
+    is_read = True
+    is_write = False
+    n = 1
+    offset = 0
+    reg = ecx
+    reg_id = 1
+    regs = set(['ecx'])
+    scale = None
+    size = 4
+    text = ecx
+    type = General_Register
+    value = 0
+**********************************************************************
+[00400510]    mov     [rbp+var_8], eax
+<sark.code.instruction.Instruction object at 0x0000027C32B2C518>
+    feature = 66052
+    is_call = False
+    is_indirect_jump = False
+    is_ret = False
+    mnem = mov
+    operands = [<Operand(n=0, text='[rbp+var_8]')>, <Operand(n=1, text='eax')>]
+    regs = set(['eax', 'rbp'])
+
+----------------------------------------------------------------------
+[rbp+var_8]
+    addr = 18446744073709551608
+    base = rbp
+    displacement = 18446744073709551608
+    dtype = 2
+    flags = 8
+    has_displacement = True
+    imm = 0
+    index = None
+    is_read = False
+    is_write = True
+    n = 0
+    offset = 18446744073709551608
+    reg = rbp
+    reg_id = 5
+    regs = set(['rbp'])
+    scale = 1
+    size = 4
+    text = [rbp+var_8]
+    type = Memory_Displacement
+    value = 0
+----------------------------------------------------------------------
+eax
+    addr = 0
+    base = eax
+    displacement = 0
+    dtype = 2
+    flags = 8
+    has_displacement = False
+    imm = 0
+    index = None
+    is_read = True
+    is_write = False
+    n = 1
+    offset = 0
+    reg = eax
+    reg_id = 0
+    regs = set(['eax'])
+    scale = None
+    size = 4
+    text = eax
+    type = General_Register
+    value = 0
+**********************************************************************
+[00400513]    mov     eax, ecx
+<sark.code.instruction.Instruction object at 0x0000027C32B2C710>
+    feature = 66052
+    is_call = False
+    is_indirect_jump = False
+    is_ret = False
+    mnem = mov
+    operands = [<Operand(n=0, text='eax')>, <Operand(n=1, text='ecx')>]
+    regs = set(['eax', 'ecx'])
+
+----------------------------------------------------------------------
+eax
+    addr = 0
+    base = eax
+    displacement = 0
+    dtype = 2
+    flags = 8
+    has_displacement = False
+    imm = 0
+    index = None
+    is_read = False
+    is_write = True
+    n = 0
+    offset = 0
+    reg = eax
+    reg_id = 0
+    regs = set(['eax'])
+    scale = None
+    size = 4
+    text = eax
+    type = General_Register
+    value = 0
+----------------------------------------------------------------------
+ecx
+    addr = 0
+    base = ecx
+    displacement = 0
+    dtype = 2
+    flags = 8
+    has_displacement = False
+    imm = 0
+    index = None
+    is_read = True
+    is_write = False
+    n = 1
+    offset = 0
+    reg = ecx
+    reg_id = 1
+    regs = set(['ecx'])
+    scale = None
+    size = 4
+    text = ecx
+    type = General_Register
+    value = 0
+**********************************************************************
+[00400515]    add     rsp, 10h
+<sark.code.instruction.Instruction object at 0x0000027C32B2C588>
+    feature = 66308
+    is_call = False
+    is_indirect_jump = False
+    is_ret = False
+    mnem = add
+    operands = [<Operand(n=0, text='rsp')>, <Operand(n=1, text='10h')>]
+    regs = set(['rsp'])
+
+----------------------------------------------------------------------
+rsp
+    addr = 0
+    base = rsp
+    displacement = 0
+    dtype = 7
+    flags = 8
+    has_displacement = False
+    imm = 0
+    index = None
+    is_read = True
+    is_write = True
+    n = 0
+    offset = 0
+    reg = rsp
+    reg_id = 4
+    regs = set(['rsp'])
+    scale = None
+    size = 8
+    text = rsp
+    type = General_Register
+    value = 0
+----------------------------------------------------------------------
+10h
+    addr = 0
+    base = # Exception: SarkOperandWithoutReg('Operand does not have a register.',)
+    displacement = 0
+    dtype = 7
+    flags = 8
+    has_displacement = False
+    imm = 16
+    index = None
+    is_read = True
+    is_write = False
+    n = 1
+    offset = 0
+    reg = # Exception: SarkOperandWithoutReg('Operand does not have a register.',)
+    reg_id = 0
+    regs = set([])
+    scale = None
+    size = 8
+    text = 10h
+    type = Immediate_Value
+    value = 16
+**********************************************************************
+[00400519]    pop     rbp
+<sark.code.instruction.Instruction object at 0x0000027C32B2C518>
+    feature = 65540
+    is_call = False
+    is_indirect_jump = False
+    is_ret = False
+    mnem = pop
+    operands = [<Operand(n=0, text='rbp')>]
+    regs = set(['rbp'])
+
+----------------------------------------------------------------------
+rbp
+    addr = 0
+    base = rbp
+    displacement = 0
+    dtype = 7
+    flags = 8
+    has_displacement = False
+    imm = 0
+    index = None
+    is_read = False
+    is_write = True
+    n = 0
+    offset = 0
+    reg = rbp
+    reg_id = 5
+    regs = set(['rbp'])
+    scale = None
+    size = 8
+    text = rbp
+    type = General_Register
+    value = 0
+**********************************************************************
+[0040051A]    retn
+<sark.code.instruction.Instruction object at 0x0000027C32B2C710>
+    feature = 65537
+    is_call = False
+    is_indirect_jump = False
+    is_ret = True
+    mnem = retn
+    operands = []
+    regs = set([])
+
+**********************************************************************
+[00400520]    push    r15
+<sark.code.instruction.Instruction object at 0x0000027C32B2C588>
+    feature = 65792
+    is_call = False
+    is_indirect_jump = False
+    is_ret = False
+    mnem = push
+    operands = [<Operand(n=0, text='r15')>]
+    regs = set(['r15'])
+
+----------------------------------------------------------------------
+r15
+    addr = 0
+    base = r15
+    displacement = 0
+    dtype = 7
+    flags = 8
+    has_displacement = False
+    imm = 0
+    index = None
+    is_read = True
+    is_write = False
+    n = 0
+    offset = 0
+    reg = r15
+    reg_id = 15
+    regs = set(['r15'])
+    scale = None
+    size = 8
+    text = r15
+    type = General_Register
+    value = 0
+**********************************************************************
+[00400522]    push    r14
+<sark.code.instruction.Instruction object at 0x0000027C32B2CA20>
+    feature = 65792
+    is_call = False
+    is_indirect_jump = False
+    is_ret = False
+    mnem = push
+    operands = [<Operand(n=0, text='r14')>]
+    regs = set(['r14'])
+
+----------------------------------------------------------------------
+r14
+    addr = 0
+    base = r14
+    displacement = 0
+    dtype = 7
+    flags = 8
+    has_displacement = False
+    imm = 0
+    index = None
+    is_read = True
+    is_write = False
+    n = 0
+    offset = 0
+    reg = r14
+    reg_id = 14
+    regs = set(['r14'])
+    scale = None
+    size = 8
+    text = r14
+    type = General_Register
+    value = 0
+**********************************************************************
+[00400524]    mov     r15, rdx
+<sark.code.instruction.Instruction object at 0x0000027C32B2C710>
+    feature = 66052
+    is_call = False
+    is_indirect_jump = False
+    is_ret = False
+    mnem = mov
+    operands = [<Operand(n=0, text='r15')>, <Operand(n=1, text='rdx')>]
+    regs = set(['r15', 'rdx'])
+
+----------------------------------------------------------------------
+r15
+    addr = 0
+    base = r15
+    displacement = 0
+    dtype = 7
+    flags = 8
+    has_displacement = False
+    imm = 0
+    index = None
+    is_read = False
+    is_write = True
+    n = 0
+    offset = 0
+    reg = r15
+    reg_id = 15
+    regs = set(['r15'])
+    scale = None
+    size = 8
+    text = r15
+    type = General_Register
+    value = 0
+----------------------------------------------------------------------
+rdx
+    addr = 0
+    base = rdx
+    displacement = 0
+    dtype = 7
+    flags = 8
+    has_displacement = False
+    imm = 0
+    index = None
+    is_read = True
+    is_write = False
+    n = 1
+    offset = 0
+    reg = rdx
+    reg_id = 2
+    regs = set(['rdx'])
+    scale = None
+    size = 8
+    text = rdx
+    type = General_Register
+    value = 0
+**********************************************************************
+[00400527]    push    r13
+<sark.code.instruction.Instruction object at 0x0000027C32B2C588>
+    feature = 65792
+    is_call = False
+    is_indirect_jump = False
+    is_ret = False
+    mnem = push
+    operands = [<Operand(n=0, text='r13')>]
+    regs = set(['r13'])
+
+----------------------------------------------------------------------
+r13
+    addr = 0
+    base = r13
+    displacement = 0
+    dtype = 7
+    flags = 8
+    has_displacement = False
+    imm = 0
+    index = None
+    is_read = True
+    is_write = False
+    n = 0
+    offset = 0
+    reg = r13
+    reg_id = 13
+    regs = set(['r13'])
+    scale = None
+    size = 8
+    text = r13
+    type = General_Register
+    value = 0
+**********************************************************************
+[00400529]    push    r12
+<sark.code.instruction.Instruction object at 0x0000027C32B2CA20>
+    feature = 65792
+    is_call = False
+    is_indirect_jump = False
+    is_ret = False
+    mnem = push
+    operands = [<Operand(n=0, text='r12')>]
+    regs = set(['r12'])
+
+----------------------------------------------------------------------
+r12
+    addr = 0
+    base = r12
+    displacement = 0
+    dtype = 7
+    flags = 8
+    has_displacement = False
+    imm = 0
+    index = None
+    is_read = True
+    is_write = False
+    n = 0
+    offset = 0
+    reg = r12
+    reg_id = 12
+    regs = set(['r12'])
+    scale = None
+    size = 8
+    text = r12
+    type = General_Register
+    value = 0
+**********************************************************************
+[0040052B]    lea     r12, __frame_dummy_init_array_entry
+<sark.code.instruction.Instruction object at 0x0000027C32B2C710>
+    feature = 66052
+    is_call = False
+    is_indirect_jump = False
+    is_ret = False
+    mnem = lea
+    operands = [<Operand(n=0, text='r12')>, <Operand(n=1, text='__frame_dummy_init_array_entry')>]
+    regs = set(['r12'])
+
+----------------------------------------------------------------------
+r12
+    addr = 0
+    base = r12
+    displacement = 0
+    dtype = 7
+    flags = 8
+    has_displacement = False
+    imm = 0
+    index = None
+    is_read = False
+    is_write = True
+    n = 0
+    offset = 0
+    reg = r12
+    reg_id = 12
+    regs = set(['r12'])
+    scale = None
+    size = 8
+    text = r12
+    type = General_Register
+    value = 0
+----------------------------------------------------------------------
+__frame_dummy_init_array_entry
+    addr = 6295056
+    base = # Exception: SarkOperandWithoutReg('Operand does not have a register.',)
+    displacement = 6295056
+    dtype = 7
+    flags = 8
+    has_displacement = False
+    imm = 0
+    index = None
+    is_read = True
+    is_write = False
+    n = 1
+    offset = 6295056
+    reg = # Exception: SarkOperandWithoutReg('Operand does not have a register.',)
+    reg_id = 5
+    regs = set([])
+    scale = None
+    size = 8
+    text = __frame_dummy_init_array_entry
+    type = Direct_Memory_Reference
+    value = 0
+**********************************************************************
+[00400532]    push    rbp
+<sark.code.instruction.Instruction object at 0x0000027C32B2C588>
+    feature = 65792
+    is_call = False
+    is_indirect_jump = False
+    is_ret = False
+    mnem = push
+    operands = [<Operand(n=0, text='rbp')>]
+    regs = set(['rbp'])
+
+----------------------------------------------------------------------
+rbp
+    addr = 0
+    base = rbp
+    displacement = 0
+    dtype = 7
+    flags = 8
+    has_displacement = False
+    imm = 0
+    index = None
+    is_read = True
+    is_write = False
+    n = 0
+    offset = 0
+    reg = rbp
+    reg_id = 5
+    regs = set(['rbp'])
+    scale = None
+    size = 8
+    text = rbp
+    type = General_Register
+    value = 0
+**********************************************************************
+[00400533]    lea     rbp, __do_global_dtors_aux_fini_array_entry
+<sark.code.instruction.Instruction object at 0x0000027C32B2CA20>
+    feature = 66052
+    is_call = False
+    is_indirect_jump = False
+    is_ret = False
+    mnem = lea
+    operands = [<Operand(n=0, text='rbp')>, <Operand(n=1, text='__do_global_dtors_aux_fini_array_entry')>]
+    regs = set(['rbp'])
+
+----------------------------------------------------------------------
+rbp
+    addr = 0
+    base = rbp
+    displacement = 0
+    dtype = 7
+    flags = 8
+    has_displacement = False
+    imm = 0
+    index = None
+    is_read = False
+    is_write = True
+    n = 0
+    offset = 0
+    reg = rbp
+    reg_id = 5
+    regs = set(['rbp'])
+    scale = None
+    size = 8
+    text = rbp
+    type = General_Register
+    value = 0
+----------------------------------------------------------------------
+__do_global_dtors_aux_fini_array_entry
+    addr = 6295064
+    base = # Exception: SarkOperandWithoutReg('Operand does not have a register.',)
+    displacement = 6295064
+    dtype = 7
+    flags = 8
+    has_displacement = False
+    imm = 0
+    index = None
+    is_read = True
+    is_write = False
+    n = 1
+    offset = 6295064
+    reg = # Exception: SarkOperandWithoutReg('Operand does not have a register.',)
+    reg_id = 5
+    regs = set([])
+    scale = None
+    size = 8
+    text = __do_global_dtors_aux_fini_array_entry
+    type = Direct_Memory_Reference
+    value = 0
+**********************************************************************
+[0040053A]    push    rbx
+<sark.code.instruction.Instruction object at 0x0000027C32B2C710>
+    feature = 65792
+    is_call = False
+    is_indirect_jump = False
+    is_ret = False
+    mnem = push
+    operands = [<Operand(n=0, text='rbx')>]
+    regs = set(['rbx'])
+
+----------------------------------------------------------------------
+rbx
+    addr = 0
+    base = rbx
+    displacement = 0
+    dtype = 7
+    flags = 8
+    has_displacement = False
+    imm = 0
+    index = None
+    is_read = True
+    is_write = False
+    n = 0
+    offset = 0
+    reg = rbx
+    reg_id = 3
+    regs = set(['rbx'])
+    scale = None
+    size = 8
+    text = rbx
+    type = General_Register
+    value = 0
+**********************************************************************
+[0040053B]    mov     r13d, edi
+<sark.code.instruction.Instruction object at 0x0000027C32B2C588>
+    feature = 66052
+    is_call = False
+    is_indirect_jump = False
+    is_ret = False
+    mnem = mov
+    operands = [<Operand(n=0, text='r13d')>, <Operand(n=1, text='edi')>]
+    regs = set(['r13d', 'edi'])
+
+----------------------------------------------------------------------
+r13d
+    addr = 0
+    base = r13d
+    displacement = 0
+    dtype = 2
+    flags = 8
+    has_displacement = False
+    imm = 0
+    index = None
+    is_read = False
+    is_write = True
+    n = 0
+    offset = 0
+    reg = r13d
+    reg_id = 13
+    regs = set(['r13d'])
+    scale = None
+    size = 4
+    text = r13d
+    type = General_Register
+    value = 0
+----------------------------------------------------------------------
+edi
+    addr = 0
+    base = edi
+    displacement = 0
+    dtype = 2
+    flags = 8
+    has_displacement = False
+    imm = 0
+    index = None
+    is_read = True
+    is_write = False
+    n = 1
+    offset = 0
+    reg = edi
+    reg_id = 7
+    regs = set(['edi'])
+    scale = None
+    size = 4
+    text = edi
+    type = General_Register
+    value = 0
+**********************************************************************
+[0040053E]    mov     r14, rsi
+<sark.code.instruction.Instruction object at 0x0000027C32B2CA20>
+    feature = 66052
+    is_call = False
+    is_indirect_jump = False
+    is_ret = False
+    mnem = mov
+    operands = [<Operand(n=0, text='r14')>, <Operand(n=1, text='rsi')>]
+    regs = set(['r14', 'rsi'])
+
+----------------------------------------------------------------------
+r14
+    addr = 0
+    base = r14
+    displacement = 0
+    dtype = 7
+    flags = 8
+    has_displacement = False
+    imm = 0
+    index = None
+    is_read = False
+    is_write = True
+    n = 0
+    offset = 0
+    reg = r14
+    reg_id = 14
+    regs = set(['r14'])
+    scale = None
+    size = 8
+    text = r14
+    type = General_Register
+    value = 0
+----------------------------------------------------------------------
+rsi
+    addr = 0
+    base = rsi
+    displacement = 0
+    dtype = 7
+    flags = 8
+    has_displacement = False
+    imm = 0
+    index = None
+    is_read = True
+    is_write = False
+    n = 1
+    offset = 0
+    reg = rsi
+    reg_id = 6
+    regs = set(['rsi'])
+    scale = None
+    size = 8
+    text = rsi
+    type = General_Register
+    value = 0
+**********************************************************************
+[00400541]    sub     rbp, r12
+<sark.code.instruction.Instruction object at 0x0000027C32B2C710>
+    feature = 66308
+    is_call = False
+    is_indirect_jump = False
+    is_ret = False
+    mnem = sub
+    operands = [<Operand(n=0, text='rbp')>, <Operand(n=1, text='r12')>]
+    regs = set(['r12', 'rbp'])
+
+----------------------------------------------------------------------
+rbp
+    addr = 0
+    base = rbp
+    displacement = 0
+    dtype = 7
+    flags = 8
+    has_displacement = False
+    imm = 0
+    index = None
+    is_read = True
+    is_write = True
+    n = 0
+    offset = 0
+    reg = rbp
+    reg_id = 5
+    regs = set(['rbp'])
+    scale = None
+    size = 8
+    text = rbp
+    type = General_Register
+    value = 0
+----------------------------------------------------------------------
+r12
+    addr = 0
+    base = r12
+    displacement = 0
+    dtype = 7
+    flags = 8
+    has_displacement = False
+    imm = 0
+    index = None
+    is_read = True
+    is_write = False
+    n = 1
+    offset = 0
+    reg = r12
+    reg_id = 12
+    regs = set(['r12'])
+    scale = None
+    size = 8
+    text = r12
+    type = General_Register
+    value = 0
+**********************************************************************
+[00400544]    sub     rsp, 8
+<sark.code.instruction.Instruction object at 0x0000027C32B2C588>
+    feature = 66308
+    is_call = False
+    is_indirect_jump = False
+    is_ret = False
+    mnem = sub
+    operands = [<Operand(n=0, text='rsp')>, <Operand(n=1, text='8')>]
+    regs = set(['rsp'])
+
+----------------------------------------------------------------------
+rsp
+    addr = 0
+    base = rsp
+    displacement = 0
+    dtype = 7
+    flags = 8
+    has_displacement = False
+    imm = 0
+    index = None
+    is_read = True
+    is_write = True
+    n = 0
+    offset = 0
+    reg = rsp
+    reg_id = 4
+    regs = set(['rsp'])
+    scale = None
+    size = 8
+    text = rsp
+    type = General_Register
+    value = 0
+----------------------------------------------------------------------
+8
+    addr = 0
+    base = # Exception: SarkOperandWithoutReg('Operand does not have a register.',)
+    displacement = 0
+    dtype = 7
+    flags = 8
+    has_displacement = False
+    imm = 8
+    index = None
+    is_read = True
+    is_write = False
+    n = 1
+    offset = 0
+    reg = # Exception: SarkOperandWithoutReg('Operand does not have a register.',)
+    reg_id = 0
+    regs = set([])
+    scale = None
+    size = 8
+    text = 8
+    type = Immediate_Value
+    value = 8
+**********************************************************************
+[00400548]    sar     rbp, 3
+<sark.code.instruction.Instruction object at 0x0000027C32B2CA20>
+    feature = 99076
+    is_call = False
+    is_indirect_jump = False
+    is_ret = False
+    mnem = sar
+    operands = [<Operand(n=0, text='rbp')>, <Operand(n=1, text='3')>]
+    regs = set(['rbp'])
+
+----------------------------------------------------------------------
+rbp
+    addr = 0
+    base = rbp
+    displacement = 0
+    dtype = 7
+    flags = 8
+    has_displacement = False
+    imm = 0
+    index = None
+    is_read = True
+    is_write = True
+    n = 0
+    offset = 0
+    reg = rbp
+    reg_id = 5
+    regs = set(['rbp'])
+    scale = None
+    size = 8
+    text = rbp
+    type = General_Register
+    value = 0
+----------------------------------------------------------------------
+3
+    addr = 0
+    base = # Exception: SarkOperandWithoutReg('Operand does not have a register.',)
+    displacement = 0
+    dtype = 0
+    flags = 8
+    has_displacement = False
+    imm = 3
+    index = None
+    is_read = True
+    is_write = False
+    n = 1
+    offset = 0
+    reg = # Exception: SarkOperandWithoutReg('Operand does not have a register.',)
+    reg_id = 0
+    regs = set([])
+    scale = None
+    size = 1
+    text = 3
+    type = Immediate_Value
+    value = 3
+**********************************************************************
+[0040054C]    call    _init_proc
+<sark.code.instruction.Instruction object at 0x0000027C32B2C710>
+    feature = 65794
+    is_call = True
+    is_indirect_jump = False
+    is_ret = False
+    mnem = call
+    operands = [<Operand(n=0, text='_init_proc')>]
+    regs = set([])
+
+----------------------------------------------------------------------
+_init_proc
+    addr = 4195272
+    base = # Exception: SarkOperandWithoutReg('Operand does not have a register.',)
+    displacement = 4195272
+    dtype = 2
+    flags = 8
+    has_displacement = False
+    imm = 0
+    index = None
+    is_read = True
+    is_write = False
+    n = 0
+    offset = 4195272
+    reg = # Exception: SarkOperandWithoutReg('Operand does not have a register.',)
+    reg_id = 0
+    regs = set([])
+    scale = None
+    size = 4
+    text = _init_proc
+    type = Immediate_Near_Address
+    value = 0
+**********************************************************************
+[00400551]    test    rbp, rbp
+<sark.code.instruction.Instruction object at 0x0000027C32B2C588>
+    feature = 66304
+    is_call = False
+    is_indirect_jump = False
+    is_ret = False
+    mnem = test
+    operands = [<Operand(n=0, text='rbp')>, <Operand(n=1, text='rbp')>]
+    regs = set(['rbp'])
+
+----------------------------------------------------------------------
+rbp
+    addr = 0
+    base = rbp
+    displacement = 0
+    dtype = 7
+    flags = 8
+    has_displacement = False
+    imm = 0
+    index = None
+    is_read = True
+    is_write = False
+    n = 0
+    offset = 0
+    reg = rbp
+    reg_id = 5
+    regs = set(['rbp'])
+    scale = None
+    size = 8
+    text = rbp
+    type = General_Register
+    value = 0
+----------------------------------------------------------------------
+rbp
+    addr = 0
+    base = rbp
+    displacement = 0
+    dtype = 7
+    flags = 8
+    has_displacement = False
+    imm = 0
+    index = None
+    is_read = True
+    is_write = False
+    n = 1
+    offset = 0
+    reg = rbp
+    reg_id = 5
+    regs = set(['rbp'])
+    scale = None
+    size = 8
+    text = rbp
+    type = General_Register
+    value = 0
+**********************************************************************
+[00400554]    jz      short loc_400576
+<sark.code.instruction.Instruction object at 0x0000027C32B2CA20>
+    feature = 65792
+    is_call = False
+    is_indirect_jump = False
+    is_ret = False
+    mnem = jz
+    operands = [<Operand(n=0, text='loc_400576')>]
+    regs = set([])
+
+----------------------------------------------------------------------
+loc_400576
+    addr = 4195702
+    base = # Exception: SarkOperandWithoutReg('Operand does not have a register.',)
+    displacement = 4195702
+    dtype = 0
+    flags = 8
+    has_displacement = False
+    imm = 0
+    index = None
+    is_read = True
+    is_write = False
+    n = 0
+    offset = 4195702
+    reg = # Exception: SarkOperandWithoutReg('Operand does not have a register.',)
+    reg_id = 0
+    regs = set([])
+    scale = None
+    size = 1
+    text = loc_400576
+    type = Immediate_Near_Address
+    value = 0
+**********************************************************************
+[00400556]    xor     ebx, ebx
+<sark.code.instruction.Instruction object at 0x0000027C32B2C710>
+    feature = 66308
+    is_call = False
+    is_indirect_jump = False
+    is_ret = False
+    mnem = xor
+    operands = [<Operand(n=0, text='ebx')>, <Operand(n=1, text='ebx')>]
+    regs = set(['ebx'])
+
+----------------------------------------------------------------------
+ebx
+    addr = 0
+    base = ebx
+    displacement = 0
+    dtype = 2
+    flags = 8
+    has_displacement = False
+    imm = 0
+    index = None
+    is_read = True
+    is_write = True
+    n = 0
+    offset = 0
+    reg = ebx
+    reg_id = 3
+    regs = set(['ebx'])
+    scale = None
+    size = 4
+    text = ebx
+    type = General_Register
+    value = 0
+----------------------------------------------------------------------
+ebx
+    addr = 0
+    base = ebx
+    displacement = 0
+    dtype = 2
+    flags = 8
+    has_displacement = False
+    imm = 0
+    index = None
+    is_read = True
+    is_write = False
+    n = 1
+    offset = 0
+    reg = ebx
+    reg_id = 3
+    regs = set(['ebx'])
+    scale = None
+    size = 4
+    text = ebx
+    type = General_Register
+    value = 0
+**********************************************************************
+[00400558]    nop     dword ptr [rax+rax+00000000h]
+<sark.code.instruction.Instruction object at 0x0000027C32B2C588>
+    feature = 65536
+    is_call = False
+    is_indirect_jump = False
+    is_ret = False
+    mnem = nop
+    operands = [<Operand(n=0, text='dword ptr [rax+rax+00000000h]')>]
+    regs = set(['rax'])
+
+----------------------------------------------------------------------
+dword ptr [rax+rax+00000000h]
+    addr = 0
+    base = rax
+    displacement = 0
+    dtype = 2
+    flags = 8
+    has_displacement = True
+    imm = 0
+    index = rax
+    is_read = False
+    is_write = False
+    n = 0
+    offset = 0
+    reg = rsp
+    reg_id = 4
+    regs = set(['rax'])
+    scale = 1
+    size = 4
+    text = dword ptr [rax+rax+00000000h]
+    type = Memory_Displacement
+    value = 0
+**********************************************************************
+[00400560]    mov     rdx, r15
+<sark.code.instruction.Instruction object at 0x0000027C32B2CA20>
+    feature = 66052
+    is_call = False
+    is_indirect_jump = False
+    is_ret = False
+    mnem = mov
+    operands = [<Operand(n=0, text='rdx')>, <Operand(n=1, text='r15')>]
+    regs = set(['r15', 'rdx'])
+
+----------------------------------------------------------------------
+rdx
+    addr = 0
+    base = rdx
+    displacement = 0
+    dtype = 7
+    flags = 8
+    has_displacement = False
+    imm = 0
+    index = None
+    is_read = False
+    is_write = True
+    n = 0
+    offset = 0
+    reg = rdx
+    reg_id = 2
+    regs = set(['rdx'])
+    scale = None
+    size = 8
+    text = rdx
+    type = General_Register
+    value = 0
+----------------------------------------------------------------------
+r15
+    addr = 0
+    base = r15
+    displacement = 0
+    dtype = 7
+    flags = 8
+    has_displacement = False
+    imm = 0
+    index = None
+    is_read = True
+    is_write = False
+    n = 1
+    offset = 0
+    reg = r15
+    reg_id = 15
+    regs = set(['r15'])
+    scale = None
+    size = 8
+    text = r15
+    type = General_Register
+    value = 0
+**********************************************************************
+[00400563]    mov     rsi, r14
+<sark.code.instruction.Instruction object at 0x0000027C32B2C710>
+    feature = 66052
+    is_call = False
+    is_indirect_jump = False
+    is_ret = False
+    mnem = mov
+    operands = [<Operand(n=0, text='rsi')>, <Operand(n=1, text='r14')>]
+    regs = set(['r14', 'rsi'])
+
+----------------------------------------------------------------------
+rsi
+    addr = 0
+    base = rsi
+    displacement = 0
+    dtype = 7
+    flags = 8
+    has_displacement = False
+    imm = 0
+    index = None
+    is_read = False
+    is_write = True
+    n = 0
+    offset = 0
+    reg = rsi
+    reg_id = 6
+    regs = set(['rsi'])
+    scale = None
+    size = 8
+    text = rsi
+    type = General_Register
+    value = 0
+----------------------------------------------------------------------
+r14
+    addr = 0
+    base = r14
+    displacement = 0
+    dtype = 7
+    flags = 8
+    has_displacement = False
+    imm = 0
+    index = None
+    is_read = True
+    is_write = False
+    n = 1
+    offset = 0
+    reg = r14
+    reg_id = 14
+    regs = set(['r14'])
+    scale = None
+    size = 8
+    text = r14
+    type = General_Register
+    value = 0
+**********************************************************************
+[00400566]    mov     edi, r13d
+<sark.code.instruction.Instruction object at 0x0000027C32B2C588>
+    feature = 66052
+    is_call = False
+    is_indirect_jump = False
+    is_ret = False
+    mnem = mov
+    operands = [<Operand(n=0, text='edi')>, <Operand(n=1, text='r13d')>]
+    regs = set(['r13d', 'edi'])
+
+----------------------------------------------------------------------
+edi
+    addr = 0
+    base = edi
+    displacement = 0
+    dtype = 2
+    flags = 8
+    has_displacement = False
+    imm = 0
+    index = None
+    is_read = False
+    is_write = True
+    n = 0
+    offset = 0
+    reg = edi
+    reg_id = 7
+    regs = set(['edi'])
+    scale = None
+    size = 4
+    text = edi
+    type = General_Register
+    value = 0
+----------------------------------------------------------------------
+r13d
+    addr = 0
+    base = r13d
+    displacement = 0
+    dtype = 2
+    flags = 8
+    has_displacement = False
+    imm = 0
+    index = None
+    is_read = True
+    is_write = False
+    n = 1
+    offset = 0
+    reg = r13d
+    reg_id = 13
+    regs = set(['r13d'])
+    scale = None
+    size = 4
+    text = r13d
+    type = General_Register
+    value = 0
+**********************************************************************
+[00400569]    call    ds:(__frame_dummy_init_array_entry - 600E10h)[r12+rbx*8]
+<sark.code.instruction.Instruction object at 0x0000027C32B2CA20>
+    feature = 82178
+    is_call = True
+    is_indirect_jump = False
+    is_ret = False
+    mnem = call
+    operands = [<Operand(n=0, text='ds:(__frame_dummy_init_array_entry - 600E10h)[r12+rbx*8]')>]
+    regs = set(['r12', 'rbx'])
+
+----------------------------------------------------------------------
+ds:(__frame_dummy_init_array_entry - 600E10h)[r12+rbx*8]
+    addr = 0
+    base = r12
+    displacement = 0
+    dtype = 7
+    flags = 8
+    has_displacement = True
+    imm = 0
+    index = rbx
+    is_read = True
+    is_write = False
+    n = 0
+    offset = 0
+    reg = r12
+    reg_id = 12
+    regs = set(['r12', 'rbx'])
+    scale = 8
+    size = 8
+    text = ds:(__frame_dummy_init_array_entry - 600E10h)[r12+rbx*8]
+    type = Memory_Phrase
+    value = 0
+**********************************************************************
+[0040056D]    add     rbx, 1
+<sark.code.instruction.Instruction object at 0x0000027C32B2C710>
+    feature = 66308
+    is_call = False
+    is_indirect_jump = False
+    is_ret = False
+    mnem = add
+    operands = [<Operand(n=0, text='rbx')>, <Operand(n=1, text='1')>]
+    regs = set(['rbx'])
+
+----------------------------------------------------------------------
+rbx
+    addr = 0
+    base = rbx
+    displacement = 0
+    dtype = 7
+    flags = 8
+    has_displacement = False
+    imm = 0
+    index = None
+    is_read = True
+    is_write = True
+    n = 0
+    offset = 0
+    reg = rbx
+    reg_id = 3
+    regs = set(['rbx'])
+    scale = None
+    size = 8
+    text = rbx
+    type = General_Register
+    value = 0
+----------------------------------------------------------------------
+1
+    addr = 0
+    base = # Exception: SarkOperandWithoutReg('Operand does not have a register.',)
+    displacement = 0
+    dtype = 7
+    flags = 8
+    has_displacement = False
+    imm = 1
+    index = None
+    is_read = True
+    is_write = False
+    n = 1
+    offset = 0
+    reg = # Exception: SarkOperandWithoutReg('Operand does not have a register.',)
+    reg_id = 0
+    regs = set([])
+    scale = None
+    size = 8
+    text = 1
+    type = Immediate_Value
+    value = 1
+**********************************************************************
+[00400571]    cmp     rbp, rbx
+<sark.code.instruction.Instruction object at 0x0000027C32B2C588>
+    feature = 66304
+    is_call = False
+    is_indirect_jump = False
+    is_ret = False
+    mnem = cmp
+    operands = [<Operand(n=0, text='rbp')>, <Operand(n=1, text='rbx')>]
+    regs = set(['rbx', 'rbp'])
+
+----------------------------------------------------------------------
+rbp
+    addr = 0
+    base = rbp
+    displacement = 0
+    dtype = 7
+    flags = 8
+    has_displacement = False
+    imm = 0
+    index = None
+    is_read = True
+    is_write = False
+    n = 0
+    offset = 0
+    reg = rbp
+    reg_id = 5
+    regs = set(['rbp'])
+    scale = None
+    size = 8
+    text = rbp
+    type = General_Register
+    value = 0
+----------------------------------------------------------------------
+rbx
+    addr = 0
+    base = rbx
+    displacement = 0
+    dtype = 7
+    flags = 8
+    has_displacement = False
+    imm = 0
+    index = None
+    is_read = True
+    is_write = False
+    n = 1
+    offset = 0
+    reg = rbx
+    reg_id = 3
+    regs = set(['rbx'])
+    scale = None
+    size = 8
+    text = rbx
+    type = General_Register
+    value = 0
+**********************************************************************
+[00400574]    jnz     short loc_400560
+<sark.code.instruction.Instruction object at 0x0000027C32B2CA20>
+    feature = 65792
+    is_call = False
+    is_indirect_jump = False
+    is_ret = False
+    mnem = jnz
+    operands = [<Operand(n=0, text='loc_400560')>]
+    regs = set([])
+
+----------------------------------------------------------------------
+loc_400560
+    addr = 4195680
+    base = # Exception: SarkOperandWithoutReg('Operand does not have a register.',)
+    displacement = 4195680
+    dtype = 0
+    flags = 8
+    has_displacement = False
+    imm = 0
+    index = None
+    is_read = True
+    is_write = False
+    n = 0
+    offset = 4195680
+    reg = # Exception: SarkOperandWithoutReg('Operand does not have a register.',)
+    reg_id = 0
+    regs = set([])
+    scale = None
+    size = 1
+    text = loc_400560
+    type = Immediate_Near_Address
+    value = 0
+**********************************************************************
+[00400576]    add     rsp, 8
+<sark.code.instruction.Instruction object at 0x0000027C32B2C710>
+    feature = 66308
+    is_call = False
+    is_indirect_jump = False
+    is_ret = False
+    mnem = add
+    operands = [<Operand(n=0, text='rsp')>, <Operand(n=1, text='8')>]
+    regs = set(['rsp'])
+
+----------------------------------------------------------------------
+rsp
+    addr = 0
+    base = rsp
+    displacement = 0
+    dtype = 7
+    flags = 8
+    has_displacement = False
+    imm = 0
+    index = None
+    is_read = True
+    is_write = True
+    n = 0
+    offset = 0
+    reg = rsp
+    reg_id = 4
+    regs = set(['rsp'])
+    scale = None
+    size = 8
+    text = rsp
+    type = General_Register
+    value = 0
+----------------------------------------------------------------------
+8
+    addr = 0
+    base = # Exception: SarkOperandWithoutReg('Operand does not have a register.',)
+    displacement = 0
+    dtype = 7
+    flags = 8
+    has_displacement = False
+    imm = 8
+    index = None
+    is_read = True
+    is_write = False
+    n = 1
+    offset = 0
+    reg = # Exception: SarkOperandWithoutReg('Operand does not have a register.',)
+    reg_id = 0
+    regs = set([])
+    scale = None
+    size = 8
+    text = 8
+    type = Immediate_Value
+    value = 8
+**********************************************************************
+[0040057A]    pop     rbx
+<sark.code.instruction.Instruction object at 0x0000027C32B2C588>
+    feature = 65540
+    is_call = False
+    is_indirect_jump = False
+    is_ret = False
+    mnem = pop
+    operands = [<Operand(n=0, text='rbx')>]
+    regs = set(['rbx'])
+
+----------------------------------------------------------------------
+rbx
+    addr = 0
+    base = rbx
+    displacement = 0
+    dtype = 7
+    flags = 8
+    has_displacement = False
+    imm = 0
+    index = None
+    is_read = False
+    is_write = True
+    n = 0
+    offset = 0
+    reg = rbx
+    reg_id = 3
+    regs = set(['rbx'])
+    scale = None
+    size = 8
+    text = rbx
+    type = General_Register
+    value = 0
+**********************************************************************
+[0040057B]    pop     rbp
+<sark.code.instruction.Instruction object at 0x0000027C32B2CA20>
+    feature = 65540
+    is_call = False
+    is_indirect_jump = False
+    is_ret = False
+    mnem = pop
+    operands = [<Operand(n=0, text='rbp')>]
+    regs = set(['rbp'])
+
+----------------------------------------------------------------------
+rbp
+    addr = 0
+    base = rbp
+    displacement = 0
+    dtype = 7
+    flags = 8
+    has_displacement = False
+    imm = 0
+    index = None
+    is_read = False
+    is_write = True
+    n = 0
+    offset = 0
+    reg = rbp
+    reg_id = 5
+    regs = set(['rbp'])
+    scale = None
+    size = 8
+    text = rbp
+    type = General_Register
+    value = 0
+**********************************************************************
+[0040057C]    pop     r12
+<sark.code.instruction.Instruction object at 0x0000027C32B2C710>
+    feature = 65540
+    is_call = False
+    is_indirect_jump = False
+    is_ret = False
+    mnem = pop
+    operands = [<Operand(n=0, text='r12')>]
+    regs = set(['r12'])
+
+----------------------------------------------------------------------
+r12
+    addr = 0
+    base = r12
+    displacement = 0
+    dtype = 7
+    flags = 8
+    has_displacement = False
+    imm = 0
+    index = None
+    is_read = False
+    is_write = True
+    n = 0
+    offset = 0
+    reg = r12
+    reg_id = 12
+    regs = set(['r12'])
+    scale = None
+    size = 8
+    text = r12
+    type = General_Register
+    value = 0
+**********************************************************************
+[0040057E]    pop     r13
+<sark.code.instruction.Instruction object at 0x0000027C32B2C588>
+    feature = 65540
+    is_call = False
+    is_indirect_jump = False
+    is_ret = False
+    mnem = pop
+    operands = [<Operand(n=0, text='r13')>]
+    regs = set(['r13'])
+
+----------------------------------------------------------------------
+r13
+    addr = 0
+    base = r13
+    displacement = 0
+    dtype = 7
+    flags = 8
+    has_displacement = False
+    imm = 0
+    index = None
+    is_read = False
+    is_write = True
+    n = 0
+    offset = 0
+    reg = r13
+    reg_id = 13
+    regs = set(['r13'])
+    scale = None
+    size = 8
+    text = r13
+    type = General_Register
+    value = 0
+**********************************************************************
+[00400580]    pop     r14
+<sark.code.instruction.Instruction object at 0x0000027C32B2CA20>
+    feature = 65540
+    is_call = False
+    is_indirect_jump = False
+    is_ret = False
+    mnem = pop
+    operands = [<Operand(n=0, text='r14')>]
+    regs = set(['r14'])
+
+----------------------------------------------------------------------
+r14
+    addr = 0
+    base = r14
+    displacement = 0
+    dtype = 7
+    flags = 8
+    has_displacement = False
+    imm = 0
+    index = None
+    is_read = False
+    is_write = True
+    n = 0
+    offset = 0
+    reg = r14
+    reg_id = 14
+    regs = set(['r14'])
+    scale = None
+    size = 8
+    text = r14
+    type = General_Register
+    value = 0
+**********************************************************************
+[00400582]    pop     r15
+<sark.code.instruction.Instruction object at 0x0000027C32B2C710>
+    feature = 65540
+    is_call = False
+    is_indirect_jump = False
+    is_ret = False
+    mnem = pop
+    operands = [<Operand(n=0, text='r15')>]
+    regs = set(['r15'])
+
+----------------------------------------------------------------------
+r15
+    addr = 0
+    base = r15
+    displacement = 0
+    dtype = 7
+    flags = 8
+    has_displacement = False
+    imm = 0
+    index = None
+    is_read = False
+    is_write = True
+    n = 0
+    offset = 0
+    reg = r15
+    reg_id = 15
+    regs = set(['r15'])
+    scale = None
+    size = 8
+    text = r15
+    type = General_Register
+    value = 0
+**********************************************************************
+[00400584]    retn
+<sark.code.instruction.Instruction object at 0x0000027C32B2C588>
+    feature = 65537
+    is_call = False
+    is_indirect_jump = False
+    is_ret = True
+    mnem = retn
+    operands = []
+    regs = set([])
+

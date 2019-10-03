@@ -2,6 +2,7 @@ from collections import namedtuple, defaultdict
 import operator
 
 import idaapi
+import idautils
 import idc
 
 from . import exceptions
@@ -211,7 +212,8 @@ def apply_struct(start, end, reg_name, struct_name):
     sid = get_struct(struct_name)
 
     for ea, n in operands:
-        idc.op_stroff(ea, n, sid, 0)
+        insn = idautils.DecodeInstruction(ea)
+        idc.op_stroff(insn, n, sid, 0)
 
 
 def selection_has_offsets(start, end):

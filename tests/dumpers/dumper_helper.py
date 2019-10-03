@@ -16,7 +16,7 @@ def is_private_attr(name):
 def is_constant_attr(name):
     return name.isupper()
 
-def dump_attrs(obj, exclude=None):
+def dump_attrs(obj, exclude=None, handle_execption=None):
     if exclude is None:
         exclude = set()
 
@@ -33,7 +33,14 @@ def dump_attrs(obj, exclude=None):
         if is_constant_attr(name):
             continue
 
-        attr = getattr(obj, name)
+        try:
+            attr = getattr(obj, name)
+        except Exception as e:
+            if handle_execption and handle_execption(e):
+                attr = '# Exception: {!r}'.format(e)
+            else:
+                raise
+
         if isinstance(attr, types.FunctionType):
             continue
 
