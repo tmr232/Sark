@@ -1,0 +1,3 @@
+Color before change: None
+Color after change: 4919
+Color after clear: None
