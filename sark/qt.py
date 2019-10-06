@@ -1,14 +1,11 @@
 import os
 import sys
 
-from cute import QtCore, QtWidgets, QtGui, use_qt5, connect, disconnect, form_to_widget
+from PyQt5 import QtCore, QtWidgets, QtGui
 
 import idaapi
 
 from . import exceptions
-
-# This is an alias left for backwards compatibility. Use `connect` instead.
-connect_method_to_signal = connect
 
 
 def capture_widget(widget, path=None):
@@ -22,10 +19,7 @@ def capture_widget(widget, path=None):
         If a path is provided, the image will be saved to it.
         If not, the PNG buffer will be returned.
     """
-    if use_qt5:
-        pixmap = widget.grab()
-    else:
-        pixmap = QtGui.QPixmap.grabWidget(widget)
+    pixmap = widget.grab()
 
     if path:
         pixmap.save(path)
@@ -45,7 +39,7 @@ def get_widget(title):
     if not tform:
         raise exceptions.FormNotFound("No form titled {!r} found.".format(title))
 
-    return form_to_widget(tform)
+    return idaapi.PluginForm.FormToPyQtWidget(tform)
 
 
 def resize_widget(widget, width, height):
@@ -61,7 +55,7 @@ def get_window():
     if not tform:
         tform = idaapi.find_widget("Output window")
 
-    widget = form_to_widget(tform)
+    widget = idaapi.PluginForm.FormToPyQtWidget(tform)
     window = widget.window()
     return window
 
@@ -99,10 +93,7 @@ class MenuManager(object):
         super(MenuManager, self).__init__()
 
         self._window = get_window()
-        if use_qt5:
-            self._menu = self._window.findChild(QtWidgets.QMenuBar)
-        else:
-            self._menu = self._window.findChild(QtGui.QMenuBar)
+        self._menu = self._window.findChild(QtWidgets.QMenuBar)
 
         self._menus = {}
 

@@ -5,7 +5,7 @@ import itertools
 import wrapt
 from .qt import MenuManager
 import traceback
-from cute import QtGui, QtWidgets
+from PyQt5 import QtGui, QtWidgets
 
 
 def ask_color(initial=None):

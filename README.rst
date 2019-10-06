@@ -16,7 +16,6 @@ Dependencies
 
 1. `NetworkX <https://networkx.github.io/>`_
 2. `wrapt <https://pypi.python.org/pypi/wrapt>`_
-3. `idacute <https://github.com/tmr232/cute>`_
 
 Installation
 ------------

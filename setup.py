@@ -12,7 +12,7 @@ setup(
     name='sark',
     version='1.0',
     packages=find_packages(exclude=['media', 'plugins']),
-    install_requires=['networkx', 'wrapt', 'idacute'],
+    install_requires=['networkx', 'wrapt'],
     url='https://github.com/tmr232/Sark',
     license='MIT',
     author='Tamir Bahar',
