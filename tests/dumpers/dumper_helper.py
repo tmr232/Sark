@@ -16,6 +16,15 @@ def is_private_attr(name):
 def is_constant_attr(name):
     return name.isupper()
 
+def repr_set(set_:set):
+    if not set_:
+        return 'set()'
+    else:
+        sorted_members = sorted(set_)
+        content = ', '.join(map(repr, sorted_members))
+        return f'{{{content}}}'
+
+
 def dump_attrs(obj, exclude=None, handle_execption=None):
     if exclude is None:
         exclude = set()
@@ -46,5 +55,8 @@ def dump_attrs(obj, exclude=None, handle_execption=None):
 
         if is_automated_repr(attr):
             continue
+
+        if isinstance(attr, set):
+            attr = repr_set(attr)
 
         print('    {} = {}'.format(name, attr))

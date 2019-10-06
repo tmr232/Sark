@@ -40,7 +40,7 @@ rbp
     is_ret = False
     mnem = mov
     operands = [<Operand(n=0, text='rbp')>, <Operand(n=1, text='rsp')>]
-    regs = {'rsp', 'rbp'}
+    regs = {'rbp', 'rsp'}
 
 ----------------------------------------------------------------------
 rbp
@@ -623,7 +623,7 @@ r14
     is_ret = False
     mnem = mov
     operands = [<Operand(n=0, text='r15')>, <Operand(n=1, text='rdx')>]
-    regs = {'rdx', 'r15'}
+    regs = {'r15', 'rdx'}
 
 ----------------------------------------------------------------------
 r15
@@ -920,7 +920,7 @@ rbx
     is_ret = False
     mnem = mov
     operands = [<Operand(n=0, text='r13d')>, <Operand(n=1, text='edi')>]
-    regs = {'r13d', 'edi'}
+    regs = {'edi', 'r13d'}
 
 ----------------------------------------------------------------------
 r13d
@@ -975,7 +975,7 @@ edi
     is_ret = False
     mnem = mov
     operands = [<Operand(n=0, text='r14')>, <Operand(n=1, text='rsi')>]
-    regs = {'rsi', 'r14'}
+    regs = {'r14', 'rsi'}
 
 ----------------------------------------------------------------------
 r14
@@ -1404,7 +1404,7 @@ dword ptr [rax+rax+00000000h]
     is_ret = False
     mnem = mov
     operands = [<Operand(n=0, text='rdx')>, <Operand(n=1, text='r15')>]
-    regs = {'rdx', 'r15'}
+    regs = {'r15', 'rdx'}
 
 ----------------------------------------------------------------------
 rdx
@@ -1459,7 +1459,7 @@ r15
     is_ret = False
     mnem = mov
     operands = [<Operand(n=0, text='rsi')>, <Operand(n=1, text='r14')>]
-    regs = {'rsi', 'r14'}
+    regs = {'r14', 'rsi'}
 
 ----------------------------------------------------------------------
 rsi
@@ -1514,7 +1514,7 @@ r14
     is_ret = False
     mnem = mov
     operands = [<Operand(n=0, text='edi')>, <Operand(n=1, text='r13d')>]
-    regs = {'r13d', 'edi'}
+    regs = {'edi', 'r13d'}
 
 ----------------------------------------------------------------------
 edi
