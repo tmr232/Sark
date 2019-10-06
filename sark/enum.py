@@ -1,6 +1,6 @@
 import idaapi
 from . import exceptions
-from awesome.context import ignored
+from contextlib import suppress
 
 DEFMASK = idaapi.BADADDR
 
@@ -53,7 +53,7 @@ def add_enum(name=None, index=None, flags=idaapi.hex_flag(), bitfield=False):
         An `Enum` object.
     """
     if name is not None:
-        with ignored(exceptions.EnumNotFound):
+        with suppress(exceptions.EnumNotFound):
             _get_enum(name)
             raise exceptions.EnumAlreadyExists()
 

@@ -5,7 +5,6 @@ import idaapi
 import shutil
 import itertools
 import struct
-from awesome.iterator import irange as range
 from .core import fix_addresses, get_native_size
 from . import exceptions
 

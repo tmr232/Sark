@@ -1,4 +1,4 @@
-from awesome.context import ignored
+from contextlib import suppress
 import idaapi
 import sark
 from ida_settings import IDASettings
@@ -26,7 +26,7 @@ class UiHooks(idaapi.UI_Hooks):
 
     def updating_actions(self, ctx):
         if ctx.form_type == idaapi.BWN_DISASM:
-            with ignored(sark.exceptions.SarkNoFunction):
+            with suppress(sark.exceptions.SarkNoFunction):
                 self.lines.update(highlight_calls_in_function(ctx.cur_ea))
 
         return super(UiHooks, self).updating_actions(ctx)

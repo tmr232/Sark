@@ -1,5 +1,5 @@
 from itertools import repeat
-from awesome.context import ignored
+from contextlib import suppress
 import sark
 import idaapi
 import networkx as nx
@@ -10,7 +10,7 @@ MENU_PATH_GRAPHS = 'View/Graphs/'
 
 
 def _try_get_function_start(ea):
-    with ignored(exceptions.SarkNoFunction):
+    with suppress(exceptions.SarkNoFunction):
         return sark.Function(ea).start_ea
 
     return ea

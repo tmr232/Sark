@@ -1,4 +1,3 @@
 networkx
-awesomelib
 wrapt
 idacute

@@ -1,4 +1,4 @@
-from awesome.context import ignored
+from contextlib import suppress
 import idaapi
 import idc
 import sark
@@ -9,7 +9,7 @@ def show_function_strings(function):
     idaapi.msg("From          To            String\n")
 
     for xref in function.xrefs_from:
-        with ignored(sark.exceptions.SarkNoString):
+        with suppress(sark.exceptions.SarkNoString):
             string = sark.get_string(xref.to)
             # Trim the string for easier display
             string = string[:100]

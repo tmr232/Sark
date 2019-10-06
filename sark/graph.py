@@ -2,7 +2,7 @@ import collections
 import itertools
 import networkx as nx
 from .code.function import functions, Function
-from awesome.context import ignored
+from contextlib import suppress
 from . import exceptions
 
 
@@ -39,7 +39,7 @@ def lowest_common_ancestors(G, targets):
 
 
 def _try_get_function_start(ea):
-    with ignored(exceptions.SarkNoFunction):
+    with suppress(exceptions.SarkNoFunction):
         return Function(ea).start_ea
 
     return ea

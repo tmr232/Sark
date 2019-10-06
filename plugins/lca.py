@@ -1,4 +1,4 @@
-from awesome.context import ignored
+from contextlib import suppress
 import sark
 import sark.graph
 import networkx as nx
@@ -305,7 +305,7 @@ def idaview_add_target_handler(lca_plugin):
 
         def _activate(self, ctx):
             if lca_plugin._lca_viewer:
-                with ignored(KeyError):
+                with suppress(KeyError):
                     lca_plugin._lca_viewer.add_target(ctx.cur_ea)
                     lca_plugin._lca_viewer.rebuild_graph()
                     idaapi.msg("[LCA] Target Added: {}\n".format(idc.Name(ctx.cur_ea)))
