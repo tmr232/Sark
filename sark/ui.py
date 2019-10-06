@@ -38,7 +38,7 @@ class Update(object):
     LOCK = RLock()
 
     def __enter__(self):
-        self.LOCK.acquire(blocking=0)
+        self.LOCK.acquire(blocking=False)
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         can_update = self.LOCK._is_owned()
