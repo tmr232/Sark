@@ -1,4 +1,3 @@
-from itertools import imap, count
 import idaapi
 import idautils
 import idc
@@ -211,7 +210,7 @@ class Line(object):
 
         :return: Xrefs as `sark.code.xref.Xref` objects.
         """
-        return imap(Xref, idautils.XrefsFrom(self.ea))
+        return map(Xref, idautils.XrefsFrom(self.ea))
 
     @property
     def calls_from(self):
@@ -234,7 +233,7 @@ class Line(object):
         Returns:
             Xrefs as `sark.code.xref.Xref` objects.
         """
-        return imap(Xref, idautils.XrefsTo(self.ea))
+        return map(Xref, idautils.XrefsTo(self.ea))
 
     @property
     def drefs_to(self):

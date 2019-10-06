@@ -1,7 +1,6 @@
 from collections import defaultdict
 import idaapi
 import sark
-import idc
 import sark.exceptions
 
 
@@ -37,7 +36,7 @@ def get_common_value(desired=None):
     # Ignore 0 as it is usually not interesting
     values[0] = 0
     # Get the most common value
-    common_value = max(values.iteritems(), key=lambda x: x[1])[0]
+    common_value = max(values.items(), key=lambda x: x[1])[0]
     return common_value
 
 

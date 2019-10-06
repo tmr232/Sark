@@ -1,30 +1,31 @@
+import importlib
 from . import base
 
-reload(base)
+importlib.reload(base)
 
 from . import xref
 
-reload(xref)
+importlib.reload(xref)
 
 from . import line
 
-reload(line)
+importlib.reload(line)
 
 from . import function
 
-reload(function)
+importlib.reload(function)
 
 from . import switch
 
-reload(switch)
+importlib.reload(switch)
 
 from . import instruction
 
-reload(instruction)
+importlib.reload(instruction)
 
 from . import segment
 
-reload(segment)
+importlib.reload(segment)
 
 from .base import *
 from .line import Line, lines

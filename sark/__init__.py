@@ -36,16 +36,17 @@ if is_in_ida():
                    ui,
                    graph)
 
-    reload(code)
-    reload(core)
-    reload(exceptions)
-    reload(graph)
-    reload(structure)
-    reload(codeblock)
-    reload(data)
-    reload(debug)
-    reload(enum)
-    reload(ui)
+    import importlib
+    importlib.reload(code)
+    importlib.reload(core)
+    importlib.reload(exceptions)
+    importlib.reload(graph)
+    importlib.reload(structure)
+    importlib.reload(codeblock)
+    importlib.reload(data)
+    importlib.reload(debug)
+    importlib.reload(enum)
+    importlib.reload(ui)
 
     from .code import *
     from .codeblock import CodeBlock, get_nx_graph, get_block_start, FlowChart, codeblocks
