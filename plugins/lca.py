@@ -6,7 +6,6 @@ import sark.ui
 import idc
 import idaapi
 
-
 COLOR_SOURCE = 0x364b00
 COLOR_TARGET = 0x601116
 COLOR_DISABLED = 0x000673
@@ -32,8 +31,7 @@ def remove_target_handler(lca_viewer):
             lca_viewer.remove_target(lca_viewer[node_id])
             lca_viewer.rebuild_graph()
             lca_viewer.Refresh()
-            idaapi.msg("[LCA] Target Removed: {}\n".format(idc.Name(lca_viewer[node_id])))
-
+            idaapi.msg("[LCA] Target Removed: {}\n".format(idaapi.get_ea_name(lca_viewer[node_id], idaapi.GN_VISIBLE)))
 
     return RemoveTargetHandler
 
@@ -48,7 +46,6 @@ def disable_source_handler(lca_viewer):
             lca_viewer.rebuild_graph()
             lca_viewer.Refresh()
 
-
     return DisableSourceHandler
 
 
@@ -61,7 +58,6 @@ def enable_source_handler(lca_viewer):
             lca_viewer.enable_source(lca_viewer[node_id])
             lca_viewer.rebuild_graph()
             lca_viewer.Refresh()
-
 
     return EnableSourceHandler
 
@@ -79,7 +75,6 @@ def add_address_handler(lca_viewer):
             lca_viewer.add_target(ea)
             lca_viewer.rebuild_graph()
             lca_viewer.Refresh()
-
 
     return AddAddressHandler
 
@@ -128,13 +123,12 @@ class LCAGraph(idaapi.GraphViewer):
 
         self._node_ids = {}
 
-
     @property
     def current_node_id(self):
         return self._current_node_id
 
     def OnGetText(self, node_id):
-        return pad(idc.Name(self[node_id]))
+        return pad(idaapi.get_ea_name(self[node_id], idaapi.GN_VISIBLE))
 
     def _register_handlers(self):
         for handler in self._handlers:
@@ -156,8 +150,9 @@ class LCAGraph(idaapi.GraphViewer):
 
     def add_target(self, target):
         if target not in self._idb_graph.node:
-            idaapi.msg("[LCA] Target {} not in IDB graph. Cannot add.\n".format(idc.Name(target)))
-            raise KeyError("Target {} not in IDB graph.".format(idc.Name(target)))
+            idaapi.msg(
+                "[LCA] Target {} not in IDB graph. Cannot add.\n".format(idaapi.get_ea_name(target, idaapi.GN_VISIBLE)))
+            raise KeyError("Target {} not in IDB graph.".format(idaapi.get_ea_name(target, idaapi.GN_VISIBLE)))
 
         self._targets.add(target)
 
@@ -202,11 +197,9 @@ class LCAGraph(idaapi.GraphViewer):
             elif node_ea in self._sources:
                 self._set_node_bg_color(node_id, COLOR_SOURCE)
 
-
     def clear_nodes(self):
         for node_id in range(self.Count()):
             self._set_node_bg_color(node_id, 0xFFFFFFFF)
-
 
     def OnRefresh(self):
         self.Clear()
@@ -308,7 +301,7 @@ def idaview_add_target_handler(lca_plugin):
                 with suppress(KeyError):
                     lca_plugin._lca_viewer.add_target(ctx.cur_ea)
                     lca_plugin._lca_viewer.rebuild_graph()
-                    idaapi.msg("[LCA] Target Added: {}\n".format(idc.Name(ctx.cur_ea)))
+                    idaapi.msg("[LCA] Target Added: {}\n".format(idaapi.get_ea_name(ctx.cur_ea, idaapi.GN_VISIBLE)))
 
     return IDAViewAddTargetHandler
 
@@ -336,7 +329,7 @@ class LCA(idaapi.plugin_t):
         self._lca_starter.register()
         idaapi.attach_action_to_menu("View/Graph Overview", self._lca_starter.get_name(), idaapi.SETMENU_APP)
 
-        self._idaview_handler  = idaview_add_target_handler(self)
+        self._idaview_handler = idaview_add_target_handler(self)
         self._idaview_handler.register()
         self._hooks = idaview_hooks(self._idaview_handler)()
         self._hooks.hook()
@@ -352,7 +345,6 @@ class LCA(idaapi.plugin_t):
         if self._lca_viewer is None:
             self._lca_viewer = LCAGraph("LCA Graph")
         self._lca_viewer.Show()
-
 
     def run(self, arg):
         self.show_graph()

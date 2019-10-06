@@ -251,7 +251,7 @@ class NXGraph(idaapi.GraphViewer):
 
         for counter in itertools.count():
             unique_title = "{}-{}".format(title, counter)
-            if not idaapi.find_tform(unique_title):
+            if not idaapi.find_widget(unique_title):
                 break
 
         return unique_title
