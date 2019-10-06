@@ -1,4 +1,3 @@
-from itertools import imap
 import idaapi
 import idautils
 import idc
@@ -19,7 +18,7 @@ class Comments(object):
     def __init__(self, function):
         self._function = function
 
-    def __nonzero__(self):
+    def __bool__(self):
         return any((self.regular, self.repeat,))
 
     @property
@@ -274,7 +273,7 @@ class Function(FunctionFlagsMixin):
 
         This only includes references to that function's start address.
         """
-        return imap(Xref, idautils.XrefsTo(self.start_ea))
+        return map(Xref, idautils.XrefsTo(self.start_ea))
 
     @property
     def drefs_to(self):

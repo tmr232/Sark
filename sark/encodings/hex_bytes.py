@@ -19,7 +19,7 @@ def hex_encode(input, errors='strict'):
     """
     assert errors == 'strict'
     temp = binascii.b2a_hex(input)
-    output = " ".join(temp[i:i + 2] for i in xrange(0, len(temp), 2))
+    output = " ".join(temp[i:i + 2] for i in range(0, len(temp), 2))
     return (output, len(input))
 
 

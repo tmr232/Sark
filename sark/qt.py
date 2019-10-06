@@ -131,6 +131,6 @@ class MenuManager(object):
 
     def clear(self):
         """Clear all menus created by this manager."""
-        for menu in self._menus.itervalues():
+        for menu in self._menus.values():
             self._menu.removeAction(menu.menuAction())
         self._menus = {}

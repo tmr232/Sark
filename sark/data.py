@@ -13,25 +13,25 @@ from . import exceptions
 def Bytes(start=None, end=None):
     start, end = fix_addresses(start, end)
 
-    return itertools.imap(idc.Byte, range(start, end))
+    return map(idc.Byte, list(range(start, end)))
 
 
 def Words(start=None, end=None):
     start, end = fix_addresses(start, end)
 
-    return itertools.imap(idc.Word, range(start, end, 2))
+    return map(idc.Word, list(range(start, end, 2)))
 
 
 def Dwords(start=None, end=None):
     start, end = fix_addresses(start, end)
 
-    return itertools.imap(idc.Dword, range(start, end, 4))
+    return map(idc.Dword, list(range(start, end, 4)))
 
 
 def Qwords(start=None, end=None):
     start, end = fix_addresses(start, end)
 
-    return itertools.imap(idc.Qword, range(start, end, 8))
+    return map(idc.Qword, list(range(start, end, 8)))
 
 
 def NativeWords(start, end):
@@ -46,31 +46,31 @@ def NativeWords(start, end):
 
 
 def bytes_until(byte=0, start=None, end=None):
-    return iter(Bytes(start, end).next, byte)
+    return iter(Bytes(start, end).__next__, byte)
 
 
 def words_until(word=0, start=None, end=None):
-    return iter(Words(start, end).next, word)
+    return iter(Words(start, end).__next__, word)
 
 
 def dwords_until(dword=0, start=None, end=None):
-    return iter(Dwords(start, end).next, dword)
+    return iter(Dwords(start, end).__next__, dword)
 
 
 def qwords_until(qword=0, start=None, end=None):
-    return iter(Qwords(start, end).next, qword)
+    return iter(Qwords(start, end).__next__, qword)
 
 
 def native_words_until(native_word=0, start=None, end=None):
-    return iter(NativeWords(start, end).next, native_word)
+    return iter(NativeWords(start, end).__next__, native_word)
 
 
 def Chars(start=None, end=None):
-    return itertools.imap(chr, Bytes(start, end))
+    return map(chr, Bytes(start, end))
 
 
 def chars_until(char='\0', start=None, end=None):
-    return iter(Chars(start, end).next, char)
+    return iter(Chars(start, end).__next__, char)
 
 
 def read_ascii_string(ea, max_length=None):
@@ -125,7 +125,7 @@ def apply_patches(output_path=None):
     patches = get_patched_bytes()
 
     with open(to_patch, "r+b") as output:
-        for patch in patches.itervalues():
+        for patch in patches.values():
             output.seek(patch.fpos)
             patched_byte = chr(patch.patched)
             output.write(patched_byte)

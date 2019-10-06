@@ -340,7 +340,7 @@ class IndexingMode(object):
     def is_none(self):
         return not (self.pre or self.post)
 
-    def __nonzero__(self):
+    def __bool__(self):
         return self.pre or self.post
 
 
@@ -353,6 +353,9 @@ class Instruction(object):
             raise exceptions.SarkNoInstruction("No Instruction at 0x{:08X}.".format(ea))
 
         self._operands = self._make_operands()
+
+    def __repr__(self):
+        return f'<Instruction at 0x{self._ea:08x}>'
 
     def _make_operands(self):
         operands = []

@@ -401,7 +401,7 @@ def _iter_enum_constant_ids(eid):
 
 def _iter_enum_ids():
     """Iterate the IDs of all enums in the IDB"""
-    for index in xrange(idaapi.get_enum_qty()):
+    for index in range(idaapi.get_enum_qty()):
         yield idaapi.getn_enum(index)
 
 

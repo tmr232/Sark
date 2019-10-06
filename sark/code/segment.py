@@ -258,7 +258,7 @@ def segments(seg_type=None):
             otherwise returns only the relevant ones
     """
 
-    for index in xrange(idaapi.get_segm_qty()):
+    for index in range(idaapi.get_segm_qty()):
         seg = Segment(index=index)
         if (seg_type is None) or (seg.type == seg_type):
             yield Segment(index=index)

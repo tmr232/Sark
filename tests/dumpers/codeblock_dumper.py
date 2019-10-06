@@ -1,5 +1,3 @@
-from __future__ import print_function
-
 import sark
 from dumper_helper import dump_attrs
 
@@ -12,7 +10,7 @@ def main():
         for block in flowchart:
             print('-' * 70)
             print(block)
-            dump_attrs(block)
+            dump_attrs(block, exclude=('startEA','endEA'))
             print('    {} = {}'.format('prev',list(block.prev)))
             print('    {} = {}'.format('next',list(block.next)))
 

@@ -171,7 +171,7 @@ def get_common_register(start, end):
             register_name = operand.base
             registers[register_name] += 1
 
-    return max(registers.iteritems(), key=operator.itemgetter(1))[0]
+    return max(registers.items(), key=operator.itemgetter(1))[0]
 
 
 def offset_name(offset):

@@ -1,5 +1,5 @@
 from collections import defaultdict
-from itertools import izip
+
 
 import idaapi
 
@@ -33,7 +33,7 @@ class Switch(object):
 
     def _build_reverse(self, switch_map):
         reverse_map = defaultdict(list)
-        for case, target in switch_map.iteritems():
+        for case, target in switch_map.items():
             reverse_map[target].append(case)
         return reverse_map
 
@@ -47,7 +47,7 @@ class Switch(object):
 
     def _build_map(self, results):
         switch_map = {}
-        for cases, target in izip(results.cases, results.targets):
+        for cases, target in zip(results.cases, results.targets):
             for case in cases:
                 switch_map[case] = target
 
@@ -56,21 +56,21 @@ class Switch(object):
     @property
     def targets(self):
         """Switch Targets"""
-        return self._map.values()
+        return list(self._map.values())
 
     @property
     def cases(self):
         """Switch Cases"""
-        return self._map.keys()
+        return list(self._map.keys())
 
     @property
     def pairs(self):
         """(case, target) pairs"""
-        return self._map.iteritems()
+        return iter(self._map.items())
 
     def __iter__(self):
         """Iterate switch cases."""
-        return self._map.iterkeys()
+        return iter(self._map.keys())
 
     def __getitem__(self, case):
         """switch[case] -> target"""

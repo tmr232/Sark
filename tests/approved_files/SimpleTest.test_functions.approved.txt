@@ -75,7 +75,7 @@ Function(name=".puts", addr=0x004003F0)
     name = .puts
     signature = int(const char *s)
     start_ea = 4195312
-    tinfo = ('\x0c\x11\x07\x02\nr', '\x02s')
+    tinfo = (b'\x0c\x11\x07\x02\nr', b'\x02s')
 Function(name="_start", addr=0x00400400)
     color = None
     comments = Comments(func=_start, reqular=None, repeat=None)
@@ -257,7 +257,7 @@ Function(name="main", addr=0x004004F0)
     name = main
     signature = int __cdecl(int argc, const char **argv, const char **envp)
     start_ea = 4195568
-    tinfo = ('\x0c1\x07\x04\x07\n\nr\n\nr', '\x05argc\x05argv\x05envp')
+    tinfo = (b'\x0c1\x07\x04\x07\n\nr\n\nr', b'\x05argc\x05argv\x05envp')
 Function(name="__libc_csu_init", addr=0x00400520)
     color = None
     comments = Comments(func=__libc_csu_init, reqular=None, repeat=None)
@@ -283,7 +283,7 @@ Function(name="__libc_csu_init", addr=0x00400520)
     name = __libc_csu_init
     signature = void(void)
     start_ea = 4195616
-    tinfo = ('\x0c!\x01', '')
+    tinfo = (b'\x0c!\x01', b'')
 Function(name="__libc_csu_fini", addr=0x00400590)
     color = None
     comments = Comments(func=__libc_csu_fini, reqular=None, repeat=None)
@@ -309,7 +309,7 @@ Function(name="__libc_csu_fini", addr=0x00400590)
     name = __libc_csu_fini
     signature = void(void)
     start_ea = 4195728
-    tinfo = ('\x0c!\x01', '')
+    tinfo = (b'\x0c!\x01', b'')
 Function(name=".term_proc", addr=0x00400594)
     color = None
     comments = Comments(func=.term_proc, reqular=None, repeat=None)
@@ -361,7 +361,7 @@ Function(name="puts", addr=0x00601040)
     name = puts
     signature = int(const char *s)
     start_ea = 6295616
-    tinfo = ('\x0c\x11\x07\x02\nr', '\x02s')
+    tinfo = (b'\x0c\x11\x07\x02\nr', b'\x02s')
 Function(name="__libc_start_main", addr=0x00601048)
     color = None
     comments = Comments(func=__libc_start_main, reqular=None, repeat=None)
@@ -387,7 +387,7 @@ Function(name="__libc_start_main", addr=0x00601048)
     name = __libc_start_main
     signature = int __cdecl(int (__cdecl *main)(int, char **, char **), int argc, char **ubp_av, void (*init)(void), void (*fini)(void), void (*rtld_fini)(void), void *stack_end)
     start_ea = 6295624
-    tinfo = ('\x0c1\x07\x08\n\x0c1\x07\x04\x07\n\n2\n\n2\x07\n\n2\n\x0c!\x01\n\x0c!\x01\n\x0c!\x01\n\x01', '\x05main\x01\x01\x01\x05argc\x07ubp_av\x05init\x05fini\nrtld_fini\nstack_end')
+    tinfo = (b'\x0c1\x07\x08\n\x0c1\x07\x04\x07\n\n2\n\n2\x07\n\n2\n\x0c!\x01\n\x0c!\x01\n\x0c!\x01\n\x01', b'\x05main\x01\x01\x01\x05argc\x07ubp_av\x05init\x05fini\nrtld_fini\nstack_end')
 Function(name="__gmon_start__", addr=0x00601050)
     color = None
     comments = Comments(func=__gmon_start__, reqular=None, repeat=None)

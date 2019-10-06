@@ -76,7 +76,7 @@ def get_lca_graph(G, targets, lca_sources=None):
         for target in targets:
             path = nx.shortest_path(G, source, target)
 
-            for frm, to in itertools.izip(path[:-1], path[1:]):
+            for frm, to in zip(path[:-1], path[1:]):
                 lca_graph.add_edge(frm, to)
 
     return lca_graph

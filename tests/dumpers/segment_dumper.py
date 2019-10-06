@@ -1,5 +1,3 @@
-from __future__ import print_function
-
 import sark
 from dumper_helper import dump_attrs
 

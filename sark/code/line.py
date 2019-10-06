@@ -18,7 +18,7 @@ class Comments(object):
     def __init__(self, ea):
         self._ea = ea
 
-    def __nonzero__(self):
+    def __bool__(self):
         return any((self.regular, self.repeat, self.anterior, self.posterior,))
 
     @property
@@ -41,7 +41,7 @@ class Comments(object):
 
     def _iter_extra_comments(self, start):
         end = idaapi.get_first_free_extra_cmtidx(self._ea, start)
-        for idx in xrange(start, end):
+        for idx in range(start, end):
             line = idaapi.get_extra_cmt(self._ea, idx)
             yield line or ''
 
@@ -210,7 +210,7 @@ class Line(object):
 
         :return: Xrefs as `sark.code.xref.Xref` objects.
         """
-        return map(Xref, idautils.XrefsFrom(self.ea))
+        return list(map(Xref, idautils.XrefsFrom(self.ea)))
 
     @property
     def calls_from(self):
@@ -233,7 +233,7 @@ class Line(object):
         Returns:
             Xrefs as `sark.code.xref.Xref` objects.
         """
-        return map(Xref, idautils.XrefsTo(self.ea))
+        return list(map(Xref, idautils.XrefsTo(self.ea)))
 
     @property
     def drefs_to(self):

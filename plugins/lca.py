@@ -204,7 +204,7 @@ class LCAGraph(idaapi.GraphViewer):
 
 
     def clear_nodes(self):
-        for node_id in xrange(self.Count()):
+        for node_id in range(self.Count()):
             self._set_node_bg_color(node_id, 0xFFFFFFFF)
 
 
