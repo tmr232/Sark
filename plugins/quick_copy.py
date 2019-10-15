@@ -1,6 +1,13 @@
 import idaapi
 import clipboard
 import sark
+import binascii
+
+
+def to_hex_bytes(raw_bytes: bytes) -> str:
+    hex_string = binascii.b2a_hex(raw_bytes).decode('utf-8')
+    hex_bytes = ' '.join(hex_string[i:i + 2] for i in range(0, len(hex_string), 2))
+    return hex_bytes
 
 
 def message(*messages):
@@ -29,7 +36,7 @@ def copy_current_file_offset():
 def copy_current_selection():
     start, end = sark.get_selection()
     buffer = sark.data.read_memory(start, end)
-    clipboard.copy(buffer.encode("hex-bytes"))
+    clipboard.copy(to_hex_bytes(buffer))
 
 
 class QuickCopy(idaapi.plugin_t):
@@ -42,7 +49,7 @@ class QuickCopy(idaapi.plugin_t):
     def init(self):
         self.hotkeys = []
         self.hotkeys.append(idaapi.add_hotkey("Ctrl+Alt+C", copy_current_address))
-        self.hotkeys.append(idaapi.add_hotkey("Ctrl+Alt+C+O", copy_current_file_offset))
+        self.hotkeys.append(idaapi.add_hotkey("Ctrl+Alt+O", copy_current_file_offset))
         self.hotkeys.append(idaapi.add_hotkey("Ctrl+Shift+C", copy_current_selection))
         return idaapi.PLUGIN_KEEP
 
