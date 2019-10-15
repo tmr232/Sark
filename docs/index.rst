@@ -58,5 +58,6 @@ Contents:
    examples/index
    plugins/index
    debugging
+   Support
    CONTRIBUTING
    AUTHORS
