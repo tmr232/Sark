@@ -12,28 +12,28 @@ from . import exceptions
 def Bytes(start=None, end=None):
     start, end = fix_addresses(start, end)
 
-    return map(idc.Byte, list(range(start, end)))
+    return map(idaapi.get_wide_byte, list(range(start, end)))
 
 
 def Words(start=None, end=None):
     start, end = fix_addresses(start, end)
 
-    return map(idc.Word, list(range(start, end, 2)))
+    return map(idaapi.get_wide_word, list(range(start, end, 2)))
 
 
 def Dwords(start=None, end=None):
     start, end = fix_addresses(start, end)
 
-    return map(idc.Dword, list(range(start, end, 4)))
+    return map(idaapi.get_wide_dword, list(range(start, end, 4)))
 
 
 def Qwords(start=None, end=None):
     start, end = fix_addresses(start, end)
 
-    return map(idc.Qword, list(range(start, end, 8)))
+    return map(idaapi.get_qword, list(range(start, end, 8)))
 
 
-def NativeWords(start, end):
+def NativeWords(start=None, end=None):
     native_size = get_native_size()
 
     if native_size == 2:
@@ -126,12 +126,12 @@ def apply_patches(output_path=None):
     with open(to_patch, "r+b") as output:
         for patch in patches.values():
             output.seek(patch.fpos)
-            patched_byte = chr(patch.patched)
+            patched_byte = bytes([patch.patched])
             output.write(patched_byte)
 
 
 def undefine(start, end):
-    idaapi.del_items(start, end - start, idc.DOUNK_SIMPLE)
+    idaapi.del_items(start, end - start, idaapi.DELIT_SIMPLE)
 
 
 def is_string(ea):

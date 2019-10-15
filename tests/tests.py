@@ -10,6 +10,10 @@ class SimpleTest(unittest.TestCase):
     def setUp(self):
         self.reporter = GenericDiffReporterFactory().get_first_working()
 
+    def test_data(self):
+        data = run_dumper('data_dumper.py', 'simple.out.i64')
+        verify(data, self.reporter)
+
     def test_functions(self):
         data = run_dumper('function_dumper.py', 'simple.out.i64')
         verify(data, self.reporter)
@@ -37,7 +41,6 @@ class SimpleTest(unittest.TestCase):
     def test_modify_block_color(self):
         data = run_dumper('block_color_modifier.py', 'simple.out.i64')
         verify(data, self.reporter)
-
 
 
 if __name__ == "__main__":
