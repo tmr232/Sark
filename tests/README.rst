@@ -18,9 +18,4 @@ Then, run the following:
 
 .. code:: bash
 
-    py -2 tests/tests.py
-
-Known Failures
---------------
-
-You may see a mismatch between ``startEA`` and ``start_ea``. This is OK.
+    py -3 tests/tests.py
