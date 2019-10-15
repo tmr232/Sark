@@ -10,10 +10,10 @@ class Registers(object):
     register info, such as the names of the instruction pointer and the stack pointer.
 
     Usage (on x86):
-        >>> print Registers().ip.name
+        >>> print(Registers().ip.name)
         eip
 
-        >>> print Registers().sp.name
+        >>> print(Registers().sp.name)
         esp
     """
     REGISTER_READONLY = 0x001  # the user can't modify the current value of this register

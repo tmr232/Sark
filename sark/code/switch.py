@@ -14,7 +14,7 @@ class Switch(object):
 
         >>> my_switch = Switch(switch_jump_address)
         >>> for case, target in my_switch:
-        ...     print "{} -> 0x{:08X}".format(case, target)
+        ...     print("{} -> 0x{:08X}".format(case, target))
 
     """
     def __init__(self, ea):
