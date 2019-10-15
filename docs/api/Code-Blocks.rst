@@ -9,8 +9,8 @@ to as a flowchart.
 
     >>> block = sark.CodeBlock()
     >>> print(list(block.next))
-    [<CodeBlock(startEA=0x00417567, endEA=0x00417570)>,
-     <CodeBlock(startEA=0x0041759E, endEA=0x004175D4)>]
+    [<CodeBlock(start_ea=0x00417567, end_ea=0x00417570)>,
+     <CodeBlock(start_ea=0x0041759E, end_ea=0x004175D4)>]
 
 Sark's ``CodeBlock`` object inherits from the ``idaapi.BasicBlock``
 objects, and adds a few handy members.
@@ -67,7 +67,7 @@ was added.
 
 The function returns a `NetworkX <https://networkx.github.io/>`__
 ``DiGraph`` object representing the flowchart, with each node being the
-``startEA`` of a matching block. Using NetworkX's functionality, it is
+``start_ea`` of a matching block. Using NetworkX's functionality, it is
 easy to trace routes in the graph.
 
 .. code:: python
@@ -75,8 +75,8 @@ easy to trace routes in the graph.
     >>> import networkx as nx
     >>> func = sark.Function()
     >>> graph = sark.get_nx_graph(func.ea)
-    >>> start_address = sark.get_block_start(func.startEA)  # The `get_block_start(ea)` is short for `get_codeblock(ea).startEA`
-    >>> end_address = sark.get_block_start(func.endEA - 1)  # Remember, `endEA` is outside the function!
+    >>> start_address = sark.get_block_start(func.start_ea)  # The `get_block_start(ea)` is short for `get_codeblock(ea).start_ea`
+    >>> end_address = sark.get_block_start(func.end_ea - 1)  # Remember, `end_ea` is outside the function!
     >>> path = nx.shortest_path(graph, start_address, end_address)
     >>> print("From {} to {}".format(hex(start_address), hex(end_address)))
     From 0x417400L to 0x4176a6L
