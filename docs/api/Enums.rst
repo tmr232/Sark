@@ -7,10 +7,10 @@ reading.
 .. code:: python
 
     >>> for enum in sark.enums():
-    ...     print "{}:".format(enum.name)
+    ...     print("{}:".format(enum.name))
     ...     for member in enum.members:
-    ...         print "    {:<30} = {}".format(member.name, member.value)
-    ...     print
+    ...         print("    {:<30} = {}".format(member.name, member.value))
+    ...     print()
     POOL_TYPE:
         NonPagedPool                   = 0
         PagedPool                      = 1
@@ -59,7 +59,7 @@ members object allows easy enumeration and manipulation of the members:
     >>> my_enum.members.add("third", 2)
     >>> my_enum.members.remove("second")
     >>> for member in my_enum.members:
-    ...     print "{} = {}".format(member.name, member.value)
+    ...     print("{} = {}".format(member.name, member.value))
     first = 0
     third = 2
 

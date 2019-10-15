@@ -7,13 +7,15 @@ Sark (named after the notorious Tron villain) is an object-oriented
 scripting layer written on top of IDAPython. Sark is easy to use and
 provides tools for writing advanced scripts and plugins.
 
+Sark actively supports IDA7.4 and Python3. For older versions, see :doc:`Support`.
+
 
 Getting Started
 ===============
 
 Install Sark from the command line::
 
-   pip install -U git+https://github.com/tmr232/Sark.git#egg=Sark
+   pip3 install -U git+https://github.com/tmr232/Sark.git#egg=Sark
 
 Import inside IDA, and start having fun!
 

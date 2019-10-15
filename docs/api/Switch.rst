@@ -8,7 +8,7 @@ a great job at analyzing it.
 
     >>> switch = sark.Switch(idc.here())
     >>> for case, target in switch:
-    ...     print "{} -> 0x{:08X}".format(case, target)
+    ...     print("{} -> 0x{:08X}".format(case, target))
     0 -> 0x004224C9
     1 -> 0x0042249F
     2 -> 0x0042251B

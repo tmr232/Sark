@@ -7,11 +7,11 @@ IDA-View is a line in Sark. Let's have a look.
 .. code:: python
 
     >>> my_line = sark.Line()  # Same as `sark.Line(ea=idc.here())`
-    >>> print my_line
+    >>> print(my_line)
     [00417401]    mov     ebp, esp
 
     >>> my_line.comments.regular = "The line at 0x{:08X}".format(my_line.ea)
-    >>> print my_line
+    >>> print(my_line)
     [00417401]    mov     ebp, esp        ; The line at 0x00417401
 
 The ``sark.Line`` object encapsulates most of the line-relevant

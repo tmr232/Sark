@@ -8,13 +8,13 @@ objects represent the actual assembly code of each line.
 
     >>> line = sark.Line()
     >>> insn = line.insn
-    >>> print line
+    >>> print(line)
     [00417555]    mov     ecx, [eax+8]
 
-    >>> print insn.mnem
+    >>> print(insn.mnem)
     mov
 
-    >>> print insn.operands
+    >>> print(insn.operands)
     [<Operand(n=0, text='ecx')>, <Operand(n=1, text='[eax+8]')>]
 
 Out of their members,
@@ -41,10 +41,10 @@ code.
 
 .. code:: python
 
-    >>> print insn.operands[1]
+    >>> print(insn.operands[1])
     <Operand(n=1, text='[eax+8]')>
 
-    >>> print "{0.reg} + {0.offset}".format(insn.operands[1])
+    >>> print("{0.reg} + {0.offset}".format(insn.operands[1]))
     eax + 8
 
 +-------------+-----------------------------------------+

@@ -7,15 +7,15 @@ a single function in IDA.
 .. code:: python
 
     >>> my_func = sark.Function()  # The same arguments as `sark.Line`
-    >>> print my_func
+    >>> print(my_func)
     Function(name="sub_417400", addr=0x00417400)
 
     >>> my_func.name = "my_func"
-    >>> print my_func
+    >>> print(my_func)
     Function(name="my_func", addr=0x00417400)
 
     >>> for line in my_func.lines:
-    ...     print line.disasm
+    ...     print(line.disasm)
     push    ebp
     mov     ebp, esp
     sub     esp, 0DCh

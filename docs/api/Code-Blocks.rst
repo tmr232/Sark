@@ -8,7 +8,7 @@ to as a flowchart.
 .. code:: python
 
     >>> block = sark.CodeBlock()
-    >>> print list(block.next)
+    >>> print(list(block.next))
     [<CodeBlock(startEA=0x00417567, endEA=0x00417570)>,
      <CodeBlock(startEA=0x0041759E, endEA=0x004175D4)>]
 
@@ -78,7 +78,7 @@ easy to trace routes in the graph.
     >>> start_address = sark.get_block_start(func.startEA)  # The `get_block_start(ea)` is short for `get_codeblock(ea).startEA`
     >>> end_address = sark.get_block_start(func.endEA - 1)  # Remember, `endEA` is outside the function!
     >>> path = nx.shortest_path(graph, start_address, end_address)
-    >>> print "From {} to {}".format(hex(start_address), hex(end_address))
+    >>> print("From {} to {}".format(hex(start_address), hex(end_address)))
     From 0x417400L to 0x4176a6L
 
     >>>print " -> ".join(map(hex, nx.shortest_path(graph, start, end)))

@@ -12,7 +12,7 @@ Copying Addresses
 To copy the address of the current line, just press ``Ctrl + Alt + C``. It will get copied as a hex number, prefixed
 with ``0x``.
 
-To copy the file offset of the current line, simply press ``Ctrl + Alt + C + O``. It will get copied as a hex 
+To copy the file offset of the current line, simply press ``Ctrl + Alt + O``. It will get copied as a hex
 number (like line address copying), prefixed with ``0x``.
 
 Copying Bytes

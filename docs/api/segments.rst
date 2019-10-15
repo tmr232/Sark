@@ -16,9 +16,9 @@ objects allow access to underlying ``Function`` and ``Line`` objects.
     >>> # See reference implementation here: https://code.google.com/p/idapython/wiki/ExampleScripts
     >>> #
     >>> for function in sark.Segment().functions:
-    >>>    print "Function %s at 0x%x" % (function.name, function.ea)
+    >>>    print("Function %s at 0x%x" % (function.name, function.ea))
     >>>    for ref in function.crefs_to:
-    >>>        print "  called from %s(0x%x)" % (sark.Function(ref).name, ref)
+    >>>        print("  called from %s(0x%x)" % (sark.Function(ref).name, ref))
 
 
 Like the ``sark.Line`` objects, they encapsulate relevant API into a

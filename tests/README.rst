@@ -12,7 +12,7 @@ Then, make sure ``approvaltests`` is installed
 
 .. code:: bash
 
-    pip install approvaltests
+    pip3 install approvaltests
 
 Then, run the following:
 
