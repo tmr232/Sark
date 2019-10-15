@@ -10,7 +10,7 @@ def read(*paths):
 
 setup(
     name='sark',
-    version='1.0',
+    version='2.0',
     packages=find_packages(exclude=['media', 'plugins']),
     install_requires=['networkx', 'wrapt'],
     url='https://github.com/tmr232/Sark',
