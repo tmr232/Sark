@@ -7,8 +7,8 @@ PLUGINS_LIST = "plugins.list"
 
 USER_PLUGIN_LIST_PATH = os.path.join(idaapi.get_user_idadir(), PLUGINS_LIST)
 SYS_PLUGIN_LIST_PATH = os.path.join(idaapi.idadir(idaapi.CFG_SUBDIR), PLUGINS_LIST)
-if idc.GetIdbPath():
-    PROJECT_PLUGIN_LIST_PATH = os.path.join(os.path.dirname(idc.GetIdbPath()), PLUGINS_LIST)
+if idc.get_idb_path():
+    PROJECT_PLUGIN_LIST_PATH = os.path.join(os.path.dirname(idc.get_idb_path()), PLUGINS_LIST)
 else:
     PROJECT_PLUGIN_LIST_PATH = None
 
