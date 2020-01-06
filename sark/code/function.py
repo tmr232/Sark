@@ -1,8 +1,10 @@
+from typing import Iterable
+
 import idaapi
 import idautils
 import idc
 from .base import get_func, demangle
-from ..core import set_name, get_ea, fix_addresses, is_same_function,add_func
+from ..core import set_name, get_ea, fix_addresses, is_same_function, add_func
 from .line import Line
 from .xref import Xref
 from ..ui import updates_ui
@@ -184,7 +186,6 @@ class Function(FunctionFlagsMixin):
 
         return Function(ea)
 
-
     @property
     def comments(self):
         """Comments"""
@@ -200,12 +201,12 @@ class Function(FunctionFlagsMixin):
         return self.start_ea
 
     @property
-    def lines(self):
+    def lines(self) -> Iterable[Line]:
         """Get all function lines."""
         return iter_function_lines(self._func)
 
     @property
-    def start_ea(self):
+    def start_ea(self) -> int:
         """Start Address"""
         return self._func.start_ea
 
@@ -383,7 +384,7 @@ class Function(FunctionFlagsMixin):
             raise exceptions.SetTypeFailed(self.start_ea, tinfo)
 
 
-def iter_function_lines(func_ea):
+def iter_function_lines(func_ea) -> Iterable[Line]:
     """Iterate the lines of a function.
 
     Args:

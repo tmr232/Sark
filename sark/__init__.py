@@ -1,15 +1,3 @@
-def register_sark_codecs():
-    import codecs
-    from .encodings.hex_bytes import getregentry
-
-    def sark_search_function(encoding):
-        codec_info = getregentry()
-        if encoding == codec_info.name:
-            return codec_info
-
-    codecs.register(sark_search_function)
-
-
 def is_in_ida():
     try:
         import idaapi
@@ -18,8 +6,6 @@ def is_in_ida():
     except ImportError:
         return False
 
-# Register the hex-bytes codec.
-register_sark_codecs()
 
 # Since some of our code can be used outside of IDA, namely the `plumbing` module
 # when used in the codecs proxy, we want to allow importing specific modules outside
@@ -36,17 +22,17 @@ if is_in_ida():
                    ui,
                    graph)
 
-    import importlib
-    importlib.reload(code)
-    importlib.reload(core)
-    importlib.reload(exceptions)
-    importlib.reload(graph)
-    importlib.reload(structure)
-    importlib.reload(codeblock)
-    importlib.reload(data)
-    importlib.reload(debug)
-    importlib.reload(enum)
-    importlib.reload(ui)
+    import idaapi
+    idaapi.require('sark.code')
+    idaapi.require('sark.core')
+    idaapi.require('sark.exceptions')
+    idaapi.require('sark.graph')
+    idaapi.require('sark.structure')
+    idaapi.require('sark.codeblock')
+    idaapi.require('sark.data')
+    idaapi.require('sark.debug')
+    idaapi.require('sark.enum')
+    idaapi.require('sark.ui')
 
     from .code import *
     from .codeblock import CodeBlock, get_nx_graph, get_block_start, FlowChart, codeblocks

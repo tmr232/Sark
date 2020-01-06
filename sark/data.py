@@ -131,7 +131,7 @@ def apply_patches(output_path=None):
 
 
 def undefine(start, end):
-    idaapi.del_items(start, end - start, idaapi.DELIT_SIMPLE)
+    idaapi.del_items(start, idaapi.DELIT_SIMPLE, end - start)
 
 
 def is_string(ea):
