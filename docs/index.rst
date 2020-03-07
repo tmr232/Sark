@@ -13,7 +13,9 @@ Sark actively supports IDA7.4 and Python3. For older versions, see :doc:`Support
 Getting Started
 ===============
 
-Install Sark from the command line::
+Install Sark from the command line:
+
+.. code:: bash
 
    pip3 install -U git+https://github.com/tmr232/Sark.git#egg=Sark
 

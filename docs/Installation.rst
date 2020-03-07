@@ -18,6 +18,24 @@ For older versions of IDA (7.3 or lower), use:
 
 And see :doc:`Support`
 
+Alternatively, you can install Sark directly from PyPI. The Sark version will
+match the IDA versions, more or less. So for 7.4 or higher, you'll just want
+the latest:
+
+.. code:: bash
+
+    pip3 install sark
+
+But for 7.3 or earlier, you'll want a version smaller than 7.4:
+
+.. code:: bash
+
+    pip2 install "sark<7.4"
+
+
+That said, installing from the repo is the only way to be sure you get the
+latest version of Sark.
+
 
 To install the IDA Plugins (optional) download the entire repository
 from `GitHub <https://github.com/tmr232/Sark>`__ and read :doc:`plugins/installation`.
