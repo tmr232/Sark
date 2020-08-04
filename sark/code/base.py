@@ -36,7 +36,10 @@ def is_ea_call(ea):
 
 def get_register_info(reg_name):
     ri = idaapi.reg_info_t()
-    success = idaapi.parse_reg_name(reg_name, ri)
+    if idaapi.IDA_SDK_VERSION >= 750:
+        success = idaapi.parse_reg_name(ri, reg_name)
+    else:
+        success = idaapi.parse_reg_name(reg_name, ri)
     if not success:
         raise exceptions.SarkInvalidRegisterName("No register named {!r}".format(reg_name))
     return ri
