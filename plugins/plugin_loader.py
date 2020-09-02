@@ -36,7 +36,7 @@ def iter_paths(filepath):
         with open(filepath) as f:
             for line in f:
                 # Use `#` for comments
-                if line.startswith("#"):
+                if line.startswith("#") or line.isspace():
                     continue
                 # Remove trailing spaces and newlines, then normalize to avoid duplicates.
                 path = os.path.normpath(line.strip())
