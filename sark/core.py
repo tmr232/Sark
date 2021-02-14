@@ -1,5 +1,6 @@
 import idaapi
 import idc
+import ida_search
 import string
 from . import exceptions
 
@@ -68,14 +69,14 @@ def iter_find_query(query, start=None, end=None, down=True):
     start, end = fix_addresses(start, end)
 
     if down:
-        direction = idc.SEARCH_DOWN
+        direction = ida_search.SEARCH_DOWN
     else:
-        direction = idc.SEARCH_UP
+        direction = ida_search.SEARCH_UP
 
-    current = idc.FindBinary(start, direction, query)
+    current = ida_search.find_binary(start, end, query, 16, direction)
     while current < end:
         yield current
-        current = idc.FindBinary(current + 1, direction, query)
+        current = ida_search.find_binary(current + 1, end, query, 16, direction)
 
 
 def fix_addresses(start=None, end=None):
