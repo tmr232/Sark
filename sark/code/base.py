@@ -25,6 +25,11 @@ DTYPE_TO_SIZE = {
 
 
 def dtype_to_size(dtyp):
+    if dtyp == idaapi.dt_tbyte:
+        # This can't be put in the dict as it depends on the current processor
+        # and may change during runtime.
+        return idaapi.ph_get_tbyte_size()
+
     return DTYPE_TO_SIZE[dtyp]
 
 
