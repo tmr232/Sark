@@ -1,7 +1,7 @@
 import os
 import sys
 
-from PyQt5 import QtCore, QtWidgets, QtGui
+from PySide6 import QtCore, QtWidgets, QtGui
 
 import idaapi
 
