@@ -427,7 +427,7 @@ class Instruction(object):
 
     @property
     def indexing_mode(self):
-        if idaapi.get_inf_structure().procName != 'ARM':
+        if idaapi.get_inf_structure().procname != 'ARM':
             return IndexingMode()
 
         return IndexingMode(pre=bool(self.insn_t.auxpref & 0x20),
