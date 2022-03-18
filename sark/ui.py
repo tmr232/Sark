@@ -3,10 +3,13 @@ import idc
 from threading import RLock
 import itertools
 import wrapt
-from .qt import MenuManager
 import traceback
-from PyQt5 import QtGui, QtWidgets
 
+if idaapi.is_idaq():
+    # Only load Qt if we're in IDAQ.
+    # This should allow running in IDAT.
+    from .qt import MenuManager
+    from PyQt5 import QtGui, QtWidgets
 
 def ask_color(initial=None):
     if initial is not None:

@@ -29,6 +29,10 @@ def read_config(key):
 def get_ida_path(): pass
 
 
+@read_config('IDATPATH')
+def get_idat_path(): pass
+
+
 def get_tempfile_path():
     handle, name = tempfile.mkstemp()
     os.close(handle)
@@ -47,9 +51,14 @@ def unsafe_tempfile():
         os.unlink(name)
 
 
-def run_ida(script, idb):
+def run_ida(script, idb, *, use_idat=False):
+    if use_idat:
+        ida_path = get_idat_path()
+    else:
+        ida_path = get_ida_path()
+
     with unsafe_tempfile() as f:
-        subprocess.call([get_ida_path(), '-A', '-S"{}" "{}" "{}"'.format(get_wrapper_script(), f.name, script), idb])
+        subprocess.call([ida_path, '-A', '-S"{}" "{}" "{}"'.format(get_wrapper_script(), f.name, script), idb])
 
         output = f.read()
 
@@ -72,5 +81,5 @@ def get_binary_path(name):
     return os.path.join(get_binary_dir(), name)
 
 
-def run_dumper(dumper_name, binary_name):
-    return run_ida(get_dumper_path(dumper_name), get_binary_path(binary_name))
+def run_dumper(dumper_name, binary_name, *, use_idat=False):
+    return run_ida(get_dumper_path(dumper_name), get_binary_path(binary_name), use_idat=use_idat)
