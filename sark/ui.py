@@ -175,7 +175,7 @@ class NXGraph(idaapi.GraphViewer):
         1. By specifying the `handler` parameter to the constructor;
         2. By setting the `NXGraph.HANDLER` attribute of a specific node:
 
-            >>> my_graph.node[my_node][NXGraph.HANDLER] = MyCustomHandler()
+            >>> my_graph.nodes[my_node][NXGraph.HANDLER] = MyCustomHandler()
 
     Two other useful attribute are `NXGraph.BG_COLOR` and `NXGraph.FRAME_COLOR` that allow
     specifying colors for your nodes. If not provided, the default color will be used.
@@ -271,7 +271,7 @@ class NXGraph(idaapi.GraphViewer):
 
     def _get_attrs(self, node_id):
         """Get the node's attributes"""
-        return self._graph.node[self[node_id]]
+        return self._graph.nodes[self[node_id]]
 
     def _get_handling_triplet(self, node_id):
         """_get_handling_triplet(node_id) -> (handler, value, attrs)"""
