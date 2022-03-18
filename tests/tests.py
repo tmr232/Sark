@@ -42,6 +42,18 @@ class SimpleTest(unittest.TestCase):
         data = run_dumper('block_color_modifier.py', 'simple.out.i64')
         verify(data, self.reporter)
 
+    def test_api_sampler(self):
+        data = run_dumper('api_sampler.py', 'simple.out.i64')
+        verify(data, self.reporter)
+
+    def test_idat(self):
+        data = run_dumper('api_sampler.py', 'simple.out.i64', use_idat=True)
+        verify(data, self.reporter)
+
+    def test_idat_data_dumper(self):
+        data = run_dumper('data_dumper.py', 'simple.out.i64', use_idat=True)
+        verify(data, self.reporter)
+
 
 if __name__ == "__main__":
     unittest.main()
