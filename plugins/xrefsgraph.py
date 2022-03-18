@@ -87,7 +87,7 @@ def show_xref_graph(ea, to=False, distance=4):
 
     call_graph = gen_xref_graph(ea, to=to, distance=distance)
 
-    call_graph.node[ea][sark.ui.NXGraph.BG_COLOR] = 0x80
+    call_graph.nodes[ea][sark.ui.NXGraph.BG_COLOR] = 0x80
 
     title = 'Xrefs {tofrom} {target} '.format(tofrom='to' if to else 'from',
                                               target=_get_best_name(ea))
