@@ -35,7 +35,7 @@ class Phrase(object):
         if self.op_t.type not in (idaapi.o_displ, idaapi.o_phrase):
             raise exceptions.OperandNotPhrase('Operand is not of type o_phrase or o_displ.')
 
-        proc_name = idaapi.get_inf_structure().procName
+        proc_name = idaapi.get_inf_structure().procname
         if proc_name != 'metapc':
             raise exceptions.PhraseProcessorNotSupported(
                 'Phrase analysis not supported for processor {}'.format(proc_name))
@@ -427,7 +427,7 @@ class Instruction(object):
 
     @property
     def indexing_mode(self):
-        if idaapi.get_inf_structure().procName != 'ARM':
+        if idaapi.get_inf_structure().procname != 'ARM':
             return IndexingMode()
 
         return IndexingMode(pre=bool(self.insn_t.auxpref & 0x20),

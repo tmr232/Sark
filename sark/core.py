@@ -93,10 +93,10 @@ def fix_addresses(start=None, end=None):
         (start, end)
     """
     if start in (None, idaapi.BADADDR):
-        start = idaapi.cvar.inf.minEA
+        start = idaapi.cvar.inf.min_ea
 
     if end in (None, idaapi.BADADDR):
-        end = idaapi.cvar.inf.maxEA
+        end = idaapi.cvar.inf.max_ea
 
     return start, end
 
