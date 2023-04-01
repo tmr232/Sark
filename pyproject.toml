@@ -1,3 +1,26 @@
 [build-system]
-requires = ["setuptools>=40.6.0", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "sark"
+description = "IDA Scripting Library"
+readme = "README.rst"
+license = "MIT"
+authors = [
+    { name = "Tamir Bahar", email = "" },
+]
+dependencies = [
+    "networkx >= 2.0.0",
+    "wrapt",
+]
+version = "8.2.0"
+
+[project.urls]
+Homepage = "https://github.com/tmr232/Sark"
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/sark",
+]
+
