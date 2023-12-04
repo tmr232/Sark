@@ -205,8 +205,6 @@ class Operand(object):
     def displacement(self):
         return base.operand_get_displacement(self._operand)
 
-    offset = displacement
-
     @property
     def op_t(self):
         return self._operand
