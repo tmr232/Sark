@@ -26,9 +26,12 @@ OPND_READ_FLAGS = {
     5: idaapi.CF_USE6,
 }
 
+
 def _is_intel()->bool:
     proc_name = idaapi.get_inf_structure().procname
     return proc_name == 'metapc'
+
+
 class Phrase(object):
     def __init__(self, insn_t, op_t):
         self.insn_t:ida_ua.insn_t = insn_t
@@ -37,7 +40,7 @@ class Phrase(object):
         self._initialize()
 
     def _initialize(self):
-        if self.op_t.type not in (idaapi.o_displ, idaapi.o_phrase, idaapi.o_mem):
+        if self.op_t.type not in (idaapi.o_displ, idaapi.o_phrase):
             raise exceptions.OperandNotPhrase(f'Operand is not of type o_phrase or o_displ: {self.op_t.type}')
 
         proc_name = idaapi.get_inf_structure().procname
@@ -167,7 +170,7 @@ class OperandType(object):
 
     @property
     def has_phrase(self):
-        return self._type in (idaapi.o_phrase, idaapi.o_displ, idaapi.o_mem)
+        return self._type in (idaapi.o_phrase, idaapi.o_displ)
 
 
 class Operand(object):
@@ -291,12 +294,18 @@ class Operand(object):
     def scale(self):
         if self._phrase:
             return self._phrase.scale
+
+        if self.type.is_mem and _is_intel():
+            return 1<< intel.x86_scale(self.op_t)
         return None
 
     @property
     def index(self):
         if self._phrase:
             return self._phrase.index
+
+        if self.type.is_mem and _is_intel():
+            return base.get_register_name(intel.x86_index_reg(self._insn, self.op_t), self.size)
         return None
 
     @property

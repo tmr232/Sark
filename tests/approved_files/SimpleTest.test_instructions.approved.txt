@@ -771,7 +771,7 @@ r12
 ----------------------------------------------------------------------
 __frame_dummy_init_array_entry
     addr = 6295056
-    base = rbp
+    base = # Exception: SarkOperandWithoutReg('Operand does not have a register.')
     displacement = 6295056
     dtype = 7
     flags = 8
@@ -859,7 +859,7 @@ rbp
 ----------------------------------------------------------------------
 __do_global_dtors_aux_fini_array_entry
     addr = 6295064
-    base = rbp
+    base = # Exception: SarkOperandWithoutReg('Operand does not have a register.')
     displacement = 6295064
     dtype = 7
     flags = 8
