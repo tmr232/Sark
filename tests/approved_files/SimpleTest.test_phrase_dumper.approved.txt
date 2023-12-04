@@ -1,0 +1,5 @@
+Diffing generated and parsed phrases.
+Any line printed indicates an error.
+
+
+Done.

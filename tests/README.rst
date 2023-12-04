@@ -8,11 +8,11 @@ Running The Tests
 
 First, inside ``tests/config.json`` set ``IDAPATH`` to point to your IDA executable.
 
-Then, make sure ``approvaltests`` is installed
+Then, make sure ``approvaltests`` and ``keystone-engine`` are installed
 
 .. code:: bash
 
-    pip3 install approvaltests
+    pip3 install approvaltests keystone-engine
 
 Then, run the following:
 
