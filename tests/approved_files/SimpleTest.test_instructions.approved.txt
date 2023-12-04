@@ -771,7 +771,7 @@ r12
 ----------------------------------------------------------------------
 __frame_dummy_init_array_entry
     addr = 6295056
-    base = # Exception: SarkOperandWithoutReg('Operand does not have a register.')
+    base = rbp
     displacement = 6295056
     dtype = 7
     flags = 8
@@ -785,7 +785,7 @@ __frame_dummy_init_array_entry
     reg = # Exception: SarkOperandWithoutReg('Operand does not have a register.')
     reg_id = 5
     regs = set()
-    scale = None
+    scale = 1
     size = 8
     text = __frame_dummy_init_array_entry
     type = Direct_Memory_Reference
@@ -859,7 +859,7 @@ rbp
 ----------------------------------------------------------------------
 __do_global_dtors_aux_fini_array_entry
     addr = 6295064
-    base = # Exception: SarkOperandWithoutReg('Operand does not have a register.')
+    base = rbp
     displacement = 6295064
     dtype = 7
     flags = 8
@@ -873,7 +873,7 @@ __do_global_dtors_aux_fini_array_entry
     reg = # Exception: SarkOperandWithoutReg('Operand does not have a register.')
     reg_id = 5
     regs = set()
-    scale = None
+    scale = 1
     size = 8
     text = __do_global_dtors_aux_fini_array_entry
     type = Direct_Memory_Reference

@@ -1,7 +1,9 @@
+import ida_ua
 import idaapi
 import idautils
 import idc
 
+from . import intel
 from . import base
 from .. import core
 from .. import exceptions
@@ -24,53 +26,34 @@ OPND_READ_FLAGS = {
     5: idaapi.CF_USE6,
 }
 
-
+def _is_intel()->bool:
+    proc_name = idaapi.get_inf_structure().procname
+    return proc_name == 'metapc'
 class Phrase(object):
-    def __init__(self, op_t):
-        self.op_t = op_t
+    def __init__(self, insn_t, op_t):
+        self.insn_t:ida_ua.insn_t = insn_t
+        self.op_t:ida_ua.op_t = op_t
 
         self._initialize()
 
     def _initialize(self):
-        if self.op_t.type not in (idaapi.o_displ, idaapi.o_phrase):
-            raise exceptions.OperandNotPhrase('Operand is not of type o_phrase or o_displ.')
+        if self.op_t.type not in (idaapi.o_displ, idaapi.o_phrase, idaapi.o_mem):
+            raise exceptions.OperandNotPhrase(f'Operand is not of type o_phrase or o_displ: {self.op_t.type}')
 
         proc_name = idaapi.get_inf_structure().procname
         if proc_name != 'metapc':
             raise exceptions.PhraseProcessorNotSupported(
                 'Phrase analysis not supported for processor {}'.format(proc_name))
 
-        specflag1 = self.op_t.specflag1
-        specflag2 = self.op_t.specflag2
-        scale = 1 << ((specflag2 & 0xC0) >> 6)
-        offset = self.op_t.addr
+        def fix_reg_none(reg_id)->int|None:
+            if reg_id == intel.RegNo.R_none:
+                return None
+            return reg_id
 
-        if specflag1 == 0:
-            index = None
-            base_ = self.op_t.reg
-        elif specflag1 == 1:
-            index = (specflag2 & 0x38) >> 3
-            base_ = (specflag2 & 0x07) >> 0
-
-            if self.op_t.reg == 0xC:
-                if base_ & 4:
-                    base_ += 8
-                if index & 4:
-                    index += 8
-        else:
-            raise exceptions.PhraseNotSupported('o_displ, o_phrase : Not implemented yet : %x' % specflag1)
-
-        # HACK: This is a really ugly hack. For some reason, phrases of the form `[esp + ...]` (`sp`, `rsp` as well)
-        # set both the `index` and the `base` to `esp`. This is not significant, as `esp` cannot be used as an
-        # index, but it does cause issues with the parsing.
-        # This is only relevant to Intel architectures.
-        if (index == base_ == idautils.procregs.sp.reg) and (scale == 1):
-            index = None
-
-        self.scale = scale
-        self.index_id = index
-        self.base_id = base_
-        self.offset = offset
+        self.scale = 1 << intel.x86_scale(self.op_t)
+        self.index_id = fix_reg_none(intel.x86_index_reg(self.insn_t, self.op_t))
+        self.base_id = fix_reg_none(intel.x86_base_reg(self.insn_t, self.op_t))
+        self.offset = self.op_t.addr
 
     @property
     def base(self):
@@ -184,7 +167,7 @@ class OperandType(object):
 
     @property
     def has_phrase(self):
-        return self._type in (idaapi.o_phrase, idaapi.o_displ)
+        return self._type in (idaapi.o_phrase, idaapi.o_displ, idaapi.o_mem)
 
 
 class Operand(object):
@@ -197,7 +180,7 @@ class Operand(object):
         # We have to save the `insn_t` object referenced to make sure the `op_t` object is not released on the C side.
         self._insn = insn
         try:
-            self._phrase = Phrase(operand)
+            self._phrase = Phrase(insn, operand)
         except exceptions.PhraseError:
             self._phrase = None
 
@@ -318,8 +301,6 @@ class Operand(object):
 
     @property
     def offset(self):
-        if self._phrase:
-            return self._phrase.offset
         return self.addr
 
 

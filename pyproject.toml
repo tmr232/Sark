@@ -7,6 +7,7 @@ name = "sark"
 description = "IDA Scripting Library"
 readme = "README.rst"
 license = "MIT"
+version = "8.2.0"
 authors = [
     { name = "Tamir Bahar", email = "" },
 ]
@@ -14,7 +15,12 @@ dependencies = [
     "networkx >= 2.0.0",
     "wrapt",
 ]
-version = "8.2.0"
+
+[project.optional-dependencies]
+dev = [
+    "keystone-engine == 0.9.2",
+    "approvaltests >= 10.1.0"
+]
 
 [project.urls]
 Homepage = "https://github.com/tmr232/Sark"

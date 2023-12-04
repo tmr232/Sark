@@ -222,6 +222,10 @@ class OperandNotPhrase(PhraseError):
     pass
 
 
+class InvalidPhraseRegisters(PhraseError):
+    pass
+
+
 class PhraseNotSupported(PhraseError):
     pass
 
