@@ -7,7 +7,7 @@ name = "sark"
 description = "IDA Scripting Library"
 readme = "README.rst"
 license = "MIT"
-version = "8.2.0"
+version = "8.2.1"
 authors = [
     { name = "Tamir Bahar", email = "" },
 ]

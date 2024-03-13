@@ -1,0 +1,32 @@
+name: Publish
+
+on:
+  release:
+    types:
+      - published
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      # IMPORTANT: this permission is mandatory for trusted publishing
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.11
+          cache: 'pip'
+
+      - name: Build
+        run: |
+          python3 -m pip install --user pipx
+          python3 -m pipx ensurepath
+          pipx install hatch
+          hatch build
+
+      - name: Publish
+        uses: pypa/gh-action-pypi-publish@release/v1
