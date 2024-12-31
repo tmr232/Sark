@@ -4,6 +4,7 @@ import operator
 import idaapi
 import idautils
 import idc
+import ida_typeinf
 
 from . import exceptions
 from .code import lines
@@ -14,29 +15,27 @@ FF_SIZES = [1, 2, 4, 8, 16, ]
 SIZE_TO_TYPE = dict(zip(FF_SIZES, FF_TYPES))
 
 STRUCT_ERROR_MAP = {
-    idc.STRUC_ERROR_MEMBER_NAME:
+    ida_typeinf.TERR_BAD_NAME:
         (exceptions.SarkErrorStructMemberName, "already has member with this name (bad name)"),
-    idc.STRUC_ERROR_MEMBER_OFFSET:
+    ida_typeinf.TERR_BAD_OFFSET:
         (exceptions.SarkErrorStructMemberOffset, "already has member at this offset"),
-    idc.STRUC_ERROR_MEMBER_SIZE:
+    ida_typeinf.TERR_BAD_SIZE:
         (exceptions.SarkErrorStructMemberSize, "bad number of bytes or bad sizeof(type)"),
-    idc.STRUC_ERROR_MEMBER_TINFO:
+    ida_typeinf.TERR_BAD_TYPE:
         (exceptions.SarkErrorStructMemberTinfo, "bad typeid parameter"),
-    idc.STRUC_ERROR_MEMBER_STRUCT:
-        (exceptions.SarkErrorStructMemberStruct, "bad struct id (the 1st argument)"),
-    idc.STRUC_ERROR_MEMBER_UNIVAR:
+    ida_typeinf.TERR_BAD_UNIVAR:
         (exceptions.SarkErrorStructMemberUnivar, "unions can't have variable sized members"),
-    idc.STRUC_ERROR_MEMBER_VARLAST:
+    ida_typeinf.TERR_BAD_VARLAST:
         (exceptions.SarkErrorStructMemberVarlast, "variable sized member should be the last member in the structure"),
 }
 
 
-def struct_member_error(err, sid, name, offset, size):
+def struct_member_error(err, tid, name, offset, size):
     """Create and format a struct member exception.
 
     Args:
         err: The error value returned from struct member creation
-        sid: The struct id
+        tid: The type id
         name: The member name
         offset: Memeber offset
         size: Member size
@@ -46,7 +45,7 @@ def struct_member_error(err, sid, name, offset, size):
         informative message.
     """
     exception, msg = STRUCT_ERROR_MAP[err]
-    struct_name = idaapi.get_struc_name(sid)
+    struct_name = idaapi.get_tid_name(tid)
     return exception(('AddStructMember(struct="{}", member="{}", offset={}, size={}) '
                       'failed: {}').format(
         struct_name,
@@ -70,16 +69,16 @@ def create_struct(name):
         exceptions.SarkStructAlreadyExists: A struct with the same name already exists
         exceptions.SarkCreationFailed:  Struct creation failed
     """
-    sid = idaapi.get_struc_id(name)
-    if sid != idaapi.BADADDR:
+    tid = idaapi.get_named_type_tid(name)
+    if tid != idaapi.BADADDR:
         # The struct already exists.
         raise exceptions.SarkStructAlreadyExists("A struct names {!r} already exists.".format(name))
 
-    sid = idaapi.add_struc(idaapi.BADADDR, name, 0)
-    if sid == idaapi.BADADDR:
+    tid = idaapi.tinfo_t.create_udt(idaapi.BADADDR, name, 0)
+    if tid == idaapi.BADADDR:
         raise exceptions.SarkStructCreationFailed("Struct creation failed.")
 
-    return sid
+    return tid
 
 
 def get_struct(name):
@@ -94,22 +93,22 @@ def get_struct(name):
     Raises:
         exceptions.SarkStructNotFound: is the struct does not exist.
     """
-    sid = idaapi.get_struc_id(name)
-    if sid == idaapi.BADADDR:
+    tid = idaapi.get_named_type_tid(name)
+    if tid == idaapi.BADADDR:
         raise exceptions.SarkStructNotFound()
 
-    return sid
+    return tid
 
 
 def size_to_flags(size):
     return SIZE_TO_TYPE[size] | idc.FF_DATA
 
 
-def add_struct_member(sid, name, offset, size):
-    failure = idc.add_struc_member(sid, name, offset, size_to_flags(size), -1, size)
+def add_struct_member(tid, name, offset, size):
+    failure = idc.add_struc_member(tid, name, offset, size_to_flags(size), -1, size)
 
     if failure:
-        raise struct_member_error(failure, sid, name, offset, size)
+        raise struct_member_error(failure, tid, name, offset, size)
 
 
 StructOffset = namedtuple("StructOffset", "offset size")
@@ -179,31 +178,31 @@ def offset_name(offset):
     return "offset_{:X}".format(offset.offset)
 
 
-def set_struct_offsets(offsets, sid):
+def set_struct_offsets(offsets, tid):
     for offset in offsets:
         try:
-            add_struct_member(sid,
+            add_struct_member(tid,
                               offset_name(offset),
                               offset.offset,
                               offset.size)
         except exceptions.SarkErrorStructMemberName:
             # Get the offset of the member with the same name
-            existing_offset = idc.get_member_offset(sid, offset_name(offset))
+            existing_offset = idc.get_member_offset(tid, offset_name(offset))
             if offset.offset == existing_offset:
                 pass
             else:
                 raise
         except exceptions.SarkErrorStructMemberOffset:
             # Get the size of the member at the same offset
-            if offset.size == idc.get_member_size(sid, offset.offset):
+            if offset.size == idc.get_member_size(tid, offset.offset):
                 # If they are the same, all is well.
                 pass
 
 
 def create_struct_from_offsets(name, offsets):
-    sid = create_struct(name)
+    tid = create_struct(name)
 
-    set_struct_offsets(offsets, sid)
+    set_struct_offsets(offsets, tid)
 
 
 def apply_struct(start, end, reg_name, struct_name):
