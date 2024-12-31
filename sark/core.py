@@ -1,5 +1,6 @@
 import idaapi
 import idc
+import ida_ida
 import ida_search
 import string
 from . import exceptions
@@ -93,10 +94,10 @@ def fix_addresses(start=None, end=None):
         (start, end)
     """
     if start in (None, idaapi.BADADDR):
-        start = idaapi.cvar.inf.min_ea
+        start = ida_ida.inf_get_min_ea()
 
     if end in (None, idaapi.BADADDR):
-        end = idaapi.cvar.inf.max_ea
+        end = ida_ida.inf_get_max_ea()
 
     return start, end
 
@@ -155,10 +156,10 @@ def get_name_or_address(ea):
 
 def get_native_size():
     """Get the native word size in normal 8-bit bytes."""
-    info = idaapi.get_inf_structure()
-    if info.is_64bit():
+    bits = ida_ida.inf_get_app_bitness()
+    if bits == 64:
         return 8
-    elif info.is_32bit():
+    elif bits == 32:
         return 4
     else:
         return 2
