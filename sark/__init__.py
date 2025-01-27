@@ -38,4 +38,4 @@ if is_in_ida():
     from .codeblock import CodeBlock, get_nx_graph, get_block_start, FlowChart, codeblocks
     from .data import read_ascii_string, get_string
     from .core import set_name, is_function
-    from .enum import Enum, add_enum, remove_enum
+    from .enum import Enum, enums, add_enum, remove_enum
