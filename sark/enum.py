@@ -394,7 +394,10 @@ def _iter_enum_constant_ids(tid):
 
 
 def _iter_types():
+    """Iterate all types in the database"""
     til = ida_typeinf.get_idati()
+    # get_ordinal_count returns 0 when numbered types
+    # aren't enabled in the database (according to docs).
     if ida_typeinf.get_ordinal_count() == 0:
         for named in til.named_types():
             yield named
