@@ -4,7 +4,7 @@ import idc
 from . import exceptions
 from contextlib import suppress
 
-DEFMASK = idaapi.BADADDR
+DEFMASK = -1
 
 ENUM_ERROR_MAP = {
     ida_typeinf.TERR_BAD_NAME:
@@ -381,7 +381,7 @@ def _iter_enum_member_cid_with_bitmask(tid, bitmask):
     an invalid member.
     """
     cid = idc.get_first_enum_member(tid, bmask=bitmask)
-    while cid != idaapi.BADNODE:
+    while cid != DEFMASK:
         yield cid
         cid = idc.get_next_enum_member(tid, cid, bmask=bitmask)
 
