@@ -3,6 +3,7 @@ import idaapi
 import idautils
 import idc
 import ida_ida
+from typing import Optional
 
 from . import intel
 from . import base
@@ -49,7 +50,7 @@ class Phrase(object):
             raise exceptions.PhraseProcessorNotSupported(
                 'Phrase analysis not supported for processor {}'.format(proc_name))
 
-        def fix_reg_none(reg_id)->int|None:
+        def fix_reg_none(reg_id) -> Optional[int]:
             if reg_id == intel.RegNo.R_none:
                 return None
             return reg_id
