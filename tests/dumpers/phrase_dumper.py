@@ -1,4 +1,5 @@
 import itertools
+from typing import Optional
 
 import ida_bytes
 import ida_ua
@@ -19,7 +20,7 @@ def assemble(line: str) -> bytes:
     return bytes(encoding)
 
 
-def lea(base: str | None, index: str | None, scale: int, offset: int) -> str:
+def lea(base: Optional[str], index: Optional[str], scale: int, offset: int) -> str:
     assert scale >= 1
 
     parts = []
