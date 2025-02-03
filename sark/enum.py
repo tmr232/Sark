@@ -395,10 +395,12 @@ def _iter_enum_constant_ids(tid):
 
 def _iter_types():
     til = ida_typeinf.get_idati()
-    for named in til.named_types():
-        yield named
-    for numbered in til.numbered_types():
-        yield numbered
+    if ida_typeinf.get_ordinal_count() == 0:
+        for named in til.named_types():
+            yield named
+    else:
+        for numbered in til.numbered_types():
+            yield numbered
 
 
 def _iter_enum_ids():
