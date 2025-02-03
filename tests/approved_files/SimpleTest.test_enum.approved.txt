@@ -1,8 +1,8 @@
 <Enum(name='FunLittleEnum')>
     bitfield = False
     comments = EnumComments(name='FunLittleEnum', reqular=None, repeat=None)
-    eid = 18374686479671623820
-    flag = 17825792
-    is_from_til = False
+    flag = 1179648
+    is_from_til = True
     name = FunLittleEnum
-    width = 0
+    tid = 18374686479671623820
+    width = 4
