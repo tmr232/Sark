@@ -7,26 +7,15 @@ name = "sark"
 description = "IDA Scripting Library"
 readme = "README.rst"
 license = "MIT"
-version = "8.2.1"
-authors = [
-    { name = "Tamir Bahar", email = "" },
-]
-dependencies = [
-    "networkx >= 2.0.0",
-    "wrapt",
-]
+version = "9.0.0"
+authors = [{ name = "Tamir Bahar", email = "" }]
+dependencies = ["networkx >= 2.0.0", "wrapt"]
 
 [project.optional-dependencies]
-dev = [
-    "keystone-engine == 0.9.2",
-    "approvaltests >= 10.1.0"
-]
+dev = ["keystone-engine == 0.9.2", "approvaltests >= 10.1.0"]
 
 [project.urls]
 Homepage = "https://github.com/tmr232/Sark"
 
 [tool.hatch.build.targets.sdist]
-include = [
-    "/sark",
-]
-
+include = ["/sark"]
